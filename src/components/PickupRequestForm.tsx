@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useRef } from 'react';
@@ -23,11 +24,14 @@ import {
   Compass
 } from 'lucide-react';
 import { resolveGhanaAddress } from '@/ai/flows/ghana-address-voice-resolution';
+import { wasteImageClassification } from '@/ai/flows/waste-image-classification-flow';
+import { dynamicPickupPricing } from '@/ai/flows/dynamic-pickup-pricing-flow';
+import { smartCollectorMatching } from '@/ai/flows/smart-collector-matching';
 import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
-import { DUMMY_COLLECTORS, DEMO_AI_OUTPUT, DEMO_PRICING, DEMO_ROUTING } from '@/lib/dummy-data';
+import { DUMMY_COLLECTORS } from '@/lib/dummy-data';
 import { useFirestore, useUser } from '@/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, getDocs, query, where } from 'firebase/firestore';
 
 export default function PickupRequestForm() {
   const { toast } = useToast();
@@ -85,21 +89,47 @@ export default function PickupRequestForm() {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setSelectedImageUrl(reader.result as string);
+      reader.onloadend = async () => {
+        const base64String = reader.result as string;
+        setSelectedImageUrl(base64String);
         setLoading(true);
-        // Simulate AI Vision Analysis
-        setTimeout(() => {
-          setWasteData(DEMO_AI_OUTPUT);
-          setPriceData(DEMO_PRICING);
+        
+        try {
+          // 1. AI Waste Classification
+          const classification = await wasteImageClassification({
+            photoDataUri: base64String,
+            userDescription: address
+          });
+          setWasteData(classification);
+
+          // 2. Dynamic Pricing Calculation
+          const pricing = await dynamicPickupPricing({
+            wasteType: 'Mixed domestic refuse', // Simplified for demo
+            estimatedWeight: classification.estimatedWeightKg,
+            estimatedVolume: classification.estimatedVolumeM3,
+            userLocation: resolvedLoc.resolvedCoordinates,
+            collectorLocation: { lat: 5.67691, lng: -0.16240 }, // Simulated nearest collector
+            trafficConditions: 'moderate',
+            zoneDemandDensity: 'medium',
+            timeOfRequest: new Date().toISOString(),
+            landfillTippingFees: 0,
+            fuelCostIndex: 1.0,
+            serviceUrgency: 'immediate'
+          });
+          setPriceData(pricing);
+          
           setStep(3);
+          toast({ title: "AI Scan Complete", description: `Classified as ${classification.wasteCategories[0]} (~${classification.estimatedWeightKg}kg).` });
+        } catch (error) {
+          console.error("AI Analysis failed:", error);
+          toast({ variant: 'destructive', title: "Analysis Failed", description: "Could not process image. Please try again." });
+        } finally {
           setLoading(false);
-          toast({ title: "AI Scan Complete", description: "Classified as Mixed Domestic Waste (~45kg)." });
-        }, 3000);
+        }
       };
       reader.readAsDataURL(file);
     }
@@ -124,6 +154,29 @@ export default function PickupRequestForm() {
       const customerId = user?.uid || 'demo-user-123';
       const customerName = user?.displayName || 'Ama Owusu (Demo)';
 
+      // 3. Smart Collector Matching (Real Production Flow)
+      // In a real app, we would query the 'collectors' collection for available drivers
+      const collectorsSnap = await getDocs(query(collection(db, 'collectors'), where('isOnline', '==', true)));
+      const availableList = collectorsSnap.docs.map(doc => ({
+        collectorId: doc.id,
+        ...doc.data()
+      })) as any[];
+
+      // Fallback to dummy list if Firestore is empty for demo
+      const collectorsToMatch = availableList.length > 0 ? availableList : DUMMY_COLLECTORS;
+
+      const matchingResult = await smartCollectorMatching({
+        userLocation: resolvedLoc.resolvedCoordinates,
+        wasteDetails: {
+          wasteType: wasteData.wasteCategories[0],
+          estimatedVolume: wasteData.estimatedVolumeM3,
+          estimatedWeight: wasteData.estimatedWeightKg,
+        },
+        availableCollectors: collectorsToMatch as any
+      });
+
+      const matched = collectorsToMatch.find(c => c.collectorId === matchingResult.matchedCollectorId) || collectorsToMatch[0];
+
       const jobData = {
         customerId,
         customerName,
@@ -136,22 +189,25 @@ export default function PickupRequestForm() {
           landmark: address
         },
         wasteDetails: {
-          type: wasteData.wasteType,
-          volume: wasteData.estimatedVolume_m3,
-          weight: wasteData.estimatedWeight_kg
+          type: wasteData.wasteCategories[0],
+          volume: wasteData.estimatedVolumeM3,
+          weight: wasteData.estimatedWeightKg
         },
-        price: priceData.pickupFee,
+        price: priceData.pickupPrice,
         payment: {
           method: paymentMethod,
           detail: paymentDetail,
           status: 'PENDING_VERIFICATION'
         },
-        createdAt: serverTimestamp()
+        createdAt: serverTimestamp(),
+        collectorId: matched.collectorId,
+        collectorName: matched.name,
+        collectorPhone: matched.phone
       };
 
       await addDoc(collection(db, 'jobs'), jobData);
       
-      setMatchedCollector(DUMMY_COLLECTORS[0]);
+      setMatchedCollector(matched);
       setStep(5);
     } catch (error) {
       console.error("Order error:", error);
@@ -267,7 +323,7 @@ export default function PickupRequestForm() {
                          <div className="h-1.5 w-12 bg-black/10 rounded-full overflow-hidden">
                             <div className="h-full bg-primary animate-progress-indefinite" />
                          </div>
-                         <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest">Detecting Sachet Plastic...</p>
+                         <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest">Detecting Waste Content...</p>
                       </div>
                     </div>
                  </div>
@@ -319,19 +375,19 @@ export default function PickupRequestForm() {
                 <div className="flex items-end justify-between relative z-10">
                    <div>
                       <p className="text-[10px] uppercase font-black tracking-[0.4em] text-white/40 mb-3">Calculated Mission Fee</p>
-                      <p className="text-8xl font-black leading-[0.8] tracking-tighter">GHS {priceData?.pickupFee.toFixed(2)}</p>
+                      <p className="text-8xl font-black leading-[0.8] tracking-tighter">GHS {priceData?.pickupPrice.toFixed(2)}</p>
                       <div className="flex flex-wrap gap-2 mt-8">
                          <Badge variant="outline" className="border-white/20 text-white font-black uppercase tracking-widest text-[9px] px-3">
-                           {wasteData.wasteType.replace(/_/g, ' ')}
+                           {wasteData.wasteCategories[0].replace(/_/g, ' ')}
                          </Badge>
                          <Badge variant="outline" className="border-white/20 text-white font-black uppercase tracking-widest text-[9px] px-3">
-                           ~{wasteData.estimatedWeight_kg}kg Capacity
+                           ~{wasteData.estimatedWeightKg}kg Capacity
                          </Badge>
                       </div>
                    </div>
                    <div className="text-right">
                       <p className="text-[10px] uppercase font-black text-white/40 tracking-[0.4em] mb-2">Truck ETA</p>
-                      <p className="font-black text-4xl text-primary">{DEMO_ROUTING.etaPickup}</p>
+                      <p className="font-black text-4xl text-primary">4 mins</p>
                    </div>
                 </div>
              </div>
@@ -428,7 +484,7 @@ export default function PickupRequestForm() {
               onClick={handleConfirmOrder} 
               disabled={loading || !paymentDetail}
             >
-              {loading ? <Loader2 className="h-10 w-10 animate-spin" /> : <><CheckCircle2 className="h-8 w-8" /> AUTHORIZE GHS {priceData?.pickupFee}</>}
+              {loading ? <Loader2 className="h-10 w-10 animate-spin" /> : <><CheckCircle2 className="h-8 w-8" /> AUTHORIZE GHS {priceData?.pickupPrice || '0.00'}</>}
             </Button>
 
             <Button variant="ghost" className="w-full text-black/40 font-black uppercase tracking-[0.3em] text-[10px]" onClick={() => setStep(3)}>
@@ -454,7 +510,7 @@ export default function PickupRequestForm() {
             <Card className="uber-shadow border-none bg-muted/20 p-10 rounded-[3.5rem] border-2 border-black/5">
                <div className="flex items-center gap-8">
                   <div className="h-24 w-24 rounded-3xl overflow-hidden border-4 border-white shadow-2xl relative">
-                    <Image src={matchedCollector.image} width={200} height={200} alt="Driver" className="object-cover" />
+                    <Image src={matchedCollector.image || `https://picsum.photos/seed/${matchedCollector.collectorId}/200/200`} width={200} height={200} alt="Driver" className="object-cover" />
                   </div>
                   <div className="flex-1 text-left">
                      <p className="font-black text-3xl uppercase tracking-tighter leading-none">{matchedCollector.name}</p>
@@ -467,7 +523,7 @@ export default function PickupRequestForm() {
                      </div>
                   </div>
                   <div className="text-right flex flex-col gap-3">
-                    <div className="bg-black text-white font-black px-6 py-3 rounded-2xl text-xl shadow-lg">{DEMO_ROUTING.etaPickup}</div>
+                    <div className="bg-black text-white font-black px-6 py-3 rounded-2xl text-xl shadow-lg">4 mins</div>
                     <a href={`tel:${matchedCollector.phone}`}>
                       <Button size="sm" variant="outline" className="rounded-2xl border-2 border-primary text-primary hover:bg-primary/10 gap-3 h-14 w-full font-black text-xs uppercase tracking-widest">
                         <Phone className="h-4 w-4" /> CONTACT
