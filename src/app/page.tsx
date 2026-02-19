@@ -144,11 +144,11 @@ export default function Home() {
         <div className="container mx-auto px-4 grid gap-16 md:grid-cols-4">
           <div className="space-y-6">
             <Link href="/" className="flex items-center gap-2">
-              {logo ? (
+              {logo && (
                 <div className="relative h-16 w-16 overflow-hidden rounded-[7%]">
                   <Image src={logo.imageUrl} alt="Logo" fill className="object-contain" />
                 </div>
-              ) : null}
+              )}
             </Link>
             <p className="text-white/40 font-medium">Sustainable infrastructure for a cleaner, smarter Ghana.</p>
           </div>
