@@ -242,13 +242,13 @@ export default function PickupRequestForm() {
         {step === 1 && (
           <div className="space-y-10 animate-in slide-in-from-right-8 duration-500">
             <div className="space-y-4">
-              <h2 className="font-headline text-5xl font-black tracking-tighter uppercase leading-[0.9]">Pickup Landmark</h2>
-              <p className="text-muted-foreground font-medium text-lg">WasteGo AI resolves local landmarks instantly.</p>
+              <h2 className="font-headline text-5xl font-black tracking-tighter uppercase leading-[0.9] text-secondary">Pickup Landmark</h2>
+              <p className="text-secondary font-medium text-lg">WasteGo AI resolves local landmarks instantly.</p>
             </div>
             
             <div className="space-y-8">
               <div className="space-y-4">
-                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-black/40">Location Mode</Label>
+                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary">Location Mode</Label>
                 <div className="grid grid-cols-3 gap-6">
                    {[
                      { id: 'LANDMARK', label: 'Local Landmark', icon: MapPin, color: 'text-primary' },
@@ -263,17 +263,17 @@ export default function PickupRequestForm() {
                         <div className={`h-16 w-16 rounded-[1.5rem] flex items-center justify-center shadow-lg ${locationType === mode.id ? 'bg-white/20' : 'bg-white'}`}>
                            <mode.icon className={`h-8 w-8 ${locationType === mode.id ? 'text-white' : mode.color}`} />
                         </div>
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em]">{mode.label}</span>
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary">{mode.label}</span>
                      </button>
                    ))}
                 </div>
               </div>
               
               <div className="space-y-4">
-                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-black/40">Landmark Detail</Label>
+                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary">Landmark Detail</Label>
                 <div className="relative group">
                    <Input 
-                    className="h-24 text-2xl px-10 pr-24 rounded-[2rem] border-4 border-black/5 bg-muted/30 focus:bg-white focus:border-black transition-all font-black placeholder:font-medium shadow-inner"
+                    className="h-24 text-2xl px-10 pr-24 rounded-[2rem] border-4 border-black/5 bg-muted/30 focus:bg-white focus:border-black transition-all font-black placeholder:font-medium shadow-inner text-secondary"
                     placeholder={locationType === 'LANDMARK' ? 'e.g. Opposite the Blue Kiosk' : 'e.g. GA-123-4567'}
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
@@ -285,9 +285,9 @@ export default function PickupRequestForm() {
                     {isRecording ? <Activity className="h-8 w-8" /> : <Mic className="h-8 w-8" />}
                   </button>
                 </div>
-                <div className="flex items-center gap-4 p-6 bg-primary/5 rounded-[1.5rem] border-2 border-primary/10">
-                   <Sparkles className="h-6 w-6 text-primary shrink-0" />
-                   <p className="text-[10px] font-bold text-primary uppercase tracking-widest leading-relaxed">
+                <div className="flex items-center gap-4 p-6 bg-secondary/5 rounded-[1.5rem] border-2 border-secondary/10">
+                   <Sparkles className="h-6 w-6 text-secondary shrink-0" />
+                   <p className="text-[10px] font-bold text-secondary uppercase tracking-widest leading-relaxed">
                      WasteGo's landmark resolution engine is active. Voice transcriptions will be automatically geo-coded for drivers.
                    </p>
                 </div>
@@ -300,7 +300,7 @@ export default function PickupRequestForm() {
               disabled={loading || !address}
             >
               {loading ? <Loader2 className="mr-3 h-8 w-8 animate-spin" /> : <Compass className="mr-3 h-8 w-8" />}
-              SECURE LOCATION <ArrowRight className="ml-2 h-8 w-8 group-hover:translate-x-3 transition-transform" />
+              <span className="text-secondary">SECURE LOCATION</span> <ArrowRight className="ml-2 h-8 w-8 group-hover:translate-x-3 transition-transform text-secondary" />
             </Button>
           </div>
         )}
