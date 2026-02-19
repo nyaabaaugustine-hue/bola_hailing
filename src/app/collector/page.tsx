@@ -1,20 +1,23 @@
-
-'use client';
+"use client";
 
 import Navigation from '@/components/Navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
-import { Truck, Navigation2, MapPin, Camera, DollarSign, ListTodo, Fuel, Phone, MessageSquare, Power, User } from 'lucide-react';
+import { Truck, Navigation2, MapPin, Camera, Fuel, Phone, MessageSquare, Power, User } from 'lucide-react';
 import { useState } from 'react';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { DUMMY_LANDFILLS, DUMMY_COLLECTORS } from '@/lib/dummy-data';
 
 export default function CollectorPage() {
   const [isOnline, setIsOnline] = useState(true);
   const driverImage = PlaceHolderImages.find(img => img.id === 'driver-profile');
   const customerImage = PlaceHolderImages.find(img => img.id === 'waste-collection-action');
+  
+  // Use the first collector as the active user for testing
+  const activeUser = DUMMY_COLLECTORS[0];
 
   return (
     <div className="min-h-screen bg-background font-body">
@@ -25,14 +28,10 @@ export default function CollectorPage() {
         <div className="container mx-auto px-4 flex items-center justify-between text-white">
           <div className="flex items-center gap-3">
              <div className={`h-10 w-10 rounded-full overflow-hidden flex items-center justify-center ${isOnline ? 'bg-white/20' : 'bg-black/20 text-muted-foreground'}`}>
-                {driverImage ? (
-                  <Image src={driverImage.imageUrl} width={40} height={40} alt="Profile" className="object-cover" />
-                ) : (
-                  <User className="h-5 w-5" />
-                )}
+                <Image src={activeUser.image} width={40} height={40} alt="Profile" className="object-cover" />
              </div>
              <div>
-                <p className="font-bold text-lg">Good morning, Kojo</p>
+                <p className="font-bold text-lg">Good morning, {activeUser.name.split(' ')[0]}</p>
                 <p className="text-xs opacity-70">{isOnline ? 'You are online and active' : 'You are offline'}</p>
              </div>
           </div>
@@ -179,15 +178,11 @@ export default function CollectorPage() {
 
                {/* Landfill availability as a secondary concern */}
                <div className="grid md:grid-cols-3 gap-4">
-                  {[
-                    { name: 'Kpone Landfill', time: '15m', status: 'Moderate' },
-                    { name: 'Abelekuma', time: '5m', status: 'Low' },
-                    { name: 'Nsawam site', time: '45m', status: 'High' }
-                  ].map((l, i) => (
+                  {DUMMY_LANDFILLS.map((l, i) => (
                     <Card key={i} className="uber-shadow border-none p-4 flex flex-col items-center text-center">
                        <p className="text-[10px] font-black uppercase text-muted-foreground">{l.name}</p>
                        <p className="text-xl font-black mt-1">{l.time}</p>
-                       <Badge className={`mt-2 ${l.status === 'Low' ? 'bg-secondary' : l.status === 'High' ? 'bg-destructive' : 'bg-orange-500'}`}>
+                       <Badge className={`mt-2 ${l.status === 'Low' ? 'bg-secondary' : l.status === 'High' ? 'bg-destructive' : 'bg-orange-500'}`} variant="default">
                           {l.status} Traffic
                        </Badge>
                     </Card>

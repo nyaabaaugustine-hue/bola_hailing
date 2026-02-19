@@ -1,5 +1,4 @@
-
-'use client';
+"use client";
 
 import Navigation from '@/components/Navigation';
 import PickupRequestForm from '@/components/PickupRequestForm';
@@ -10,11 +9,12 @@ import { Clock, MapPin, Truck, CheckCircle2, Navigation2, MoreHorizontal, Phone,
 import Image from 'next/image';
 import { useState } from 'react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { RECENT_PICKUPS, DUMMY_COLLECTORS } from '@/lib/dummy-data';
 
 export default function Dashboard() {
   const [activeJob, setActiveJob] = useState(true);
   const mapImage = PlaceHolderImages.find(img => img.id === 'dashboard-map');
-  const driverImage = PlaceHolderImages.find(img => img.id === 'driver-profile');
+  const activeCollector = DUMMY_COLLECTORS[0];
 
   return (
     <div className="min-h-screen bg-background font-body">
@@ -28,7 +28,7 @@ export default function Dashboard() {
               <div className="space-y-6 animate-in fade-in duration-700">
                 <div className="flex items-center justify-between">
                   <h1 className="font-headline text-3xl font-bold">Your Pickup is Active</h1>
-                  <Badge className="bg-primary px-3 py-1">Kojo is arriving</Badge>
+                  <Badge className="bg-primary px-3 py-1 text-white border-none">{activeCollector.name.split(' ')[0]} is arriving</Badge>
                 </div>
                 
                 {/* Simulated Uber Map */}
@@ -55,21 +55,18 @@ export default function Dashboard() {
                       <CardContent className="p-4 flex items-center justify-between">
                         <div className="flex items-center gap-4">
                           <div className="h-12 w-12 rounded-full overflow-hidden border-2 border-primary">
-                            {driverImage && (
-                              <Image 
-                                src={driverImage.imageUrl} 
-                                width={100} 
-                                height={100} 
-                                alt="Driver" 
-                                data-ai-hint={driverImage.imageHint}
-                              />
-                            )}
+                            <Image 
+                              src={activeCollector.image} 
+                              width={100} 
+                              height={100} 
+                              alt="Driver" 
+                            />
                           </div>
                           <div>
-                            <p className="font-bold text-lg">Kojo Mensah</p>
+                            <p className="font-bold text-lg">{activeCollector.name}</p>
                             <div className="flex items-center gap-1 text-sm text-muted-foreground">
                               <Star className="h-3 w-3 fill-primary text-primary" />
-                              <span>4.9 • White Box Truck</span>
+                              <span>{activeCollector.rating} • {activeCollector.vehicle.split('(')[0]}</span>
                             </div>
                           </div>
                         </div>
@@ -77,7 +74,7 @@ export default function Dashboard() {
                            <Button size="icon" variant="outline" className="rounded-full h-12 w-12 border-primary text-primary">
                              <Phone className="h-5 w-5" />
                            </Button>
-                           <Button size="icon" className="rounded-full h-12 w-12 bg-primary">
+                           <Button size="icon" className="rounded-full h-12 w-12 bg-primary text-white">
                              <MoreHorizontal className="h-5 w-5" />
                            </Button>
                         </div>
@@ -125,7 +122,7 @@ export default function Dashboard() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <p className="text-[10px] uppercase font-bold opacity-70">Total Pickups</p>
-                    <p className="text-3xl font-black">42</p>
+                    <p className="text-3xl font-black">{RECENT_PICKUPS.length}</p>
                   </div>
                   <div className="space-y-1">
                     <p className="text-[10px] uppercase font-bold opacity-70">Weight Diversion</p>
@@ -145,10 +142,7 @@ export default function Dashboard() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {[
-                  { type: 'Organic Waste', date: 'Oct 12, 2025', price: 'GHS 15', loc: 'Madina' },
-                  { type: 'Plastics (Sachet)', date: 'Oct 08, 2025', price: 'GHS 8', loc: 'Legon' }
-                ].map((job, i) => (
+                {RECENT_PICKUPS.map((job, i) => (
                   <div key={i} className="flex items-center justify-between p-3 rounded-xl hover:bg-muted transition-colors cursor-pointer group">
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
@@ -161,7 +155,7 @@ export default function Dashboard() {
                     </div>
                     <div className="text-right">
                       <p className="font-bold text-sm">{job.price}</p>
-                      <CheckCircle2 className="h-4 w-4 text-secondary ml-auto" />
+                      <CheckCircle2 className={`h-4 w-4 ml-auto ${job.status === 'Completed' ? 'text-secondary' : 'text-primary'}`} />
                     </div>
                   </div>
                 ))}

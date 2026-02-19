@@ -1,5 +1,4 @@
-
-'use client';
+"use client";
 
 import Navigation from '@/components/Navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -9,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { 
   BarChart3, 
   Map as MapIcon, 
-  Users, 
   Truck, 
   Leaf, 
   AlertTriangle,
@@ -23,6 +21,7 @@ import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { DUMMY_COLLECTORS } from '@/lib/dummy-data';
 
 export default function AdminPage() {
   const mapImage = PlaceHolderImages.find(img => img.id === 'admin-fleet-map');
@@ -56,7 +55,7 @@ export default function AdminPage() {
           {/* Core Network Stats */}
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { label: 'Active Drivers', val: '142', icon: Truck, color: 'text-primary' },
+              { label: 'Active Drivers', val: DUMMY_COLLECTORS.length.toString(), icon: Truck, color: 'text-primary' },
               { label: 'Live Bookings', val: '28', icon: Activity, color: 'text-secondary' },
               { label: 'Total Weight', val: '14.2 Tons', icon: Leaf, color: 'text-blue-500' },
               { label: 'Network Revenue', val: 'GHS 12k', icon: BarChart3, color: 'text-orange-600' }
@@ -84,7 +83,7 @@ export default function AdminPage() {
                       <CardTitle className="font-headline text-xl">Demand Hotspots</CardTitle>
                       <CardDescription>Visualizing pickup density in Accra</CardDescription>
                    </div>
-                   <Badge className="bg-secondary/10 text-secondary border-none">LIVE MAP</Badge>
+                   <Badge className="bg-secondary/10 text-secondary border-none" variant="outline">LIVE MAP</Badge>
                 </div>
               </CardHeader>
               <CardContent>
@@ -164,31 +163,30 @@ export default function AdminPage() {
                 <TableHeader>
                   <TableRow className="border-b-2">
                     <TableHead className="font-bold">Collector</TableHead>
-                    <TableHead className="font-bold">Zone</TableHead>
-                    <TableHead className="font-bold">Load</TableHead>
                     <TableHead className="font-bold">Status</TableHead>
+                    <TableHead className="font-bold">Capacity</TableHead>
                     <TableHead className="text-right font-bold">Action</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {[
-                    { name: 'Kojo Mensah', zone: 'East Legon', load: '65%', status: 'Active' },
-                    { name: 'Amara Okafor', zone: 'Madina', load: '12%', status: 'En Route' },
-                    { name: 'David Tetteh', zone: 'Osu', load: '98%', status: 'Full' }
-                  ].map((row, i) => (
+                  {DUMMY_COLLECTORS.map((collector, i) => (
                     <TableRow key={i} className="hover:bg-muted/30">
-                      <TableCell className="font-bold">{row.name}</TableCell>
-                      <TableCell>{row.zone}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Progress value={parseInt(row.load)} className="h-2 w-16" />
-                          <span className="text-xs font-bold">{row.load}</span>
+                      <TableCell className="font-bold flex items-center gap-3">
+                        <div className="h-8 w-8 rounded-full overflow-hidden border">
+                          <Image src={collector.image} width={32} height={32} alt={collector.name} />
                         </div>
+                        {collector.name}
                       </TableCell>
                       <TableCell>
-                        <Badge variant={row.status === 'Full' ? 'destructive' : 'secondary'} className="rounded-md">
-                          {row.status}
+                        <Badge variant={collector.isAvailable ? 'secondary' : 'destructive'} className="rounded-md">
+                          {collector.isAvailable ? 'Online' : 'Offline'}
                         </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Progress value={Math.floor(Math.random() * 80) + 10} className="h-2 w-16" />
+                          <span className="text-xs font-bold">{collector.truckCapacityKg}kg</span>
+                        </div>
                       </TableCell>
                       <TableCell className="text-right">
                         <Button variant="ghost" size="sm" className="h-8 w-8 p-0">

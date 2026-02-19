@@ -6,13 +6,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Camera, MapPin, Loader2, Sparkles, CreditCard, Truck, Smartphone, Star, Trash2, ArrowRight, Info, CheckCircle2 } from 'lucide-react';
+import { Camera, MapPin, Loader2, Sparkles, CreditCard, Truck, Smartphone, Star, Trash2, ArrowRight, Info } from 'lucide-react';
 import { resolveGhanaAddress } from '@/ai/flows/ghana-address-voice-resolution';
 import { wasteImageClassification } from '@/ai/flows/waste-image-classification-flow';
 import { dynamicPickupPricing } from '@/ai/flows/dynamic-pickup-pricing-flow';
 import { smartCollectorMatching } from '@/ai/flows/smart-collector-matching';
 import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
+import { DUMMY_COLLECTORS } from '@/lib/dummy-data';
 
 export default function PickupRequestForm() {
   const { toast } = useToast();
@@ -23,6 +24,7 @@ export default function PickupRequestForm() {
   const [resolvedLoc, setResolvedLoc] = useState<any>(null);
   const [wasteData, setWasteData] = useState<any>(null);
   const [priceData, setPriceData] = useState<any>(null);
+  const [matchedCollector, setMatchedCollector] = useState<any>(null);
 
   const handleAddressResolve = async () => {
     if (!address) {
@@ -83,27 +85,18 @@ export default function PickupRequestForm() {
   const handleConfirmOrder = async () => {
     setLoading(true);
     try {
-      await smartCollectorMatching({
+      const result = await smartCollectorMatching({
         userLocation: resolvedLoc.resolvedCoordinates,
         wasteDetails: {
           wasteType: wasteData.wasteCategories[0],
           estimatedVolume: wasteData.estimatedVolumeM3,
           estimatedWeight: wasteData.estimatedWeightKg,
         },
-        availableCollectors: [
-          {
-            collectorId: 'C1',
-            currentLocation: { lat: 5.61, lng: -0.11 },
-            truckCapacityKg: 1000,
-            truckCapacityM3: 15,
-            acceptedWasteTypes: ['MIXED_DOMESTIC', 'SACHET_PLASTIC'],
-            reliabilityScore: 98,
-            historicalAcceptanceRate: 99,
-            routeEfficiencyScore: 92,
-            isAvailable: true
-          }
-        ]
+        availableCollectors: DUMMY_COLLECTORS.filter(c => c.isAvailable)
       });
+      
+      const collector = DUMMY_COLLECTORS.find(c => c.collectorId === result.matchedCollectorId);
+      setMatchedCollector(collector || DUMMY_COLLECTORS[0]);
       setStep(4);
     } catch (e) {
       toast({ variant: 'destructive', title: "No Collectors", description: "All trucks are currently busy in your zone." });
@@ -223,7 +216,7 @@ export default function PickupRequestForm() {
                       <Sparkles className="h-5 w-5 text-primary" />
                       <span className="font-black uppercase tracking-[0.2em] text-[10px] text-white/60">Dynamic Pricing Engine</span>
                    </div>
-                   <Badge className="bg-white/10 text-white border-none font-bold uppercase tracking-widest text-[9px] px-3">Live Quote</Badge>
+                   <Badge className="bg-white/10 text-white border-none font-bold uppercase tracking-widest text-[9px] px-3" variant="outline">Live Quote</Badge>
                 </div>
                 <div className="flex items-end justify-between relative z-10">
                    <div>
@@ -270,7 +263,7 @@ export default function PickupRequestForm() {
           </div>
         )}
 
-        {step === 4 && (
+        {step === 4 && matchedCollector && (
           <div className="text-center py-10 animate-in zoom-in-95 duration-500 space-y-12">
             <div className="relative mx-auto h-48 w-48">
                <div className="absolute inset-0 bg-secondary/10 rounded-full animate-ping" />
@@ -280,26 +273,26 @@ export default function PickupRequestForm() {
             </div>
             <div className="space-y-4">
               <h2 className="font-headline text-5xl font-black tracking-tighter uppercase">Truck Assigned</h2>
-              <p className="text-muted-foreground font-medium text-lg max-w-xs mx-auto">Kojo Mensah is heading to your location now.</p>
+              <p className="text-muted-foreground font-medium text-lg max-w-xs mx-auto">{matchedCollector.name} is heading to your location now.</p>
             </div>
             
             <Card className="uber-shadow border-none bg-muted/30 p-8 rounded-[2rem]">
                <div className="flex items-center gap-6">
                   <div className="h-20 w-20 rounded-2xl overflow-hidden border-2 border-black shadow-xl">
-                    <Image src="https://picsum.photos/seed/driver1/200/200" width={200} height={200} alt="Driver" />
+                    <Image src={matchedCollector.image} width={200} height={200} alt="Driver" />
                   </div>
                   <div className="flex-1 text-left">
-                     <p className="font-black text-2xl uppercase tracking-tighter">Kojo Mensah</p>
+                     <p className="font-black text-2xl uppercase tracking-tighter">{matchedCollector.name}</p>
                      <div className="flex items-center gap-3 mt-1">
                         <div className="flex items-center gap-1 text-[10px] font-black text-primary">
                           <Star className="h-4 w-4 fill-primary text-primary" />
-                          <span>4.9</span>
+                          <span>{matchedCollector.rating}</span>
                         </div>
                         <span className="text-black/40 text-[10px] font-black uppercase tracking-widest">• Verified Driver</span>
                      </div>
                   </div>
                   <div className="text-right">
-                    <Badge className="bg-black text-white font-black px-4 py-2 rounded-xl text-sm border-none">8 MINS</Badge>
+                    <div className="bg-black text-white font-black px-4 py-2 rounded-xl text-sm">8 MINS</div>
                   </div>
                </div>
             </Card>
@@ -312,4 +305,8 @@ export default function PickupRequestForm() {
       </CardContent>
     </Card>
   );
+}
+
+function Badge({ className, variant, ...props }: any) {
+  return <div className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${className}`} {...props} />
 }
