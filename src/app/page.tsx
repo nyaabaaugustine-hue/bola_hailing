@@ -145,8 +145,8 @@ export default function Home() {
           <div className="space-y-6">
             <Link href="/" className="flex items-center gap-2">
               {logo && (
-                <div className="relative h-16 w-16 overflow-hidden rounded-[7%]">
-                  <Image src={logo.imageUrl} alt="Logo" fill className="object-contain" />
+                <div className="relative h-20 w-20 overflow-hidden rounded-[7%]">
+                  <Image src={logo.imageUrl} alt="WasteGo" fill className="object-contain" />
                 </div>
               )}
             </Link>
@@ -180,7 +180,7 @@ export default function Home() {
           </div>
         </div>
         <div className="container mx-auto px-4 mt-24 pt-8 border-t border-white/10 text-center text-[10px] font-black uppercase tracking-widest text-white/20">
-          © 2026 DEMO. Made in Accra.
+          © 2026 WasteGo. Made in Accra.
         </div>
       </footer>
     </div>
