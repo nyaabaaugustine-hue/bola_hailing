@@ -1,5 +1,7 @@
+
 /**
  * @fileOverview Local dummy database for testing DEMO with high-fidelity demo data.
+ * NOTE: For production real-time tracking, these objects would be moved to Firestore.
  */
 
 export const BOOKING_STATUS = {
@@ -39,13 +41,14 @@ export const DEMO_COLLECTOR = {
     "ORGANIC_MARKET",
     "SACHET_PLASTIC"
   ],
+  // Production Note: These coordinates would be updated via watchPosition() in real-time
   currentLocation: {
     lat: 5.67691,
     lng: -0.16240
   },
   availability: "ONLINE",
   rating: 4.8,
-  walletBalance: 0,
+  walletBalance: 420.50,
   reliabilityScore: 4.8,
   historicalAcceptanceRate: 99,
   image: 'https://picsum.photos/seed/kwame/200/200',
@@ -72,16 +75,6 @@ export const DUMMY_ORDERS = [
     status: 'APPROVED',
     price: 'GHS 15',
     time: '15 mins ago'
-  },
-  {
-    id: 'ORD-103',
-    customer: 'Efua Mensah',
-    phone: '0200998877',
-    location: 'Adenta Barrier',
-    wasteType: 'Organic Waste',
-    status: 'COMPLETED',
-    price: 'GHS 40',
-    time: '1 hour ago'
   }
 ];
 
@@ -111,7 +104,7 @@ export const DEMO_ROUTING = {
     [5.67830, -0.16350],
     [5.67955, -0.16421]
   ],
-  etaPickup: "7 mins"
+  etaPickup: "4 mins"
 };
 
 export const RECENT_PICKUPS = [
@@ -136,22 +129,6 @@ export const DUMMY_COLLECTORS = [
     rating: 4.8,
     phone: '0559876543',
     image: 'https://picsum.photos/seed/kwame/200/200'
-  },
-  {
-    collectorId: 'COL002',
-    name: 'Amara Okafor',
-    vehicle: 'Open Bed Truck (GW-102-21)',
-    currentLocation: { lat: 5.5600, lng: -0.2100 },
-    truckCapacityKg: 2500,
-    truckCapacityM3: 3.0,
-    acceptedWasteTypes: ['BUILDING_RUBBLE', 'METAL_SCRAP'],
-    reliabilityScore: 4.5,
-    historicalAcceptanceRate: 92,
-    routeEfficiencyScore: 88,
-    isAvailable: true,
-    rating: 4.7,
-    phone: '0244009988',
-    image: 'https://picsum.photos/seed/amara/200/200'
   }
 ];
 
