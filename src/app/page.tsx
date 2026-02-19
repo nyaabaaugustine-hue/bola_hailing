@@ -1,3 +1,4 @@
+
 import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -7,12 +8,12 @@ import {
   Truck,
   Zap,
   ShieldCheck,
-  Globe
+  Globe,
+  Info
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { Card } from '@/components/ui/card';
 
 export default function Home() {
   const heroImage = PlaceHolderImages.find(img => img.id === 'hero-image');
@@ -47,7 +48,7 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row gap-5">
                 <Link href="/login">
                   <Button size="lg" className="h-16 px-10 text-lg font-bold bg-black text-white hover:bg-black/90 shadow-2xl btn-hover-effect rounded-2xl">
-                    Get Started Now <ArrowRight className="ml-3 h-6 w-6" />
+                    Book a Pickup Now <ArrowRight className="ml-3 h-6 w-6" />
                   </Button>
                 </Link>
                 <Link href="/collector">
@@ -98,6 +99,10 @@ export default function Home() {
       {/* Trust & Features */}
       <section className="bg-black text-white py-32">
         <div className="container mx-auto px-4">
+          <div className="mb-16 space-y-4">
+            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter">Ghana's Most Reliable Waste Network.</h2>
+            <p className="text-xl text-white/60 max-w-2xl font-medium">Powering commercial fleets and household pickups with one unified platform.</p>
+          </div>
           <div className="grid md:grid-cols-3 gap-12">
             {[
               { icon: Zap, title: "Instant Dispatch", desc: "Matched with the nearest truck in under 60 seconds." },
@@ -116,6 +121,34 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Solutions Section */}
+      <section className="py-32 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="p-12 rounded-[2.5rem] bg-muted/50 border-2 border-black/5 space-y-8">
+              <div className="space-y-4">
+                <h3 className="text-3xl font-black uppercase tracking-tighter">For Households</h3>
+                <p className="text-xl font-bold text-primary">On-Demand Convenience</p>
+                <p className="text-muted-foreground font-medium">Schedule a pickup for your weekly refuse or one-off cleanup. Pay with MoMo or Card instantly.</p>
+              </div>
+              <Button variant="link" className="p-0 font-black uppercase text-xs tracking-widest flex items-center gap-2">
+                Learn more <ArrowRight className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="p-12 rounded-[2.5rem] bg-black text-white space-y-8">
+              <div className="space-y-4">
+                <h3 className="text-3xl font-black uppercase tracking-tighter">For Business</h3>
+                <p className="text-xl font-bold text-secondary">Fleet Management</p>
+                <p className="text-white/60 font-medium">Enterprise-grade tools for waste management companies to track, optimize, and scale their operations.</p>
+              </div>
+              <Button variant="link" className="p-0 font-black uppercase text-xs tracking-widest text-white flex items-center gap-2">
+                Partner with us <ArrowRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="bg-black text-white py-24 border-t border-white/10">
         <div className="container mx-auto px-4 grid gap-16 md:grid-cols-4">
@@ -129,8 +162,9 @@ export default function Home() {
             <h4 className="font-black uppercase tracking-widest text-[10px] text-white/40 mb-6">Service</h4>
             <ul className="space-y-4 font-bold">
               <li><Link href="/dashboard" className="hover:text-primary">Order Pickup</Link></li>
+              <li><Link href="#" className="hover:text-primary">Commercial Solutions</Link></li>
               <li><Link href="/collector" className="hover:text-primary">Drive With Us</Link></li>
-              <li><Link href="/login" className="hover:text-primary">Switch Portal</Link></li>
+              <li><Link href="#" className="hover:text-primary">USSD Guide</Link></li>
             </ul>
           </div>
           <div>
@@ -138,6 +172,7 @@ export default function Home() {
             <ul className="space-y-4 font-bold">
               <li><Link href="#" className="hover:text-primary">About Impact</Link></li>
               <li><Link href="#" className="hover:text-primary">Safety Standards</Link></li>
+              <li><Link href="#" className="hover:text-primary">Terms & Conditions</Link></li>
               <li><Link href="#" className="hover:text-primary">Privacy Policy</Link></li>
             </ul>
           </div>
