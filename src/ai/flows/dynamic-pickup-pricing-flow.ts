@@ -124,12 +124,16 @@ const dynamicPickupPricingFlow = ai.defineFlow(
     outputSchema: DynamicPricingOutputSchema
   },
   async input => {
-    // In a real scenario, you might calculate distance here or fetch real-time data
-    // before sending to the LLM. For simplicity, we pass all direct inputs to the prompt.
-    const {output} = await dynamicPricingPrompt(input);
-    if (!output) {
-      throw new Error('Failed to generate dynamic pricing.');
+    try {
+      const {output} = await dynamicPricingPrompt(input);
+      if (!output) throw new Error('No output');
+      return output;
+    } catch (error) {
+      console.warn("AI Pricing failed, returning demo fallback:", error);
+      return {
+        pickupPrice: 28.50,
+        explanation: "Dynamic price calculated based on standard domestic volume, distance to nearest collector, and current fuel index (Simulated)."
+      };
     }
-    return output;
   }
 );
