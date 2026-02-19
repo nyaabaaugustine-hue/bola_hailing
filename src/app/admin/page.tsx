@@ -15,16 +15,31 @@ import {
   TrendingUp,
   Activity,
   Search,
-  Filter
+  Filter,
+  CheckCircle2,
+  XCircle,
+  Phone
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { DUMMY_COLLECTORS } from '@/lib/dummy-data';
+import { DUMMY_COLLECTORS, DUMMY_ORDERS } from '@/lib/dummy-data';
+import { useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
 
 export default function AdminPage() {
+  const { toast } = useToast();
   const mapImage = PlaceHolderImages.find(img => img.id === 'admin-fleet-map');
+  const [orders, setOrders] = useState(DUMMY_ORDERS);
+
+  const handleStatusChange = (orderId: string, newStatus: string) => {
+    setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
+    toast({
+      title: `Order ${newStatus}`,
+      description: `Order ${orderId} has been ${newStatus.toLowerCase()}.`
+    });
+  };
 
   return (
     <div className="min-h-screen bg-background font-body">
@@ -35,28 +50,25 @@ export default function AdminPage() {
             <div className="space-y-1">
               <h1 className="font-headline text-4xl font-black tracking-tight uppercase">Fleet Command</h1>
               <p className="text-muted-foreground flex items-center gap-2 font-medium">
-                <Activity className="h-4 w-4 text-secondary" /> Monitoring live network operations in Accra & Kumasi.
+                <Activity className="h-4 w-4 text-secondary" /> Monitoring network operations.
               </p>
             </div>
             <div className="flex gap-3">
               <div className="relative hidden md:block">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input placeholder="Search collectors..." className="pl-10 w-64 rounded-xl border-2" />
+                <Input placeholder="Search orders..." className="pl-10 w-64 rounded-xl border-2" />
               </div>
               <Button variant="outline" className="rounded-xl border-2 font-bold gap-2">
                 <Filter className="h-4 w-4" /> Filters
               </Button>
-              <Button className="rounded-xl font-bold bg-black text-white hover:bg-black/90">
-                Network: 98.4%
-              </Button>
             </div>
           </div>
 
-          {/* Core Network Stats */}
+          {/* Network Stats */}
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {[
               { label: 'Active Drivers', val: DUMMY_COLLECTORS.length.toString(), icon: Truck, color: 'text-primary' },
-              { label: 'Live Bookings', val: '28', icon: Activity, color: 'text-secondary' },
+              { label: 'Live Bookings', val: orders.filter(o => o.status !== 'COMPLETED').length.toString(), icon: Activity, color: 'text-secondary' },
               { label: 'Total Weight', val: '14.2 Tons', icon: Leaf, color: 'text-blue-500' },
               { label: 'Network Revenue', val: 'GHS 12k', icon: BarChart3, color: 'text-orange-600' }
             ].map((stat, i) => (
@@ -74,120 +86,63 @@ export default function AdminPage() {
             ))}
           </div>
 
-          <div className="grid gap-8 lg:grid-cols-3">
-            <Card className="lg:col-span-2 uber-shadow border-none overflow-hidden">
-              <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                   <div>
-                      <CardTitle className="font-headline text-xl">Demand Hotspots</CardTitle>
-                      <CardDescription>Visualizing pickup density in Accra</CardDescription>
-                   </div>
-                   <Badge className="bg-secondary/10 text-secondary border-none" variant="outline">LIVE MAP</Badge>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="aspect-[21/9] w-full rounded-2xl bg-muted relative overflow-hidden group border-2 border-black/5">
-                   {mapImage && (
-                    <Image 
-                      src={mapImage.imageUrl} 
-                      alt={mapImage.description} 
-                      fill 
-                      className="object-cover opacity-40 grayscale"
-                      data-ai-hint={mapImage.imageHint}
-                    />
-                   )}
-                   
-                   <div className="absolute top-1/4 left-1/3 h-16 w-16 bg-red-500/20 rounded-full animate-pulse border border-red-500/40">
-                      <div className="absolute inset-0 m-auto h-4 w-4 bg-red-500 rounded-full shadow-lg shadow-red-500/50" />
-                   </div>
-                   <div className="absolute bottom-1/3 right-1/4 h-24 w-24 bg-orange-500/20 rounded-full animate-pulse delay-700 border border-orange-500/40">
-                      <div className="absolute inset-0 m-auto h-4 w-4 bg-orange-500 rounded-full shadow-lg shadow-orange-500/50" />
-                   </div>
-
-                   <div className="absolute bottom-4 left-4 bg-black/80 backdrop-blur-md p-3 rounded-xl text-white space-y-2 max-w-xs">
-                      <p className="text-[10px] font-black tracking-widest uppercase opacity-60">Peak Demand</p>
-                      <p className="text-sm font-bold">Kasoa Underbridge • 14 Requests</p>
-                      <Button size="sm" className="w-full bg-secondary h-8 text-[10px] font-black rounded-lg">RE-ROUTE TRUCKS</Button>
-                   </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="uber-shadow border-none">
-              <CardHeader>
-                <CardTitle className="font-headline text-xl flex items-center gap-2">
-                  <Leaf className="h-5 w-5 text-secondary" /> Eco-Performance
-                </CardTitle>
-                <CardDescription>Monthly diversion targets</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-8">
-                <div className="space-y-3">
-                  <div className="flex justify-between text-sm font-bold">
-                    <span>Recyclables</span>
-                    <span className="text-secondary">64%</span>
-                  </div>
-                  <Progress value={64} className="h-3 bg-muted" />
-                </div>
-                
-                <div className="space-y-3">
-                  <div className="flex justify-between text-sm font-bold">
-                    <span>Organics</span>
-                    <span className="text-orange-500">42%</span>
-                  </div>
-                  <Progress value={42} className="h-3 bg-muted" />
-                </div>
-
-                <div className="pt-4 p-6 rounded-2xl bg-black text-white relative overflow-hidden group">
-                  <div className="absolute -right-4 -bottom-4 opacity-20 group-hover:scale-110 transition-transform">
-                    <TrendingUp className="h-24 w-24" />
-                  </div>
-                  <p className="text-[10px] font-black uppercase tracking-widest opacity-60">Impact Leader</p>
-                  <p className="text-2xl font-black mt-1">2.4 Tons saved</p>
-                  <p className="text-xs text-white/50 mt-2">Equivalent to 42 trees in Aburi.</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          <Card className="uber-shadow border-none">
-            <CardHeader>
-              <CardTitle className="font-headline text-xl">Active Network Nodes</CardTitle>
-              <CardDescription>Real-time status of independent collectors</CardDescription>
+          {/* Manage Orders Section */}
+          <Card className="uber-shadow border-none overflow-hidden">
+            <CardHeader className="border-b bg-muted/10">
+              <CardTitle className="font-headline text-2xl uppercase tracking-tighter">Live Order Management</CardTitle>
+              <CardDescription>Track, approve, and manage service requests in real-time.</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-0">
               <Table>
                 <TableHeader>
-                  <TableRow className="border-b-2">
-                    <TableHead className="font-bold">Collector</TableHead>
-                    <TableHead className="font-bold">Status</TableHead>
-                    <TableHead className="font-bold">Capacity</TableHead>
-                    <TableHead className="text-right font-bold">Action</TableHead>
+                  <TableRow className="border-b-2 hover:bg-transparent">
+                    <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">Order Details</TableHead>
+                    <TableHead className="font-black uppercase text-[10px] tracking-widest">Customer</TableHead>
+                    <TableHead className="font-black uppercase text-[10px] tracking-widest">Status</TableHead>
+                    <TableHead className="font-black uppercase text-[10px] tracking-widest">Amount</TableHead>
+                    <TableHead className="text-right font-black uppercase text-[10px] tracking-widest px-6">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {DUMMY_COLLECTORS.map((collector, i) => (
-                    <TableRow key={i} className="hover:bg-muted/30">
-                      <TableCell className="font-bold flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-xl overflow-hidden border-2 border-black/5 shadow-sm">
-                          <Image src={collector.image} width={40} height={40} alt={collector.name} className="object-cover" />
-                        </div>
-                        {collector.name}
+                  {orders.map((order) => (
+                    <TableRow key={order.id} className="hover:bg-muted/20">
+                      <TableCell className="px-6">
+                        <p className="font-black text-sm">{order.id}</p>
+                        <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
+                          <MapIcon className="h-3 w-3" /> {order.location}
+                        </p>
                       </TableCell>
                       <TableCell>
-                        <Badge variant={collector.isAvailable ? 'secondary' : 'destructive'} className="rounded-md">
-                          {collector.isAvailable ? 'Online' : 'Offline'}
+                         <p className="font-bold">{order.customer}</p>
+                         <a href={`tel:${order.phone}`} className="text-xs text-primary font-bold flex items-center gap-1 mt-1 hover:underline">
+                           <Phone className="h-3 w-3" /> {order.phone}
+                         </a>
+                      </TableCell>
+                      <TableCell>
+                        <Badge 
+                          variant={order.status === 'COMPLETED' ? 'secondary' : order.status === 'CANCELLED' ? 'destructive' : 'outline'}
+                          className="rounded-lg uppercase font-black text-[9px] px-3 py-1"
+                        >
+                          {order.status}
                         </Badge>
                       </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Progress value={Math.floor(Math.random() * 80) + 10} className="h-2 w-16" />
-                          <span className="text-xs font-bold">{collector.truckCapacityKg}kg</span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl hover:bg-black hover:text-white transition-colors">
-                          <ArrowUpRight className="h-5 w-5" />
-                        </Button>
+                      <TableCell className="font-black text-secondary">{order.price}</TableCell>
+                      <TableCell className="text-right px-6 space-x-2">
+                        {order.status === 'REQUESTED' && (
+                          <>
+                            <Button size="sm" className="bg-secondary text-white rounded-xl h-10 px-4 font-black text-xs" onClick={() => handleStatusChange(order.id, 'APPROVED')}>
+                              <CheckCircle2 className="h-4 w-4 mr-2" /> APPROVE
+                            </Button>
+                            <Button size="sm" variant="ghost" className="text-destructive rounded-xl h-10 px-4 font-black text-xs hover:bg-destructive/10" onClick={() => handleStatusChange(order.id, 'CANCELLED')}>
+                              <XCircle className="h-4 w-4 mr-2" /> CANCEL
+                            </Button>
+                          </>
+                        )}
+                        {order.status !== 'REQUESTED' && (
+                          <Button variant="outline" size="sm" className="rounded-xl h-10 px-4 font-black text-xs border-2">
+                             VIEW LOGS
+                          </Button>
+                        )}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -196,40 +151,44 @@ export default function AdminPage() {
             </CardContent>
           </Card>
 
-          <Card className="uber-shadow border-none overflow-hidden">
-            <CardHeader className="bg-destructive/5 border-b border-destructive/10">
-              <div className="flex items-center gap-2 text-destructive">
-                <AlertTriangle className="h-5 w-5" />
-                <CardTitle className="font-headline text-lg uppercase tracking-tight">System Alerts</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent className="p-0">
-              <div className="divide-y">
-                {[
-                  { loc: 'Ashaiman Underbridge', issue: 'Illegal Dumping Cluster', severity: 'Critical', time: '2h ago' },
-                  { loc: 'Circle Station', issue: 'Collector Shortage', severity: 'Medium', time: '5h ago' }
-                ].map((alert, i) => (
-                  <div key={i} className="flex items-center justify-between p-6 hover:bg-muted/30 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <div className={`h-12 w-12 rounded-xl flex items-center justify-center ${alert.severity === 'Critical' ? 'bg-destructive/10 text-destructive' : 'bg-orange-500/10 text-orange-500'}`}>
-                        <MapIcon className="h-6 w-6" />
+          <div className="grid gap-8 lg:grid-cols-3">
+             <Card className="lg:col-span-2 uber-shadow border-none overflow-hidden">
+                <CardHeader>
+                  <CardTitle className="font-headline text-xl">Operational Heatmap</CardTitle>
+                </CardHeader>
+                <CardContent>
+                   <div className="aspect-[21/9] w-full rounded-2xl bg-muted relative overflow-hidden group border-2 border-black/5">
+                      {mapImage && (
+                        <Image 
+                          src={mapImage.imageUrl} 
+                          alt={mapImage.description} 
+                          fill 
+                          className="object-cover opacity-40 grayscale"
+                        />
+                      )}
+                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center space-y-2 opacity-60">
+                         <MapIcon className="h-12 w-12 mx-auto text-black/20" />
+                         <p className="font-black text-xs uppercase tracking-widest">Real-time GPS Tracking Layer</p>
                       </div>
-                      <div>
-                        <h4 className="font-black text-lg">{alert.loc}</h4>
-                        <p className="text-sm text-muted-foreground font-medium">{alert.issue} • {alert.time}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4">
-                       <Badge variant={alert.severity === 'Critical' ? 'destructive' : 'secondary'} className="uppercase font-black text-[9px] px-3">{alert.severity}</Badge>
-                       <Button variant="outline" size="sm" className="rounded-xl border-2 font-black gap-2 h-10 px-4">
-                         Dispatch Truck <ArrowUpRight className="h-4 w-4" />
-                       </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                   </div>
+                </CardContent>
+             </Card>
+             <Card className="uber-shadow border-none">
+                <CardHeader>
+                  <CardTitle className="font-headline text-xl">Quick Dispatch</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                   <div className="p-6 rounded-2xl bg-black text-white relative overflow-hidden group">
+                      <p className="text-[10px] font-black uppercase tracking-widest opacity-60">Fleet Efficiency</p>
+                      <p className="text-4xl font-black mt-1">92.4%</p>
+                      <Progress value={92} className="h-2 bg-white/20 mt-4" />
+                   </div>
+                   <Button className="w-full h-14 rounded-xl font-black border-2 border-black bg-white text-black hover:bg-black/5">
+                     RE-ROUTE IDLE TRUCKS
+                   </Button>
+                </CardContent>
+             </Card>
+          </div>
         </div>
       </main>
     </div>

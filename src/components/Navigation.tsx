@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Recycle, MapPin, Truck, LayoutDashboard, User, Menu, ShieldCheck, Briefcase, Info } from 'lucide-react';
+import { Recycle, MapPin, Truck, LayoutDashboard, User, Menu, ShieldCheck, Briefcase, Info, LogOut } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 export default function Navigation() {
@@ -16,7 +16,7 @@ export default function Navigation() {
           </span>
         </Link>
         
-        {/* Desktop Links - Uber Style Expansion */}
+        {/* Desktop Links */}
         <div className="hidden lg:flex items-center gap-8">
           <Link href="/dashboard" className="text-[10px] font-black uppercase tracking-[0.2em] text-black/60 hover:text-primary transition-colors flex items-center gap-2 group">
             <MapPin className="h-3 w-3 group-hover:scale-110 transition-transform" /> Order
@@ -24,11 +24,8 @@ export default function Navigation() {
           <Link href="/collector" className="text-[10px] font-black uppercase tracking-[0.2em] text-black/60 hover:text-primary transition-colors flex items-center gap-2 group">
             <Truck className="h-3 w-3 group-hover:scale-110 transition-transform" /> Drive
           </Link>
-          <Link href="#" className="text-[10px] font-black uppercase tracking-[0.2em] text-black/60 hover:text-primary transition-colors flex items-center gap-2 group">
-            <Briefcase className="h-3 w-3 group-hover:scale-110 transition-transform" /> Business
-          </Link>
-          <Link href="#" className="text-[10px] font-black uppercase tracking-[0.2em] text-black/60 hover:text-primary transition-colors flex items-center gap-2 group">
-            <ShieldCheck className="h-3 w-3 group-hover:scale-110 transition-transform" /> Safety
+          <Link href="/admin" className="text-[10px] font-black uppercase tracking-[0.2em] text-black/60 hover:text-primary transition-colors flex items-center gap-2 group">
+            <ShieldCheck className="h-3 w-3 group-hover:scale-110 transition-transform" /> Command
           </Link>
           <Link href="#" className="text-[10px] font-black uppercase tracking-[0.2em] text-black/60 hover:text-primary transition-colors flex items-center gap-2 group">
             <Info className="h-3 w-3 group-hover:scale-110 transition-transform" /> Impact
@@ -36,14 +33,11 @@ export default function Navigation() {
         </div>
 
         <div className="flex items-center gap-4">
-          <Link href="/admin" className="hidden md:flex">
-             <Button variant="ghost" size="sm" className="text-[10px] font-black uppercase tracking-widest text-black/40 hover:text-black">
-               Fleet Command
-             </Button>
+          <Link href="/login">
+            <Button variant="ghost" size="icon" className="rounded-full hover:bg-black/5 hidden sm:flex">
+              <LogOut className="h-5 w-5" />
+            </Button>
           </Link>
-          <Button variant="ghost" size="icon" className="rounded-full hover:bg-black/5 hidden sm:flex">
-            <User className="h-5 w-5" />
-          </Button>
           <Link href="/dashboard">
              <Button className="bg-black text-white hover:bg-black/90 font-bold px-8 h-12 rounded-full shadow-lg btn-hover-effect">
                Request Pickup
@@ -62,11 +56,9 @@ export default function Navigation() {
                 <div className="flex flex-col gap-8 pt-12">
                   <Link href="/dashboard" className="text-3xl font-black uppercase tracking-tighter hover:text-primary transition-colors">Book</Link>
                   <Link href="/collector" className="text-3xl font-black uppercase tracking-tighter hover:text-primary transition-colors">Drive</Link>
-                  <Link href="/admin" className="text-3xl font-black uppercase tracking-tighter hover:text-primary transition-colors">Fleet Command</Link>
+                  <Link href="/admin" className="text-3xl font-black uppercase tracking-tighter hover:text-primary transition-colors">Admin</Link>
                   <div className="h-px bg-black/10 w-full" />
-                  <Link href="#" className="text-xl font-bold uppercase tracking-widest text-black/40">Business</Link>
-                  <Link href="#" className="text-xl font-bold uppercase tracking-widest text-black/40">Safety</Link>
-                  <Link href="#" className="text-xl font-bold uppercase tracking-widest text-black/40">Impact</Link>
+                  <Link href="/login" className="text-xl font-bold uppercase tracking-widest text-black/40">Switch Role</Link>
                 </div>
               </SheetContent>
             </Sheet>

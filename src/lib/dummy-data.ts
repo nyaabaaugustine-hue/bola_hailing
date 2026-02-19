@@ -1,9 +1,10 @@
 /**
- * @fileOverview Local dummy database for testing BorlaHaze with high-fidelity demo data.
+ * @fileOverview Local dummy database for testing DEMO with high-fidelity demo data.
  */
 
 export const BOOKING_STATUS = {
   REQUESTED: 'REQUESTED',
+  APPROVED: 'APPROVED',
   MATCHED: 'MATCHED',
   COLLECTOR_EN_ROUTE: 'COLLECTOR_EN_ROUTE',
   ARRIVED: 'ARRIVED',
@@ -51,6 +52,39 @@ export const DEMO_COLLECTOR = {
   image: 'https://picsum.photos/seed/kwame/200/200',
   phone: "0559876543"
 };
+
+export const DUMMY_ORDERS = [
+  {
+    id: 'ORD-101',
+    customer: 'Ama Owusu',
+    phone: '0244001122',
+    location: 'Zongo Junction, Madina',
+    wasteType: 'Mixed Domestic',
+    status: 'REQUESTED',
+    price: 'GHS 28',
+    time: '2 mins ago'
+  },
+  {
+    id: 'ORD-102',
+    customer: 'John Doe',
+    phone: '0555123456',
+    location: 'Circle Station',
+    wasteType: 'Sachet Plastics',
+    status: 'APPROVED',
+    price: 'GHS 15',
+    time: '15 mins ago'
+  },
+  {
+    id: 'ORD-103',
+    customer: 'Efua Mensah',
+    phone: '0200998877',
+    location: 'Adenta Barrier',
+    wasteType: 'Organic Waste',
+    status: 'COMPLETED',
+    price: 'GHS 40',
+    time: '1 hour ago'
+  }
+];
 
 export const DEMO_AI_OUTPUT = {
   wasteType: "MIXED_DOMESTIC",

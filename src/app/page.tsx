@@ -45,9 +45,9 @@ export default function Home() {
               </div>
               
               <div className="flex flex-col sm:flex-row gap-5">
-                <Link href="/dashboard">
+                <Link href="/login">
                   <Button size="lg" className="h-16 px-10 text-lg font-bold bg-black text-white hover:bg-black/90 shadow-2xl btn-hover-effect rounded-2xl">
-                    Book a Pickup Now <ArrowRight className="ml-3 h-6 w-6" />
+                    Get Started Now <ArrowRight className="ml-3 h-6 w-6" />
                   </Button>
                 </Link>
                 <Link href="/collector">
@@ -82,7 +82,6 @@ export default function Home() {
                     fill 
                     className="object-cover"
                     priority
-                    data-ai-hint={heroImage.imageHint}
                   />
                 )}
               </div>
@@ -117,35 +116,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Impact Section */}
-      <section className="py-32 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center space-y-8 mb-20">
-            <h2 className="font-headline text-5xl md:text-7xl font-black tracking-tighter">Ghana's Most Reliable <span className="text-secondary italic">Waste Network</span>.</h2>
-            <p className="text-xl text-muted-foreground font-medium">Powering commercial fleets and household pickups with one unified platform.</p>
-          </div>
-          
-          <div className="grid lg:grid-cols-2 gap-10">
-            <Card className="rounded-[3rem] border-none uber-shadow bg-muted/30 p-12 space-y-6">
-              <Badge className="bg-primary text-white border-none uppercase tracking-widest px-4 py-1">For Households</Badge>
-              <h3 className="text-4xl font-black tracking-tighter">On-Demand Convenience</h3>
-              <p className="text-lg text-muted-foreground">Schedule a pickup for your weekly refuse or one-off cleanup. Pay with MoMo or Card instantly.</p>
-              <Button variant="link" className="p-0 text-lg font-black text-black group">
-                Learn more <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Card>
-            <Card className="rounded-[3rem] border-none uber-shadow bg-black text-white p-12 space-y-6">
-              <Badge className="bg-secondary text-white border-none uppercase tracking-widest px-4 py-1">For Business</Badge>
-              <h3 className="text-4xl font-black tracking-tighter">Fleet Management</h3>
-              <p className="text-lg text-white/50">Enterprise-grade tools for waste management companies to track, optimize, and scale their operations.</p>
-              <Button variant="link" className="p-0 text-lg font-black text-white group">
-                Partner with us <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Card>
-          </div>
-        </div>
-      </section>
-
       {/* Footer */}
       <footer className="bg-black text-white py-24 border-t border-white/10">
         <div className="container mx-auto px-4 grid gap-16 md:grid-cols-4">
@@ -159,9 +129,8 @@ export default function Home() {
             <h4 className="font-black uppercase tracking-widest text-[10px] text-white/40 mb-6">Service</h4>
             <ul className="space-y-4 font-bold">
               <li><Link href="/dashboard" className="hover:text-primary">Order Pickup</Link></li>
-              <li><Link href="#" className="hover:text-primary">Commercial Solutions</Link></li>
               <li><Link href="/collector" className="hover:text-primary">Drive With Us</Link></li>
-              <li><Link href="#" className="hover:text-primary">USSD Guide</Link></li>
+              <li><Link href="/login" className="hover:text-primary">Switch Portal</Link></li>
             </ul>
           </div>
           <div>
@@ -169,7 +138,6 @@ export default function Home() {
             <ul className="space-y-4 font-bold">
               <li><Link href="#" className="hover:text-primary">About Impact</Link></li>
               <li><Link href="#" className="hover:text-primary">Safety Standards</Link></li>
-              <li><Link href="#" className="hover:text-primary">Terms & Conditions</Link></li>
               <li><Link href="#" className="hover:text-primary">Privacy Policy</Link></li>
             </ul>
           </div>
