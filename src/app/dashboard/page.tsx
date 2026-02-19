@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Clock, MapPin, Truck, CheckCircle2, Navigation2, MoreHorizontal, Phone, Star, Leaf, TrendingUp, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 import { useState, useMemo } from 'react';
-import { collection, query, where, limit } from 'firebase/firestore';
+import { collection, query, where, limit, orderBy } from 'firebase/firestore';
 import { useFirestore, useUser, useCollection } from '@/firebase';
 
 const LiveTrackingMap = dynamic(() => import('@/components/LiveTrackingMap'), { 
@@ -24,11 +24,13 @@ export default function Dashboard() {
 
   // Real-time tracking of the active job
   const activeJobQuery = useMemo(() => {
-    if (!user) return null;
+    if (!user && !localStorage.getItem('demo_mode')) return null;
+    const uid = user?.uid || 'demo-user-123';
     return query(
       collection(db, 'jobs'),
-      where('customerId', '==', user.uid),
+      where('customerId', '==', uid),
       where('status', 'not-in', ['COMPLETED', 'CANCELLED']),
+      orderBy('status', 'desc'),
       limit(1)
     );
   }, [db, user]);
@@ -38,10 +40,11 @@ export default function Dashboard() {
 
   // History query for Impact scoring
   const historyQuery = useMemo(() => {
-    if (!user) return null;
+    if (!user && !localStorage.getItem('demo_mode')) return null;
+    const uid = user?.uid || 'demo-user-123';
     return query(
       collection(db, 'jobs'),
-      where('customerId', '==', user.uid),
+      where('customerId', '==', uid),
       where('status', 'in', ['COMPLETED']),
       limit(10)
     );
@@ -68,7 +71,9 @@ export default function Dashboard() {
                        <Sparkles className="h-4 w-4 text-primary" /> AI Match: Optimized for {activeJob.wasteDetails?.type}
                     </p>
                   </div>
-                  <Badge className="bg-primary px-4 py-1.5 text-white border-none rounded-full font-black text-[10px] uppercase tracking-widest shadow-lg shadow-primary/20">Collector arriving</Badge>
+                  <Badge className="bg-primary px-4 py-1.5 text-white border-none rounded-full font-black text-[10px] uppercase tracking-widest shadow-lg shadow-primary/20">
+                    {activeJob.status === 'MATCHED' ? 'Collector Arriving' : activeJob.status}
+                  </Badge>
                 </div>
                 
                 <div className="relative aspect-video w-full rounded-[2.5rem] overflow-hidden border-4 border-white uber-shadow bg-muted shadow-2xl">

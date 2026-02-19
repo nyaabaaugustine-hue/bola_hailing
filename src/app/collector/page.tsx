@@ -48,10 +48,11 @@ export default function CollectorPage() {
   );
   
   const activeJobQuery = useMemo(() => {
-    if (!authUser) return null;
+    if (!authUser && !localStorage.getItem('demo_mode')) return null;
+    const uid = authUser?.uid || 'demo-collector-123';
     return query(
       collection(db, 'jobs'),
-      where('collectorId', '==', authUser.uid),
+      where('collectorId', '==', uid),
       where('status', 'in', ['MATCHED', 'EN_ROUTE', 'ARRIVED']),
       limit(1)
     );
@@ -73,13 +74,14 @@ export default function CollectorPage() {
   }, [isOnline]);
 
   const handleAcceptJob = async (jobId: string) => {
-    if (!authUser) return;
+    const uid = authUser?.uid || 'demo-collector-123';
+    const name = authUser?.displayName || 'Kwame Mensah';
     try {
       const jobRef = doc(db, 'jobs', jobId);
       await updateDoc(jobRef, {
         status: 'MATCHED',
-        collectorId: authUser.uid,
-        collectorName: authUser.displayName || 'Kwame Mensah',
+        collectorId: uid,
+        collectorName: name,
         collectorPhone: '0559876543',
         liveCollectorLocation: {
           lat: 5.67691,
