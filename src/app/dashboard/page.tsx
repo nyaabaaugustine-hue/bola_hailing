@@ -1,3 +1,4 @@
+
 'use client';
 
 import Navigation from '@/components/Navigation';
@@ -8,9 +9,12 @@ import { Button } from '@/components/ui/button';
 import { Clock, MapPin, Truck, CheckCircle2, Navigation2, MoreHorizontal, Phone, Star } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function Dashboard() {
   const [activeJob, setActiveJob] = useState(true);
+  const mapImage = PlaceHolderImages.find(img => img.id === 'dashboard-map');
+  const driverImage = PlaceHolderImages.find(img => img.id === 'driver-profile');
 
   return (
     <div className="min-h-screen bg-background font-body">
@@ -29,12 +33,15 @@ export default function Dashboard() {
                 
                 {/* Simulated Uber Map */}
                 <div className="relative aspect-video w-full rounded-2xl overflow-hidden border uber-shadow bg-muted">
-                  <Image 
-                    src="https://picsum.photos/seed/accra-map-2/1200/800"
-                    alt="Map Tracking"
-                    fill
-                    className="object-cover opacity-60 grayscale"
-                  />
+                  {mapImage && (
+                    <Image 
+                      src={mapImage.imageUrl}
+                      alt={mapImage.description}
+                      fill
+                      className="object-cover opacity-60 grayscale"
+                      data-ai-hint={mapImage.imageHint}
+                    />
+                  )}
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="relative">
                        <div className="absolute -inset-8 bg-primary/20 rounded-full animate-ping" />
@@ -48,7 +55,15 @@ export default function Dashboard() {
                       <CardContent className="p-4 flex items-center justify-between">
                         <div className="flex items-center gap-4">
                           <div className="h-12 w-12 rounded-full overflow-hidden border-2 border-primary">
-                            <Image src="https://picsum.photos/seed/driver1/100/100" width={100} height={100} alt="Driver" />
+                            {driverImage && (
+                              <Image 
+                                src={driverImage.imageUrl} 
+                                width={100} 
+                                height={100} 
+                                alt="Driver" 
+                                data-ai-hint={driverImage.imageHint}
+                              />
+                            )}
                           </div>
                           <div>
                             <p className="font-bold text-lg">Kojo Mensah</p>

@@ -1,3 +1,4 @@
+
 'use client';
 
 import Navigation from '@/components/Navigation';
@@ -8,9 +9,12 @@ import { Badge } from '@/components/ui/badge';
 import { Truck, Navigation2, MapPin, Camera, DollarSign, ListTodo, Fuel, Phone, MessageSquare, Power, User } from 'lucide-react';
 import { useState } from 'react';
 import Image from 'next/image';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function CollectorPage() {
   const [isOnline, setIsOnline] = useState(true);
+  const driverImage = PlaceHolderImages.find(img => img.id === 'driver-profile');
+  const customerImage = PlaceHolderImages.find(img => img.id === 'waste-collection-action');
 
   return (
     <div className="min-h-screen bg-background font-body">
@@ -20,8 +24,12 @@ export default function CollectorPage() {
       <div className={`transition-colors duration-500 py-4 ${isOnline ? 'bg-secondary' : 'bg-muted'}`}>
         <div className="container mx-auto px-4 flex items-center justify-between text-white">
           <div className="flex items-center gap-3">
-             <div className={`h-10 w-10 rounded-full flex items-center justify-center ${isOnline ? 'bg-white/20' : 'bg-black/20 text-muted-foreground'}`}>
-                <User className="h-5 w-5" />
+             <div className={`h-10 w-10 rounded-full overflow-hidden flex items-center justify-center ${isOnline ? 'bg-white/20' : 'bg-black/20 text-muted-foreground'}`}>
+                {driverImage ? (
+                  <Image src={driverImage.imageUrl} width={40} height={40} alt="Profile" className="object-cover" />
+                ) : (
+                  <User className="h-5 w-5" />
+                )}
              </div>
              <div>
                 <p className="font-bold text-lg">Good morning, Kojo</p>
@@ -112,7 +120,20 @@ export default function CollectorPage() {
                   <CardHeader>
                      <div className="flex items-center gap-4 mb-2">
                         <div className="h-12 w-12 rounded-full overflow-hidden border-2 border-muted">
-                           <Image src="https://picsum.photos/seed/user1/100/100" width={100} height={100} alt="Customer" />
+                           {customerImage ? (
+                             <Image 
+                               src={customerImage.imageUrl} 
+                               width={100} 
+                               height={100} 
+                               alt="Customer Site" 
+                               className="object-cover"
+                               data-ai-hint={customerImage.imageHint}
+                             />
+                           ) : (
+                             <div className="bg-muted w-full h-full flex items-center justify-center">
+                               <MapPin className="h-6 w-6 text-muted-foreground" />
+                             </div>
+                           )}
                         </div>
                         <div>
                            <CardTitle className="text-xl font-bold">Pickup from Amara</CardTitle>

@@ -1,3 +1,4 @@
+
 'use client';
 
 import Navigation from '@/components/Navigation';
@@ -20,8 +21,12 @@ import {
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import Image from 'next/image';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function AdminPage() {
+  const mapImage = PlaceHolderImages.find(img => img.id === 'admin-fleet-map');
+
   return (
     <div className="min-h-screen bg-background font-body">
       <Navigation />
@@ -84,7 +89,15 @@ export default function AdminPage() {
               </CardHeader>
               <CardContent>
                 <div className="aspect-[21/9] w-full rounded-2xl bg-muted relative overflow-hidden group">
-                   <div className="absolute inset-0 opacity-40 bg-[url('https://picsum.photos/seed/accra-admin-map/1200/600')] bg-cover grayscale" />
+                   {mapImage && (
+                    <Image 
+                      src={mapImage.imageUrl} 
+                      alt={mapImage.description} 
+                      fill 
+                      className="object-cover opacity-40 grayscale"
+                      data-ai-hint={mapImage.imageHint}
+                    />
+                   )}
                    
                    {/* Simulated Hotspots */}
                    <div className="absolute top-1/4 left-1/3 h-16 w-16 bg-red-500/20 rounded-full animate-pulse border border-red-500/40">

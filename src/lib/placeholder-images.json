@@ -3,20 +3,44 @@
     {
       "id": "hero-image",
       "description": "Clean Ghanaian street with waste collection truck",
-      "imageUrl": "https://images.unsplash.com/photo-1711588312193-96aac598e5e4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Z2FyYmFnZSUyMHRydWNrfGVufDB8fHx8MTc3MTQ4NTY3NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1595246140625-573b715d11dc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Z2FyYmFnZSUyMHRydWNrfGVufDB8fHx8MTc3MTQ4NTY3NHww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "garbage truck"
     },
     {
       "id": "recycling-ghana",
       "description": "Recycling efforts in a Ghanaian community",
-      "imageUrl": "https://images.unsplash.com/photo-1637184516181-602f39d861b1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8cmVjeWNsaW5nJTIwd2FzdGV8ZW58MHx8fHwxNzcxNDg1Njc0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8cmVjeWNsaW5nJTIwd2FzdGV8ZW58MHx8fHwxNzcxNDg1Njc0fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "recycling waste"
     },
     {
       "id": "waste-types",
       "description": "Different types of waste including plastics and organics",
-      "imageUrl": "https://images.unsplash.com/photo-1571727153934-b9e0059b7ab2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwbGFzdGljJTIwd2FzdGV8ZW58MHx8fHwxNzcxNDI3NjM5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwbGFzdGljJTIwd2FzdGV8ZW58MHx8fHwxNzcxNDI3NjM5fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "plastic waste"
+    },
+    {
+      "id": "dashboard-map",
+      "description": "Real-time tracking map for waste collection",
+      "imageUrl": "https://images.unsplash.com/photo-1446776899648-aa78eefe8ed0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxjaXR5JTIwbWFwfGVufDB8fHx8MTc3MTQ2MjIzOHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "city map"
+    },
+    {
+      "id": "driver-profile",
+      "description": "Professional waste collector profile picture",
+      "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxmYWNlJTIwbWFufGVufDB8fHx8MTc3MTQ4NTY3NHww&ixlib=rb-4.1.0&q=80&w=400",
+      "imageHint": "man face"
+    },
+    {
+      "id": "admin-fleet-map",
+      "description": "Fleet monitoring heatmap",
+      "imageUrl": "https://images.unsplash.com/photo-1767556030469-9c135b2e9a9d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxoZWF0bWFwfGVufDB8fHx8MTc3MTQ4NjY3MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "heatmap"
+    },
+    {
+      "id": "waste-collection-action",
+      "description": "Collectors actively picking up refuse bins",
+      "imageUrl": "https://images.unsplash.com/photo-1618477462146-050d2767eac4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx3YXN0ZSUyMGNvbGxlY3Rpb258ZW58MHx8fHwxNzcxNDg1Njc0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "waste collection"
     }
   ]
 }
