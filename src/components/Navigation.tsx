@@ -41,11 +41,11 @@ export default function Navigation() {
   };
 
   return (
-    <nav className="fixed top-0 z-50 w-full glass-nav h-28">
+    <nav className="fixed top-0 z-50 w-full glass-nav h-32">
       <div className="container mx-auto flex h-full items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2 group">
           {logo ? (
-            <div className="relative h-20 w-20 overflow-hidden rounded-[7%]">
+            <div className="relative h-24 w-24 overflow-hidden rounded-[7%]">
               <Image 
                 src={logo.imageUrl} 
                 alt="WasteGo" 
@@ -55,30 +55,30 @@ export default function Navigation() {
               />
             </div>
           ) : (
-            <div className="flex h-20 w-20 items-center justify-center rounded-[7%] bg-primary text-white shadow-xl group-hover:bg-primary/90 transition-colors">
-              <span className="font-headline text-2xl font-black italic">W</span>
+            <div className="flex h-24 w-24 items-center justify-center rounded-[7%] bg-primary text-primary-foreground shadow-xl group-hover:bg-primary/90 transition-colors">
+              <span className="font-headline text-3xl font-black italic">W</span>
             </div>
           )}
         </Link>
         
-        <div className="hidden lg:flex items-center gap-8">
-          <Link href="/dashboard" className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/60 hover:text-primary transition-colors flex items-center gap-2 group">
-            <MapPin className="h-3 w-3 group-hover:scale-110 transition-transform" /> Order
+        <div className="hidden lg:flex items-center gap-10">
+          <Link href="/dashboard" className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/70 hover:text-primary transition-colors flex items-center gap-2 group">
+            <MapPin className="h-4 w-4 group-hover:scale-110 transition-transform" /> Order
           </Link>
-          <Link href="/collector" className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/60 hover:text-primary transition-colors flex items-center gap-2 group">
-            <Truck className="h-3 w-3 group-hover:scale-110 transition-transform" /> Drive
+          <Link href="/collector" className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/70 hover:text-primary transition-colors flex items-center gap-2 group">
+            <Truck className="h-4 w-4 group-hover:scale-110 transition-transform" /> Drive
           </Link>
-          <Link href="/admin" className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/60 hover:text-primary transition-colors flex items-center gap-2 group">
-            <ShieldCheck className="h-3 w-3 group-hover:scale-110 transition-transform" /> Command
+          <Link href="/admin" className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/70 hover:text-primary transition-colors flex items-center gap-2 group">
+            <ShieldCheck className="h-4 w-4 group-hover:scale-110 transition-transform" /> Command
           </Link>
-          <Link href="#" className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/60 hover:text-primary transition-colors flex items-center gap-2 group">
-            <Globe className="h-3 w-3 group-hover:scale-110 transition-transform" /> Impact
+          <Link href="#" className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/70 hover:text-primary transition-colors flex items-center gap-2 group">
+            <Globe className="h-4 w-4 group-hover:scale-110 transition-transform" /> Impact
           </Link>
         </div>
 
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={toggleTheme} className="rounded-full">
-            {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+          <Button variant="ghost" size="icon" onClick={toggleTheme} className="rounded-full h-12 w-12 hover:bg-black/5">
+            {theme === 'light' ? <Moon className="h-6 w-6" /> : <Sun className="h-6 w-6" />}
           </Button>
 
           {!loading && (
@@ -86,21 +86,21 @@ export default function Navigation() {
               {user ? (
                 <div className="flex items-center gap-4">
                   <Link href="/dashboard">
-                    <Button variant="ghost" className="hidden sm:flex items-center gap-2 font-bold text-sm">
+                    <Button variant="ghost" className="hidden sm:flex items-center gap-2 font-black text-xs uppercase tracking-widest px-6 h-14 rounded-2xl border-2 border-transparent hover:border-black/5">
                       <User className="h-4 w-4" /> {user.displayName?.split(' ')[0] || 'Account'}
                     </Button>
                   </Link>
-                  <Button variant="ghost" size="icon" className="rounded-full hover:bg-black/5" onClick={handleLogout}>
-                    <LogOut className="h-5 w-5" />
+                  <Button variant="ghost" size="icon" className="rounded-full h-12 w-12 hover:bg-destructive/10 text-destructive" onClick={handleLogout}>
+                    <LogOut className="h-6 w-6" />
                   </Button>
                 </div>
               ) : (
-                <div className="flex items-center gap-2 sm:gap-4">
-                  <Link href="/login">
-                    <Button variant="ghost" className="font-bold text-sm px-4">Log in</Button>
+                <div className="flex items-center gap-3">
+                  <Link href="/login" className="hidden sm:block">
+                    <Button variant="ghost" className="font-black text-xs uppercase tracking-widest px-6 h-14">Log in</Button>
                   </Link>
                   <Link href="/login">
-                    <Button className="bg-black text-white dark:bg-primary dark:text-white hover:bg-black/90 font-bold px-6 h-11 rounded-full shadow-lg btn-hover-effect">
+                    <Button className="bg-black text-white dark:bg-primary dark:text-primary-foreground font-black text-xs uppercase tracking-widest px-8 h-14 rounded-2xl shadow-xl btn-hover-effect">
                       Get Started
                     </Button>
                   </Link>
@@ -112,22 +112,22 @@ export default function Navigation() {
           <div className="lg:hidden">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="hover:bg-black/5">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-menu"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+                <Button variant="ghost" size="icon" className="h-12 w-12 hover:bg-black/5">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-menu"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[300px] border-l-4 border-primary">
-                <SheetTitle className="text-left font-black uppercase tracking-tighter text-2xl mb-8">Navigation</SheetTitle>
-                <div className="flex flex-col gap-6">
-                  <Link href="/dashboard" className="text-3xl font-black uppercase tracking-tighter hover:text-primary transition-colors">Book Pickup</Link>
-                  <Link href="/collector" className="text-3xl font-black uppercase tracking-tighter hover:text-primary transition-colors">Drive</Link>
-                  <Link href="/admin" className="text-3xl font-black uppercase tracking-tighter hover:text-primary transition-colors">Command</Link>
-                  <div className="h-px bg-black/10 w-full" />
+              <SheetContent side="right" className="w-[300px] border-l-8 border-primary">
+                <SheetTitle className="text-left font-black uppercase tracking-tighter text-3xl mb-12">Navigation</SheetTitle>
+                <div className="flex flex-col gap-8">
+                  <Link href="/dashboard" className="text-4xl font-black uppercase tracking-tighter hover:text-primary transition-colors">Book Pickup</Link>
+                  <Link href="/collector" className="text-4xl font-black uppercase tracking-tighter hover:text-primary transition-colors">Drive</Link>
+                  <Link href="/admin" className="text-4xl font-black uppercase tracking-tighter hover:text-primary transition-colors">Command</Link>
+                  <div className="h-1 bg-black/10 w-full rounded-full" />
                   {user ? (
-                    <Button variant="outline" className="h-14 rounded-xl font-black border-2" onClick={handleLogout}>LOGOUT</Button>
+                    <Button variant="outline" className="h-16 rounded-2xl font-black border-4 text-sm" onClick={handleLogout}>LOGOUT</Button>
                   ) : (
                     <Link href="/login" className="w-full">
-                      <Button className="w-full h-14 rounded-xl font-black bg-black text-white dark:bg-primary">GET STARTED</Button>
+                      <Button className="w-full h-16 rounded-2xl font-black bg-black text-white dark:bg-primary dark:text-primary-foreground text-sm">GET STARTED</Button>
                     </Link>
                   )}
                 </div>

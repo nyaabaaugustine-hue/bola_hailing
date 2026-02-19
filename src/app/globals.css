@@ -14,7 +14,8 @@
     --popover-foreground: 240 10% 3.9%;
     /* Vibrant Orange #FF8C00 -> HSL(33, 100%, 50%) */
     --primary: 33 100% 50%;
-    --primary-foreground: 0 0% 100%;
+    /* Dark foreground for orange background to improve accessibility */
+    --primary-foreground: 240 10% 3.9%;
     /* Forest Green #228B22 -> HSL(120, 60.7%, 34.1%) */
     --secondary: 120 60.7% 34.1%;
     --secondary-foreground: 0 0% 100%;
@@ -27,7 +28,7 @@
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
     --ring: 33 100% 50%;
-    --radius: 1.25rem;
+    --radius: 1.5rem;
   }
   .dark {
     --background: 240 10% 3.9%;
@@ -37,7 +38,7 @@
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
     --primary: 33 100% 50%;
-    --primary-foreground: 0 0% 100%;
+    --primary-foreground: 240 10% 3.9%;
     --secondary: 120 60.7% 45%;
     --secondary-foreground: 0 0% 10%;
     --muted: 240 3.7% 15.9%;
@@ -62,31 +63,22 @@
 }
 
 .uber-shadow {
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04), 0 0 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06), 0 0 1px rgba(0, 0, 0, 0.1);
 }
 
 .glass-nav {
-  @apply bg-background/80 backdrop-blur-xl border-b border-border;
+  @apply bg-background/90 backdrop-blur-2xl border-b border-border;
 }
 
 .btn-hover-effect {
-  @apply transition-all duration-300 hover:scale-[1.02] active:scale-[0.98];
+  @apply transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] hover:shadow-lg;
 }
 
 .leaflet-container {
   width: 100%;
   height: 100%;
   border-radius: inherit;
-  filter: grayscale(0.2) contrast(1.05);
-}
-
-.leaflet-control-zoom {
-  border: none !important;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
-}
-
-.leaflet-bar a {
-  @apply bg-background text-foreground border-border !important;
+  filter: grayscale(0.1) contrast(1.02);
 }
 
 @keyframes progress-indefinite {
