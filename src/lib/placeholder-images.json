@@ -2,9 +2,9 @@
   "placeholderImages": [
     {
       "id": "app-logo",
-      "description": "DEMO App Logo",
-      "imageUrl": "https://res.cloudinary.com/dwsl2ktt2/image/upload/v1771501831/trash_logo_exropq.png",
-      "imageHint": "trash logo"
+      "description": "WasteGo App Logo",
+      "imageUrl": "https://res.cloudinary.com/dwsl2ktt2/image/upload/v1771504095/WasteGo_logo_cropped_egn8do.png",
+      "imageHint": "waste logo"
     },
     {
       "id": "hero-image",
