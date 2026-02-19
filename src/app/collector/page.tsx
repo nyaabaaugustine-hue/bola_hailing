@@ -1,4 +1,3 @@
-
 "use client";
 
 import Navigation from '@/components/Navigation';
@@ -16,7 +15,6 @@ import {
   Power, 
   User, 
   CheckCircle2, 
-  Loader2, 
   Zap, 
   TrendingUp, 
   Sparkles, 
@@ -48,7 +46,7 @@ export default function CollectorPage() {
   );
   
   const activeJobQuery = useMemo(() => {
-    if (!authUser && !localStorage.getItem('demo_mode')) return null;
+    // If no user, we might be in demo mode
     const uid = authUser?.uid || 'demo-collector-123';
     return query(
       collection(db, 'jobs'),
@@ -90,6 +88,7 @@ export default function CollectorPage() {
       });
       toast({ title: "Job Accepted", description: "AI Route Optimization applied. Follow navigation." });
     } catch (error) {
+      console.error(error);
       toast({ variant: 'destructive', title: "Error", description: "Failed to accept job." });
     }
   };
@@ -100,6 +99,7 @@ export default function CollectorPage() {
       await updateDoc(jobRef, { status: 'COMPLETED' });
       toast({ title: "Mission Accomplished", description: "GHS 28.00 credited to your wallet." });
     } catch (error) {
+      console.error(error);
       toast({ variant: 'destructive', title: "Error", description: "Failed to complete job." });
     }
   };
@@ -300,7 +300,7 @@ export default function CollectorPage() {
                     </CardContent>
                  </Card>
                ) : (
-                 <div className="flex flex-col items-center justify-center py-32 border-8 border-dashed rounded-[4rem] bg-muted/10 text-center space-y-6 opacity-20">
+                 <div className="flex flex-col items-center justify-center py-32 border-8 border-dashed rounded-[4rem] bg-muted/10 text-center space-y-6 opacity-40">
                     <Activity className="h-24 w-24 text-muted-foreground animate-pulse" />
                     <p className="font-black text-muted-foreground uppercase tracking-[0.4em] text-xs">Scanning Network for Nearby Missions...</p>
                  </div>

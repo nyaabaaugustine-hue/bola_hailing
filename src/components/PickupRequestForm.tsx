@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useRef } from 'react';
@@ -15,15 +14,12 @@ import {
   Truck, 
   Smartphone, 
   Star, 
-  Trash2, 
   ArrowRight, 
-  Info, 
   Phone, 
   ShieldCheck, 
   CheckCircle2, 
   Mic, 
   Activity,
-  Navigation as NavigationIcon,
   Compass
 } from 'lucide-react';
 import { resolveGhanaAddress } from '@/ai/flows/ghana-address-voice-resolution';
@@ -76,6 +72,7 @@ export default function PickupRequestForm() {
       setResolvedLoc(result);
       setStep(2);
     } catch (e) {
+      console.error(e);
       setResolvedLoc({ resolvedCoordinates: { lat: 5.67955, lng: -0.16421 }, resolvedAddress: address });
       setStep(2);
     } finally {

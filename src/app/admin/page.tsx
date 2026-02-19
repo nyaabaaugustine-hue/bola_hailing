@@ -1,4 +1,3 @@
-
 "use client";
 
 import Navigation from '@/components/Navigation';
@@ -11,9 +10,6 @@ import {
   Map as MapIcon, 
   Truck, 
   Leaf, 
-  AlertTriangle,
-  ArrowUpRight,
-  TrendingUp,
   Activity,
   Search,
   Filter,
@@ -48,14 +44,14 @@ export default function AdminPage() {
       const jobRef = doc(db, 'jobs', jobId);
       await updateDoc(jobRef, { status: newStatus });
       toast({
-        title: `Order ${newStatus}`,
-        description: `Mission ${jobId.slice(0, 8)} has been ${newStatus.toLowerCase()}.`
+        title: `Mission ${newStatus}`,
+        description: `Order ${jobId.slice(0, 8).toUpperCase()} has been ${newStatus.toLowerCase()}.`
       });
     } catch (error) {
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: 'Failed to update order status.'
+        description: 'Failed to update mission status.'
       });
     }
   };
@@ -137,12 +133,12 @@ export default function AdminPage() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {jobs?.map((order: any) => (
+                        {jobs?.length > 0 ? jobs.map((order: any) => (
                           <TableRow key={order.id} className="hover:bg-muted/10 border-b border-black/5 h-24">
                             <TableCell className="px-8">
                               <p className="font-black text-base tracking-tighter">{order.id.slice(0, 8).toUpperCase()}</p>
                               <p className="text-[10px] text-muted-foreground font-bold flex items-center gap-1 mt-1 uppercase tracking-widest">
-                                <MapIcon className="h-3 w-3" /> {order.pickupLocation?.landmark || 'Madina Central'}
+                                <MapIcon className="h-3 w-3" /> {order.pickupLocation?.landmark || 'Location Unresolved'}
                               </p>
                             </TableCell>
                             <TableCell>
@@ -154,7 +150,7 @@ export default function AdminPage() {
                             <TableCell>
                               <Badge 
                                 variant={order.status === 'COMPLETED' ? 'secondary' : order.status === 'CANCELLED' ? 'destructive' : 'outline'}
-                                className="rounded-xl uppercase font-black text-[8px] px-3 py-1.5 border-2"
+                                className={`rounded-xl uppercase font-black text-[8px] px-3 py-1.5 border-2 ${order.status === 'REQUESTED' ? 'animate-pulse bg-primary/10 border-primary/20 text-primary' : ''}`}
                               >
                                 {order.status}
                               </Badge>
@@ -178,7 +174,13 @@ export default function AdminPage() {
                               )}
                             </TableCell>
                           </TableRow>
-                        ))}
+                        )) : (
+                          <TableRow>
+                            <TableCell colSpan={5} className="h-40 text-center opacity-30 font-black uppercase tracking-widest text-xs">
+                               No active missions found in the network.
+                            </TableCell>
+                          </TableRow>
+                        )}
                       </TableBody>
                     </Table>
                   )}
