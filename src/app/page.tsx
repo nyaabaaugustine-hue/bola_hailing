@@ -22,7 +22,7 @@ export default function Home() {
     <div className="flex min-h-screen flex-col bg-background font-body">
       <Navigation />
       
-      {/* Hero Section */}
+      {/* Hero Section - Increased Height */}
       <section className="relative pt-40 pb-32 md:pt-56 md:pb-48 overflow-hidden">
         {/* Background Decorative Element */}
         <div className="absolute top-0 right-0 w-2/3 h-full bg-muted/30 -z-10 hidden lg:block rounded-bl-[10rem]" />
@@ -37,6 +37,7 @@ export default function Home() {
                 </Badge>
                 <h1 className="font-headline text-6xl font-black leading-[1.05] tracking-tighter md:text-8xl lg:text-9xl flex flex-col">
                   <span>Trash Hailing</span>
+                  {/* Reduced 'Reimagined' text size */}
                   <span className="text-primary italic text-3xl md:text-5xl lg:text-6xl mt-2">Reimagined.</span>
                 </h1>
                 <div className="space-y-4 max-w-xl">
