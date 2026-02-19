@@ -32,7 +32,7 @@ export default function CollectorPage() {
       <Navigation />
       
       {/* Driver Header / Status Bar */}
-      <div className={`transition-colors duration-500 py-4 ${isOnline ? 'bg-secondary' : 'bg-muted'}`}>
+      <div className={`transition-colors duration-500 pt-24 pb-6 ${isOnline ? 'bg-secondary' : 'bg-muted'}`}>
         <div className="container mx-auto px-4 flex items-center justify-between text-white">
           <div className="flex items-center gap-3">
              <div className={`h-10 w-10 rounded-full overflow-hidden flex items-center justify-center ${isOnline ? 'bg-white/20' : 'bg-black/20 text-muted-foreground'}`}>

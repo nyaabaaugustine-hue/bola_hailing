@@ -29,13 +29,13 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen bg-background font-body">
       <Navigation />
-      <main className="container mx-auto py-8 px-4 md:py-12">
+      <main className="container mx-auto pt-28 pb-12 px-4 md:pt-32">
         <div className="space-y-8">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="space-y-1">
               <h1 className="font-headline text-4xl font-black tracking-tight uppercase">Fleet Command</h1>
               <p className="text-muted-foreground flex items-center gap-2 font-medium">
-                <Activity className="h-4 w-4 text-secondary" /> Monitoring live network operations.
+                <Activity className="h-4 w-4 text-secondary" /> Monitoring live network operations in Accra & Kumasi.
               </p>
             </div>
             <div className="flex gap-3">

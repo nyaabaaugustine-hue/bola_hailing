@@ -19,7 +19,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-background font-body">
       <Navigation />
-      <main className="container mx-auto py-8 px-4 md:py-12">
+      <main className="container mx-auto pt-24 pb-12 px-4 md:pt-32">
         <div className="grid gap-8 lg:grid-cols-12">
           
           {/* Main Content Area (Booking or Tracking) */}
