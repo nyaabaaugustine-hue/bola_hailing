@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Camera, MapPin, Loader2, Sparkles, CreditCard, Truck, Smartphone, Star, Trash2, ArrowRight, Info } from 'lucide-react';
+import { Camera, MapPin, Loader2, Sparkles, CreditCard, Truck, Smartphone, Star, Trash2, ArrowRight, Info, Phone } from 'lucide-react';
 import { resolveGhanaAddress } from '@/ai/flows/ghana-address-voice-resolution';
 import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
@@ -295,8 +295,13 @@ export default function PickupRequestForm() {
                         <span className="text-black/40 text-[10px] font-black uppercase tracking-widest">• Verified Driver</span>
                      </div>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right flex flex-col gap-2">
                     <div className="bg-black text-white font-black px-4 py-2 rounded-xl text-sm">{DEMO_ROUTING.etaPickup}</div>
+                    <a href={`tel:${matchedCollector.phone}`}>
+                      <Button size="sm" variant="outline" className="rounded-xl border-primary text-primary hover:bg-primary/10 gap-2 h-10 w-full">
+                        <Phone className="h-3 w-3" /> Call
+                      </Button>
+                    </a>
                   </div>
                </div>
             </Card>

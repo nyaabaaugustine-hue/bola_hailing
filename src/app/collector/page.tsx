@@ -32,7 +32,7 @@ export default function CollectorPage() {
       <Navigation />
       
       {/* Driver Header / Status Bar */}
-      <div className={`transition-colors duration-500 pt-24 pb-6 ${isOnline ? 'bg-secondary' : 'bg-muted'}`}>
+      <div className={`transition-colors duration-500 pt-32 pb-6 ${isOnline ? 'bg-secondary' : 'bg-muted'}`}>
         <div className="container mx-auto px-4 flex items-center justify-between text-white">
           <div className="flex items-center gap-3">
              <div className={`h-10 w-10 rounded-full overflow-hidden flex items-center justify-center ${isOnline ? 'bg-white/20' : 'bg-black/20 text-muted-foreground'}`}>
@@ -184,9 +184,11 @@ export default function CollectorPage() {
                           <Button className="col-span-2 h-16 rounded-2xl bg-black text-white font-black">
                              <Navigation2 className="mr-2 h-5 w-5" /> NAVIGATE
                           </Button>
-                          <Button variant="outline" className="h-16 rounded-2xl border-2">
-                             <Phone className="h-5 w-5" />
-                          </Button>
+                          <a href={`tel:${ACTIVE_SCENARIO_JOB.customerPhone}`} className="block">
+                            <Button variant="outline" className="w-full h-16 rounded-2xl border-2 border-primary text-primary hover:bg-primary/10">
+                               <Phone className="h-5 w-5" />
+                            </Button>
+                          </a>
                        </div>
 
                        {!jobCompleted ? (

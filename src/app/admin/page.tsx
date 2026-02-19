@@ -29,7 +29,7 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen bg-background font-body">
       <Navigation />
-      <main className="container mx-auto pt-28 pb-12 px-4 md:pt-32">
+      <main className="container mx-auto pt-32 pb-12 px-4 md:pt-36">
         <div className="space-y-8">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="space-y-1">

@@ -19,7 +19,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-background font-body">
       <Navigation />
-      <main className="container mx-auto pt-24 pb-12 px-4 md:pt-32">
+      <main className="container mx-auto pt-28 pb-12 px-4 md:pt-32">
         <div className="grid gap-8 lg:grid-cols-12">
           
           {/* Main Content Area (Booking or Tracking) */}
@@ -71,9 +71,11 @@ export default function Dashboard() {
                           </div>
                         </div>
                         <div className="flex gap-2">
-                           <Button size="icon" variant="outline" className="rounded-full h-12 w-12 border-primary text-primary">
-                             <Phone className="h-5 w-5" />
-                           </Button>
+                           <a href={`tel:${activeCollector.phone}`}>
+                             <Button size="icon" variant="outline" className="rounded-full h-12 w-12 border-primary text-primary hover:bg-primary/10">
+                               <Phone className="h-5 w-5" />
+                             </Button>
+                           </a>
                            <Button size="icon" className="rounded-full h-12 w-12 bg-primary text-white">
                              <MoreHorizontal className="h-5 w-5" />
                            </Button>

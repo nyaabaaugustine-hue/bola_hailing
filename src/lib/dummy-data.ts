@@ -48,7 +48,8 @@ export const DEMO_COLLECTOR = {
   walletBalance: 0,
   reliabilityScore: 4.8,
   historicalAcceptanceRate: 99,
-  image: 'https://picsum.photos/seed/kwame/200/200'
+  image: 'https://picsum.photos/seed/kwame/200/200',
+  phone: "0559876543"
 };
 
 export const DEMO_AI_OUTPUT = {
@@ -129,7 +130,7 @@ export const DUMMY_COLLECTORS = [
     routeEfficiencyScore: 92,
     isAvailable: true,
     rating: 4.8,
-    phone: '+233 24 400 1122',
+    phone: '0559876543',
     image: 'https://picsum.photos/seed/kwame/200/200'
   },
   {
@@ -145,7 +146,7 @@ export const DUMMY_COLLECTORS = [
     routeEfficiencyScore: 88,
     isAvailable: true,
     rating: 4.7,
-    phone: '+233 55 987 6543',
+    phone: '0244009988',
     image: 'https://picsum.photos/seed/amara/200/200'
   }
 ];
@@ -159,6 +160,7 @@ export const DUMMY_LANDFILLS = [
 export const ACTIVE_SCENARIO_JOB = {
   pickupId: 'PKP102',
   customerName: 'Ama Owusu',
+  customerPhone: '0244001122',
   landmark: 'Opposite Yellow Kiosk, Zongo Junction',
   wasteType: 'Mixed Domestic Waste',
   volume: '0.6 m3',
