@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Camera, MapPin, Loader2, Sparkles, CreditCard, Truck, Smartphone, Star, Trash2, ArrowRight, Info, Phone } from 'lucide-react';
+import { Camera, MapPin, Loader2, Sparkles, CreditCard, Truck, Smartphone, Star, Trash2, ArrowRight, Info, Phone, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import { resolveGhanaAddress } from '@/ai/flows/ghana-address-voice-resolution';
 import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
@@ -30,6 +30,8 @@ export default function PickupRequestForm() {
   const [priceData, setPriceData] = useState<any>(null);
   const [matchedCollector, setMatchedCollector] = useState<any>(null);
   const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<'momo' | 'card' | null>(null);
+  const [paymentDetail, setPaymentDetail] = useState('');
 
   const handleAddressResolve = async () => {
     if (!address) {
@@ -76,18 +78,30 @@ export default function PickupRequestForm() {
     }
   };
 
+  const handleProceedToPayment = () => {
+    if (!paymentMethod) {
+      toast({ variant: 'destructive', title: "Selection Required", description: "Please choose a payment method." });
+      return;
+    }
+    setStep(4);
+  };
+
   const handleConfirmOrder = async () => {
-    if (!user) {
-      toast({ variant: 'destructive', title: "Auth Required", description: "Please sign in to place an order." });
+    if (!paymentDetail) {
+      toast({ variant: 'destructive', title: "Payment Required", description: "Please enter your MoMo number or card details." });
       return;
     }
 
     setLoading(true);
     try {
+      // Use fallback ID if not logged in for testing
+      const customerId = user?.uid || 'demo-user-123';
+      const customerName = user?.displayName || 'Ama Owusu (Demo)';
+
       const jobData = {
-        customerId: user.uid,
-        customerName: user.displayName || 'Demo User',
-        customerPhone: user.phoneNumber || '0244001122',
+        customerId,
+        customerName,
+        customerPhone: '0244001122',
         status: 'REQUESTED',
         pickupLocation: {
           lat: resolvedLoc.resolvedCoordinates.lat,
@@ -101,13 +115,18 @@ export default function PickupRequestForm() {
           weight: wasteData.estimatedWeight_kg
         },
         price: priceData.pickupFee,
+        payment: {
+          method: paymentMethod,
+          detail: paymentDetail,
+          status: 'PENDING_VERIFICATION'
+        },
         createdAt: serverTimestamp()
       };
 
       await addDoc(collection(db, 'jobs'), jobData);
       
       setMatchedCollector(DUMMY_COLLECTORS[0]);
-      setStep(4);
+      setStep(5);
       toast({ title: "Order Confirmed", description: "Your request has been broadcast to our fleet." });
     } catch (error) {
       console.error("Order error:", error);
@@ -120,7 +139,7 @@ export default function PickupRequestForm() {
   return (
     <Card className="uber-shadow border-none overflow-hidden bg-white rounded-[2rem]">
       <div className="flex bg-muted/10 p-5 gap-3 border-b border-black/5">
-        {[1, 2, 3, 4].map((s) => (
+        {[1, 2, 3, 4, 5].map((s) => (
           <div key={s} className={`h-1.5 flex-1 rounded-full transition-all duration-700 ${s <= step ? 'bg-black' : 'bg-black/5'}`} />
         ))}
       </div>
@@ -271,16 +290,20 @@ export default function PickupRequestForm() {
              </div>
 
              <div className="space-y-4">
-                <p className="text-[10px] font-black uppercase text-black/40 tracking-[0.2em]">Payment Method</p>
+                <p className="text-[10px] font-black uppercase text-black/40 tracking-[0.2em]">Select Payment Method</p>
                 <div className="grid grid-cols-2 gap-4">
                    {[
                      { id: 'momo', label: 'Mobile Money', icon: Smartphone, color: 'text-yellow-500' },
                      { id: 'card', label: 'Debit Card', icon: CreditCard, color: 'text-blue-500' }
                    ].map((p) => (
-                     <Button key={p.id} variant="outline" className="h-24 rounded-[1.5rem] flex flex-col items-center justify-center gap-3 border-2 border-black/5 hover:border-black hover:bg-black/5 transition-all">
-                        <p.icon className={`h-7 w-7 ${p.color}`} />
+                     <button 
+                        key={p.id} 
+                        onClick={() => setPaymentMethod(p.id as any)}
+                        className={`h-28 rounded-[1.5rem] flex flex-col items-center justify-center gap-3 border-2 transition-all ${paymentMethod === p.id ? 'border-black bg-black/5 ring-4 ring-black/5' : 'border-black/5 hover:border-black/20 bg-white'}`}
+                     >
+                        <p.icon className={`h-8 w-8 ${p.color}`} />
                         <span className="font-black text-[10px] uppercase tracking-widest">{p.label}</span>
-                     </Button>
+                     </button>
                    ))}
                 </div>
              </div>
@@ -288,19 +311,81 @@ export default function PickupRequestForm() {
              <div className="pt-6 space-y-6">
                 <Button 
                   className="w-full h-20 text-xl font-black rounded-2xl bg-black text-white shadow-2xl btn-hover-effect" 
-                  onClick={handleConfirmOrder} 
-                  disabled={loading}
+                  onClick={handleProceedToPayment} 
+                  disabled={!paymentMethod}
                 >
-                   {loading ? <Loader2 className="mr-3 h-6 w-6 animate-spin" /> : "Confirm Pickup Order"}
+                   Continue to Checkout <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
-                <p className="text-[10px] text-center text-black/40 px-12 leading-relaxed font-bold uppercase tracking-tighter">
-                  Guaranteed reliable pickup by verified local collectors.
-                </p>
              </div>
           </div>
         )}
 
-        {step === 4 && matchedCollector && (
+        {step === 4 && (
+          <div className="space-y-8 animate-in slide-in-from-right-8 duration-500">
+            <div className="space-y-3">
+              <h3 className="font-headline text-4xl font-black tracking-tighter uppercase">Payment Details</h3>
+              <p className="text-muted-foreground font-medium">Verify your demo transaction.</p>
+            </div>
+
+            <div className="p-6 rounded-[1.5rem] bg-muted/20 border-2 border-black/5 space-y-6">
+               <div className="flex items-center gap-4 mb-4">
+                  <div className={`h-12 w-12 rounded-xl flex items-center justify-center text-white ${paymentMethod === 'momo' ? 'bg-yellow-500' : 'bg-blue-600'}`}>
+                    {paymentMethod === 'momo' ? <Smartphone /> : <CreditCard />}
+                  </div>
+                  <div>
+                    <p className="font-black text-sm uppercase tracking-widest">{paymentMethod === 'momo' ? 'MoMo Payment' : 'Card Payment'}</p>
+                    <p className="text-xs text-muted-foreground">Demo Transaction: GHS {priceData?.pickupFee}</p>
+                  </div>
+               </div>
+
+               <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label className="text-[10px] font-black uppercase tracking-widest text-black/40">
+                      {paymentMethod === 'momo' ? 'Enter Phone Number (0244...)' : 'Enter Card Number (4242...)'}
+                    </Label>
+                    <Input 
+                      placeholder={paymentMethod === 'momo' ? '0244 000 000' : '4242 4242 4242 4242'} 
+                      className="h-16 rounded-xl border-2 font-bold text-lg"
+                      value={paymentDetail}
+                      onChange={(e) => setPaymentDetail(e.target.value)}
+                    />
+                  </div>
+                  
+                  {paymentMethod === 'card' && (
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                         <Label className="text-[10px] font-black uppercase tracking-widest text-black/40">Expiry</Label>
+                         <Input placeholder="MM/YY" className="h-14 rounded-xl border-2 font-bold" />
+                      </div>
+                      <div className="space-y-2">
+                         <Label className="text-[10px] font-black uppercase tracking-widest text-black/40">CVV</Label>
+                         <Input placeholder="123" className="h-14 rounded-xl border-2 font-bold" />
+                      </div>
+                    </div>
+                  )}
+               </div>
+
+               <div className="flex items-center gap-3 p-4 bg-secondary/10 rounded-xl text-secondary border border-secondary/20">
+                  <ShieldCheck className="h-5 w-5 shrink-0" />
+                  <p className="text-[10px] font-bold uppercase leading-tight">Secure Sandbox: This is a demo transaction. No real funds will be deducted.</p>
+               </div>
+            </div>
+
+            <Button 
+              className="w-full h-20 text-xl font-black rounded-2xl bg-secondary text-white shadow-2xl btn-hover-effect" 
+              onClick={handleConfirmOrder} 
+              disabled={loading || !paymentDetail}
+            >
+              {loading ? <Loader2 className="mr-3 h-6 w-6 animate-spin" /> : <><CheckCircle2 className="mr-2" /> Pay GHS {priceData?.pickupFee}</>}
+            </Button>
+
+            <Button variant="ghost" className="w-full text-black/40 font-black uppercase text-[10px]" onClick={() => setStep(3)}>
+              Change Payment Method
+            </Button>
+          </div>
+        )}
+
+        {step === 5 && matchedCollector && (
           <div className="text-center py-10 animate-in zoom-in-95 duration-500 space-y-12">
             <div className="relative mx-auto h-48 w-48">
                <div className="absolute inset-0 bg-secondary/10 rounded-full animate-ping" />

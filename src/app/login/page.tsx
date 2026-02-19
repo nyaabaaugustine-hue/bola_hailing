@@ -5,7 +5,7 @@ import { useState } from 'react';
 import Navigation from '@/components/Navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { User, Truck, ShieldCheck, ArrowRight, Loader2, KeyRound, Sparkles } from 'lucide-react';
+import { User, Truck, ShieldCheck, ArrowRight, Loader2, Sparkles, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth, useUser } from '@/firebase';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
@@ -33,9 +33,11 @@ export default function LoginPage() {
         variant: 'destructive',
         title: 'Auth Error',
         description: error.message.includes('api-key-not-valid') 
-          ? 'Firebase API Key is missing. Use "Demo Access" below for testing.' 
+          ? 'Firebase API Key is missing. Using Sandbox Demo Mode.' 
           : 'Could not sign in with Google.'
       });
+      // Fallback for demo purposes if API key fails
+      handleDemoLogin('customer');
     } finally {
       setLoading(false);
     }
@@ -44,9 +46,13 @@ export default function LoginPage() {
   const handleDemoLogin = (role: 'customer' | 'collector' | 'admin') => {
     toast({
       title: `Demo Access: ${role.toUpperCase()}`,
-      description: "Entering portal in demo mode..."
+      description: "Entering portal in sandbox mode..."
     });
     
+    // Store demo session locally
+    localStorage.setItem('demo_mode', 'true');
+    localStorage.setItem('demo_role', role);
+
     const paths = {
       customer: '/dashboard',
       collector: '/collector',
@@ -90,7 +96,6 @@ export default function LoginPage() {
 
   return (
     <div className="relative min-h-screen font-body overflow-x-hidden">
-      {/* Background Image with Overlay */}
       <div className="fixed inset-0 z-0">
         {loginBg && (
           <Image
@@ -111,7 +116,6 @@ export default function LoginPage() {
           {!user ? (
             <div className="grid gap-8 lg:grid-cols-2 items-center max-w-4xl mx-auto animate-in fade-in zoom-in-95 duration-700">
               
-              {/* Login Card */}
               <Card className="uber-shadow border-none overflow-hidden rounded-[2.5rem] bg-white/95 shadow-2xl">
                 <CardHeader className="p-10 pb-6 text-center">
                   <CardTitle className="font-headline text-4xl font-black uppercase tracking-tighter mb-4">Welcome</CardTitle>
@@ -143,49 +147,48 @@ export default function LoginPage() {
                       <span className="w-full border-t border-black/10"></span>
                     </div>
                     <div className="relative flex justify-center text-[10px] font-black uppercase tracking-widest">
-                      <span className="bg-white/95 px-4 text-black/40">Infrastructure Only</span>
+                      <span className="bg-white/95 px-4 text-black/40">Secure Verification Only</span>
                     </div>
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-4">
-                     <Button variant="outline" className="h-14 rounded-xl font-bold border-2 text-xs">Email / USSD</Button>
-                     <Button variant="outline" className="h-14 rounded-xl font-bold border-2 text-xs">Phone Access</Button>
+                  <div className="flex items-center gap-3 p-4 bg-muted/50 rounded-xl text-xs text-muted-foreground">
+                    <AlertCircle className="h-4 w-4 shrink-0" />
+                    <p>Production auth requires valid Firebase keys. For demo purposes, use the <b>Sandbox Access</b> panel.</p>
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Quick Access/Demo Card */}
               <div className="space-y-6">
                 <div className="bg-black/40 backdrop-blur-md p-8 rounded-[2.5rem] border border-white/10 text-white space-y-6">
                    <div className="flex items-center gap-3">
                       <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
                          <Sparkles className="h-5 w-5" />
                       </div>
-                      <h3 className="text-xl font-black uppercase tracking-tighter">Demo Access</h3>
+                      <h3 className="text-xl font-black uppercase tracking-tighter text-primary">Sandbox Access</h3>
                    </div>
                    <p className="text-sm text-white/60 font-medium leading-relaxed">
-                     Skip the setup. Enter the portal as a pre-configured role to test the real-time waste infrastructure immediately.
+                     Test the platform instantly with pre-configured active profiles. No real payment or auth required.
                    </p>
                    <div className="space-y-3">
                       <Button 
                         onClick={() => handleDemoLogin('customer')}
                         className="w-full h-14 bg-white/10 hover:bg-white/20 text-white justify-between rounded-2xl border border-white/10 group transition-all"
                       >
-                         <span className="flex items-center gap-3 font-bold"><User className="h-4 w-4" /> Enter as Customer</span>
+                         <span className="flex items-center gap-3 font-bold"><User className="h-4 w-4" /> Enter as Ama (Customer)</span>
                          <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                       </Button>
                       <Button 
                         onClick={() => handleDemoLogin('collector')}
                         className="w-full h-14 bg-white/10 hover:bg-white/20 text-white justify-between rounded-2xl border border-white/10 group transition-all"
                       >
-                         <span className="flex items-center gap-3 font-bold"><Truck className="h-4 w-4" /> Enter as Collector</span>
+                         <span className="flex items-center gap-3 font-bold"><Truck className="h-4 w-4" /> Enter as Kwame (Collector)</span>
                          <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                       </Button>
                       <Button 
                         onClick={() => handleDemoLogin('admin')}
                         className="w-full h-14 bg-white/10 hover:bg-white/20 text-white justify-between rounded-2xl border border-white/10 group transition-all"
                       >
-                         <span className="flex items-center gap-3 font-bold"><ShieldCheck className="h-4 w-4" /> Enter as Admin</span>
+                         <span className="flex items-center gap-3 font-bold"><ShieldCheck className="h-4 w-4" /> Enter as Fleet Command (Admin)</span>
                          <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                       </Button>
                    </div>
