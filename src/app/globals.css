@@ -64,14 +64,14 @@
 }
 
 .glass-nav {
-  @apply bg-white/70 backdrop-blur-xl border-b border-black/5;
+  @apply bg-background/70 backdrop-blur-xl border-b border-border;
 }
 
 .btn-hover-effect {
   @apply transition-all duration-300 hover:scale-[1.02] active:scale-[0.98];
 }
 
-/* Custom Leaflet Styling to match Uber aesthetics */
+/* Custom Leaflet Styling to match platform aesthetics */
 .leaflet-container {
   width: 100%;
   height: 100%;
@@ -85,7 +85,15 @@
 }
 
 .leaflet-bar a {
-  background-color: white !important;
-  color: black !important;
-  border-bottom: 1px solid #f0f0f0 !important;
+  @apply bg-background text-foreground border-border !important;
+}
+
+@keyframes progress-indefinite {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(0); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-progress-indefinite {
+  animation: progress-indefinite 2s infinite linear;
 }

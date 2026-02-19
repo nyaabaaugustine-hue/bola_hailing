@@ -2,19 +2,40 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { MapPin, Truck, ShieldCheck, LogOut, User, Globe } from 'lucide-react';
+import { MapPin, Truck, ShieldCheck, LogOut, User, Globe, Moon, Sun } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 import { useUser, useAuth } from '@/firebase';
 import { signOut } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { useState, useEffect } from 'react';
 
 export default function Navigation() {
-  const { user, loading } = useUser();
+  const { user, loading } = userHook();
   const auth = useAuth();
   const router = useRouter();
   const logo = PlaceHolderImages.find(img => img.id === 'app-logo');
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+
+  function userHook() {
+    return useUser();
+  }
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
+    if (savedTheme) {
+      setTheme(savedTheme);
+      document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+    document.documentElement.classList.toggle('dark', newTheme === 'dark');
+  };
 
   const handleLogout = async () => {
     await signOut(auth);
@@ -26,41 +47,42 @@ export default function Navigation() {
       <div className="container mx-auto flex h-full items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2 group">
           {logo ? (
-            <div className="relative h-12 w-12 overflow-hidden rounded-[7%] shadow-lg">
+            <div className="relative h-12 w-12 overflow-hidden rounded-[7%] shadow-sm">
               <Image 
                 src={logo.imageUrl} 
                 alt="Logo" 
                 fill 
-                className="object-contain p-1"
+                className="object-contain"
               />
             </div>
           ) : (
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-black text-white shadow-xl group-hover:bg-primary transition-colors">
-              <span className="font-headline text-xl font-black">D</span>
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary text-white shadow-xl group-hover:bg-primary/90 transition-colors">
+              <span className="font-headline text-xl font-black italic">T</span>
             </div>
           )}
-          <span className="font-headline text-2xl font-black tracking-tighter text-black uppercase">
-            DEMO
-          </span>
         </Link>
         
         {/* Desktop Links */}
         <div className="hidden lg:flex items-center gap-8">
-          <Link href="/dashboard" className="text-[10px] font-black uppercase tracking-[0.2em] text-black/60 hover:text-primary transition-colors flex items-center gap-2 group">
+          <Link href="/dashboard" className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/60 hover:text-primary transition-colors flex items-center gap-2 group">
             <MapPin className="h-3 w-3 group-hover:scale-110 transition-transform" /> Order
           </Link>
-          <Link href="/collector" className="text-[10px] font-black uppercase tracking-[0.2em] text-black/60 hover:text-primary transition-colors flex items-center gap-2 group">
+          <Link href="/collector" className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/60 hover:text-primary transition-colors flex items-center gap-2 group">
             <Truck className="h-3 w-3 group-hover:scale-110 transition-transform" /> Drive
           </Link>
-          <Link href="/admin" className="text-[10px] font-black uppercase tracking-[0.2em] text-black/60 hover:text-primary transition-colors flex items-center gap-2 group">
+          <Link href="/admin" className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/60 hover:text-primary transition-colors flex items-center gap-2 group">
             <ShieldCheck className="h-3 w-3 group-hover:scale-110 transition-transform" /> Command
           </Link>
-          <Link href="#" className="text-[10px] font-black uppercase tracking-[0.2em] text-black/60 hover:text-primary transition-colors flex items-center gap-2 group">
+          <Link href="#" className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/60 hover:text-primary transition-colors flex items-center gap-2 group">
             <Globe className="h-3 w-3 group-hover:scale-110 transition-transform" /> Impact
           </Link>
         </div>
 
         <div className="flex items-center gap-4">
+          <Button variant="ghost" size="icon" onClick={toggleTheme} className="rounded-full">
+            {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+          </Button>
+
           {!loading && (
             <>
               {user ? (
@@ -80,7 +102,7 @@ export default function Navigation() {
                     <Button variant="ghost" className="font-bold text-sm px-4">Log in</Button>
                   </Link>
                   <Link href="/login">
-                    <Button className="bg-black text-white hover:bg-black/90 font-bold px-6 h-11 rounded-full shadow-lg btn-hover-effect">
+                    <Button className="bg-black text-white dark:bg-primary dark:text-white hover:bg-black/90 font-bold px-6 h-11 rounded-full shadow-lg btn-hover-effect">
                       Get Started
                     </Button>
                   </Link>
@@ -108,7 +130,7 @@ export default function Navigation() {
                     <Button variant="outline" className="h-14 rounded-xl font-black border-2" onClick={handleLogout}>LOGOUT</Button>
                   ) : (
                     <Link href="/login" className="w-full">
-                      <Button className="w-full h-14 rounded-xl font-black bg-black text-white">GET STARTED</Button>
+                      <Button className="w-full h-14 rounded-xl font-black bg-black text-white dark:bg-primary">GET STARTED</Button>
                     </Link>
                   )}
                 </div>
