@@ -1,4 +1,3 @@
-
 import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -154,7 +153,7 @@ export default function Home() {
           <div className="space-y-6">
             <Link href="/" className="flex items-center gap-2">
               {logo ? (
-                <div className="relative h-10 w-10 overflow-hidden rounded-[7%] bg-white p-1">
+                <div className="relative h-10 w-10 overflow-hidden rounded-[7%] p-1">
                   <Image src={logo.imageUrl} alt="Logo" fill className="object-contain" />
                 </div>
               ) : null}
