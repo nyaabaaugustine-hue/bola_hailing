@@ -27,7 +27,7 @@ export default function Navigation() {
       <div className="container mx-auto flex h-full items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2 group">
           {logo ? (
-            <div className="relative h-12 w-12 overflow-hidden rounded-xl bg-black shadow-lg">
+            <div className="relative h-12 w-12 overflow-hidden rounded-[7%] bg-black shadow-lg">
               <Image 
                 src={logo.imageUrl} 
                 alt="Logo" 
