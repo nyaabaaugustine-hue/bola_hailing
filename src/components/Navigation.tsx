@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -45,7 +46,7 @@ export default function Navigation() {
       <div className="container mx-auto flex h-full items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2 group">
           {logo ? (
-            <div className="relative h-24 w-24 overflow-hidden rounded-[7%]">
+            <div className="relative h-20 w-20 overflow-hidden rounded-[7%]">
               <Image 
                 src={logo.imageUrl} 
                 alt="WasteGo" 
@@ -55,8 +56,8 @@ export default function Navigation() {
               />
             </div>
           ) : (
-            <div className="flex h-24 w-24 items-center justify-center rounded-[7%] bg-primary text-primary-foreground shadow-xl group-hover:bg-primary/90 transition-colors">
-              <span className="font-headline text-3xl font-black italic">W</span>
+            <div className="flex h-20 w-20 items-center justify-center rounded-[7%] bg-primary text-primary-foreground shadow-xl group-hover:bg-primary/90 transition-colors">
+              <span className="font-headline text-2xl font-black italic">W</span>
             </div>
           )}
         </Link>

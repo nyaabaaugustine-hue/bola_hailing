@@ -1,3 +1,4 @@
+
 @import 'leaflet/dist/leaflet.css';
 
 @tailwind base;
@@ -12,12 +13,11 @@
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    /* Vibrant WasteGo Orange #FF8C00 -> HSL(33, 100% 50%) */
+    /* Vibrant WasteGo Orange optimized for readability with dark text */
     --primary: 33 100% 50%;
-    /* Use black text on orange for accessibility/readability */
     --primary-foreground: 0 0% 0%;
-    /* Forest Green #228B22 -> HSL(120, 60.7% 34.1%) */
-    --secondary: 120 60.7% 34.1%;
+    /* Operational Green for Status & Health Indicators */
+    --secondary: 142 70.6% 45.3%;
     --secondary-foreground: 0 0% 100%;
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
@@ -39,8 +39,8 @@
     --popover-foreground: 0 0% 98%;
     --primary: 33 100% 50%;
     --primary-foreground: 0 0% 0%;
-    --secondary: 120 60.7% 45%;
-    --secondary-foreground: 0 0% 10%;
+    --secondary: 142 70.6% 45.3%;
+    --secondary-foreground: 0 0% 100%;
     --muted: 240 3.7% 15.9%;
     --muted-foreground: 240 5% 64.9%;
     --accent: 240 3.7% 15.9%;
@@ -67,6 +67,7 @@
 }
 
 .glass-nav {
+  /* 15% Transparency applied to the navigation background */
   @apply bg-background/85 backdrop-blur-3xl border-b border-black/5;
 }
 
