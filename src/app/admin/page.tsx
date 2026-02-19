@@ -59,7 +59,7 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen bg-background font-body">
       <Navigation />
-      <main className="container mx-auto pt-32 pb-12 px-4 md:pt-36">
+      <main className="container mx-auto pt-32 pb-12 px-4 md:pt-40">
         <div className="space-y-10">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-2">
@@ -110,14 +110,14 @@ export default function AdminPage() {
               <Card className="uber-shadow border-none rounded-[3rem] overflow-hidden bg-white">
                 <CardHeader className="p-10 border-b bg-muted/5 flex flex-row items-center justify-between">
                   <div>
-                    <CardTitle className="font-headline text-2xl uppercase tracking-tighter font-black">WasteGo Control Center</CardTitle>
-                    <CardDescription className="font-bold text-xs uppercase tracking-widest opacity-60">Real-time infrastructure monitoring</CardDescription>
+                    <CardTitle className="font-headline text-2xl uppercase tracking-tighter font-black text-secondary">WasteGo Control Center</CardTitle>
+                    <CardDescription className="font-bold text-xs uppercase tracking-widest opacity-60 text-secondary">Real-time infrastructure monitoring</CardDescription>
                   </div>
                   <Badge className="bg-secondary text-white border-none px-4 py-1.5 rounded-full font-black text-[9px] uppercase tracking-widest">Live Updates Active</Badge>
                 </CardHeader>
                 <CardContent className="p-0">
                   {loading ? (
-                    <div className="p-20 text-center text-muted-foreground font-black uppercase tracking-widest flex flex-col items-center gap-4">
+                    <div className="p-20 text-center text-secondary font-black uppercase tracking-widest flex flex-col items-center gap-4">
                        <Loader2 className="h-10 w-10 animate-spin" />
                        Synchronizing Hub...
                     </div>
@@ -216,10 +216,10 @@ export default function AdminPage() {
 
                <Card className="uber-shadow border-none rounded-[3rem] p-10 space-y-8 bg-white">
                   <div className="space-y-4">
-                     <h4 className="font-black text-xl uppercase tracking-tighter flex items-center gap-3">
-                        <Zap className="h-6 w-6 text-primary" /> Optimization Hub
+                     <h4 className="font-black text-xl uppercase tracking-tighter flex items-center gap-3 text-secondary">
+                        <Zap className="h-6 w-6 text-secondary" /> Optimization Hub
                      </h4>
-                     <p className="text-sm text-muted-foreground font-medium leading-relaxed">AI is currently re-routing {DUMMY_COLLECTORS.length} drivers for fuel efficiency.</p>
+                     <p className="text-sm font-black leading-relaxed text-secondary uppercase tracking-widest text-[10px]">AI is currently re-routing {DUMMY_COLLECTORS.length} drivers for fuel efficiency.</p>
                   </div>
                   <div className="space-y-4">
                      <Button className="w-full h-16 rounded-[1.5rem] font-black border-4 border-black bg-white text-black hover:bg-black/5 uppercase tracking-widest text-xs">
