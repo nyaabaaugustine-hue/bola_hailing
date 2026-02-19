@@ -1,8 +1,9 @@
+
 'use client';
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Recycle, MapPin, Truck, ShieldCheck, Info, LogOut, User } from 'lucide-react';
+import { Recycle, MapPin, Truck, ShieldCheck, Info, LogOut, User, Globe } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 import { useUser, useAuth } from '@/firebase';
 import { signOut } from 'firebase/auth';
@@ -42,7 +43,7 @@ export default function Navigation() {
             <ShieldCheck className="h-3 w-3 group-hover:scale-110 transition-transform" /> Command
           </Link>
           <Link href="#" className="text-[10px] font-black uppercase tracking-[0.2em] text-black/60 hover:text-primary transition-colors flex items-center gap-2 group">
-            <Info className="h-3 w-3 group-hover:scale-110 transition-transform" /> Impact
+            <Globe className="h-3 w-3 group-hover:scale-110 transition-transform" /> Impact
           </Link>
         </div>
 

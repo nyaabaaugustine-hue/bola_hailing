@@ -22,7 +22,9 @@ import {
   ShieldCheck, 
   CheckCircle2, 
   Mic, 
-  Activity 
+  Activity,
+  Navigation as NavigationIcon,
+  Compass
 } from 'lucide-react';
 import { resolveGhanaAddress } from '@/ai/flows/ghana-address-voice-resolution';
 import { useToast } from '@/hooks/use-toast';
@@ -181,21 +183,21 @@ export default function PickupRequestForm() {
             <div className="space-y-8">
               <div className="space-y-4">
                 <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-black/40">Resolution Mode</Label>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-3 gap-6">
                    {[
-                     { id: 'LANDMARK', label: 'Landmark', icon: MapPin },
-                     { id: 'GHANA_POST', label: 'Digital Addr', icon: ShieldCheck },
-                     { id: 'GPS_COORDINATE', label: 'GPS Pin', icon: Activity }
+                     { id: 'LANDMARK', label: 'Landmark', icon: MapPin, color: 'text-primary' },
+                     { id: 'GHANA_POST', label: 'Digital Addr', icon: ShieldCheck, color: 'text-secondary' },
+                     { id: 'GPS_COORDINATE', label: 'GPS Pin', icon: Activity, color: 'text-orange-500' }
                    ].map((mode) => (
                      <button 
                        key={mode.id}
                        onClick={() => setLocationType(mode.id)}
-                       className={`p-4 rounded-2xl flex flex-col items-center gap-3 border-2 transition-all ${locationType === mode.id ? 'border-black bg-black text-white shadow-xl' : 'border-black/5 bg-muted/30 text-black/60 hover:border-black/20'}`}
+                       className={`p-6 rounded-[2.5rem] flex flex-col items-center gap-4 border-4 transition-all duration-300 ${locationType === mode.id ? 'border-black bg-black text-white shadow-[0_20px_40px_rgba(0,0,0,0.2)] scale-105' : 'border-black/5 bg-muted/30 text-black/60 hover:border-black/20'}`}
                      >
-                        <div className={`h-10 w-10 rounded-xl flex items-center justify-center ${locationType === mode.id ? 'bg-white/20' : 'bg-black/5'}`}>
-                           <mode.icon className="h-6 w-6" />
+                        <div className={`h-16 w-16 rounded-[1.5rem] flex items-center justify-center shadow-lg ${locationType === mode.id ? 'bg-white/20' : 'bg-white'}`}>
+                           <mode.icon className={`h-8 w-8 ${locationType === mode.id ? 'text-white' : mode.color}`} />
                         </div>
-                        <span className="text-[9px] font-black uppercase tracking-widest">{mode.label}</span>
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em]">{mode.label}</span>
                      </button>
                    ))}
                 </div>
@@ -205,34 +207,34 @@ export default function PickupRequestForm() {
                 <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-black/40">Landmark Description</Label>
                 <div className="relative group">
                    <Input 
-                    className="h-20 text-xl px-8 pr-20 rounded-3xl border-4 border-black/5 bg-muted/30 focus:bg-white focus:border-black transition-all font-bold placeholder:font-medium"
-                    placeholder={locationType === 'LANDMARK' ? 'Describe where you are...' : 'e.g. GA-123-4567'}
+                    className="h-24 text-2xl px-10 pr-24 rounded-[2rem] border-4 border-black/5 bg-muted/30 focus:bg-white focus:border-black transition-all font-black placeholder:font-medium shadow-inner"
+                    placeholder={locationType === 'LANDMARK' ? 'Opposite Yellow Kiosk...' : 'e.g. GA-123-4567'}
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                   />
                   <button 
                     onClick={simulateVoiceInput}
-                    className={`absolute right-3 top-3 h-14 w-14 rounded-2xl flex items-center justify-center transition-all ${isRecording ? 'bg-destructive text-white animate-pulse' : 'bg-black text-white hover:bg-primary shadow-lg'}`}
+                    className={`absolute right-4 top-4 h-16 w-16 rounded-2xl flex items-center justify-center transition-all ${isRecording ? 'bg-destructive text-white animate-pulse' : 'bg-black text-white hover:bg-primary shadow-xl'}`}
                   >
-                    {isRecording ? <Activity className="h-6 w-6" /> : <Mic className="h-6 w-6" />}
+                    {isRecording ? <Activity className="h-8 w-8" /> : <Mic className="h-8 w-8" />}
                   </button>
                 </div>
-                <div className="flex items-center gap-3 p-4 bg-primary/5 rounded-2xl border-2 border-primary/10">
-                   <Sparkles className="h-5 w-5 text-primary" />
+                <div className="flex items-center gap-4 p-6 bg-primary/5 rounded-[1.5rem] border-2 border-primary/10">
+                   <Sparkles className="h-6 w-6 text-primary shrink-0" />
                    <p className="text-[10px] font-bold text-primary uppercase tracking-widest leading-relaxed">
-                     AI Recommendation: Using the landmark resolution engine for Accra central.
+                     Our landmark resolution engine is active. Voice transcriptions will be automatically geo-coded.
                    </p>
                 </div>
               </div>
             </div>
 
             <Button 
-              className="w-full h-20 text-xl font-black rounded-3xl bg-black text-white hover:bg-black/90 btn-hover-effect group mt-4 shadow-[0_20px_50px_rgba(0,0,0,0.1)]" 
+              className="w-full h-24 text-2xl font-black rounded-[2rem] bg-black text-white hover:bg-black/90 btn-hover-effect group mt-4 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.4)]" 
               onClick={handleAddressResolve} 
               disabled={loading || !address}
             >
-              {loading ? <Loader2 className="mr-3 h-8 w-8 animate-spin" /> : <MapPin className="mr-3 h-8 w-8" />}
-              CONFIRM LOCATION <ArrowRight className="ml-2 h-6 w-6 group-hover:translate-x-2 transition-transform" />
+              {loading ? <Loader2 className="mr-3 h-8 w-8 animate-spin" /> : <Compass className="mr-3 h-8 w-8" />}
+              CONFIRM POSITION <ArrowRight className="ml-2 h-8 w-8 group-hover:translate-x-3 transition-transform" />
             </Button>
           </div>
         )}
