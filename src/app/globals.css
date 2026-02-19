@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 98%;
+    --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
@@ -23,7 +23,7 @@
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
     --ring: 33 100% 50%;
-    --radius: 1rem;
+    --radius: 1.25rem;
   }
   .dark {
     --background: 240 10% 3.9%;
@@ -53,14 +53,18 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground selection:bg-primary/30;
   }
 }
 
 .uber-shadow {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04), 0 0 1px rgba(0, 0, 0, 0.1);
 }
 
-.map-gradient {
-  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%);
+.glass-nav {
+  @apply bg-white/70 backdrop-blur-xl border-b border-black/5;
+}
+
+.btn-hover-effect {
+  @apply transition-all duration-300 hover:scale-[1.02] active:scale-[0.98];
 }

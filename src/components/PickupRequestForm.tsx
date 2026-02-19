@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Camera, MapPin, Loader2, Sparkles, CreditCard, CheckCircle2, Truck, Smartphone, Star, Trash2, ArrowRight, Info } from 'lucide-react';
+import { Camera, MapPin, Loader2, Sparkles, CreditCard, Truck, Smartphone, Star, Trash2, ArrowRight, Info, CheckCircle2 } from 'lucide-react';
 import { resolveGhanaAddress } from '@/ai/flows/ghana-address-voice-resolution';
 import { wasteImageClassification } from '@/ai/flows/waste-image-classification-flow';
 import { dynamicPickupPricing } from '@/ai/flows/dynamic-pickup-pricing-flow';
@@ -44,7 +44,6 @@ export default function PickupRequestForm() {
 
   const handleImageUpload = async () => {
     setLoading(true);
-    // Simulate real AI processing delay for that premium feel
     setTimeout(async () => {
       const mockDataUri = "data:image/jpeg;base64,...";
       try {
@@ -110,180 +109,181 @@ export default function PickupRequestForm() {
   };
 
   return (
-    <Card className="uber-shadow border-none overflow-hidden bg-white">
-      <div className="flex bg-muted/20 p-4 gap-2 border-b">
+    <Card className="uber-shadow border-none overflow-hidden bg-white rounded-[2rem]">
+      <div className="flex bg-muted/10 p-5 gap-3 border-b border-black/5">
         {[1, 2, 3, 4].map((s) => (
-          <div key={s} className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${s <= step ? 'bg-primary' : 'bg-muted'}`} />
+          <div key={s} className={`h-1.5 flex-1 rounded-full transition-all duration-700 ${s <= step ? 'bg-black' : 'bg-black/5'}`} />
         ))}
       </div>
-      <CardContent className="p-8">
+      <CardContent className="p-10">
         {step === 1 && (
-          <div className="space-y-6 animate-in slide-in-from-right-8 duration-500">
+          <div className="space-y-8 animate-in slide-in-from-right-8 duration-500">
             <div className="space-y-4">
-              <h2 className="font-headline text-2xl font-black">Where is the Borla?</h2>
-              <p className="text-muted-foreground text-sm">Select your location method for precision matching.</p>
+              <h2 className="font-headline text-4xl font-black tracking-tighter uppercase">Pickup Location</h2>
+              <p className="text-muted-foreground font-medium">Select your preferred location method for a precise match.</p>
             </div>
             
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Location Method</Label>
+            <div className="space-y-6">
+              <div className="space-y-3">
+                <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-black/40">Method</Label>
                 <Select defaultValue={locationType} onValueChange={setLocationType}>
-                  <SelectTrigger className="h-14 text-base rounded-xl border-2">
+                  <SelectTrigger className="h-16 text-lg rounded-2xl border-2 border-black/5 bg-muted/30 focus:bg-white focus:border-black transition-all">
                     <SelectValue placeholder="How should we find you?" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="LANDMARK">📍 Landmark (Behind Melcom, etc.)</SelectItem>
-                    <SelectItem value="GHANA_POST">📮 Digital Address (GA-123-4567)</SelectItem>
-                    <SelectItem value="GPS_COORDINATE">⚡ Precise GPS Location</SelectItem>
+                  <SelectContent className="rounded-2xl border-none shadow-2xl">
+                    <SelectItem value="LANDMARK" className="h-12 font-bold">📍 Ghanaian Landmark</SelectItem>
+                    <SelectItem value="GHANA_POST" className="h-12 font-bold">📮 GhanaPost Digital Address</SelectItem>
+                    <SelectItem value="GPS_COORDINATE" className="h-12 font-bold">⚡ Precise GPS Location</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               
-              <div className="space-y-2">
-                <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Detailed Address</Label>
+              <div className="space-y-3">
+                <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-black/40">Address / Description</Label>
                 <Input 
-                  className="h-14 text-lg px-6 rounded-xl border-2 focus:border-primary transition-all"
-                  placeholder={locationType === 'LANDMARK' ? 'e.g. Total Junction, East Legon' : 'e.g. GA-001-2345'}
+                  className="h-16 text-lg px-6 rounded-2xl border-2 border-black/5 bg-muted/30 focus:bg-white focus:border-black transition-all"
+                  placeholder={locationType === 'LANDMARK' ? 'e.g. Behind Total Filling Station' : 'e.g. GA-123-4567'}
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                 />
-                <p className="text-[10px] text-muted-foreground italic flex items-center gap-1">
-                  <Info className="h-3 w-3" /> Landmark-based resolution is fastest for our collectors.
+                <p className="text-[10px] text-black/40 font-bold italic flex items-center gap-2">
+                  <Info className="h-3 w-3" /> Landmark-based resolution is often more accurate for local drivers.
                 </p>
               </div>
             </div>
 
-            <Button className="w-full h-14 text-lg font-bold rounded-xl shadow-lg shadow-primary/20 group" onClick={handleAddressResolve} disabled={loading || !address}>
-              {loading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <MapPin className="mr-2 h-5 w-5" />}
-              Set Pickup Spot <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            <Button className="w-full h-16 text-lg font-black rounded-2xl bg-black text-white hover:bg-black/90 btn-hover-effect group mt-4 shadow-xl shadow-black/10" onClick={handleAddressResolve} disabled={loading || !address}>
+              {loading ? <Loader2 className="mr-3 h-6 w-6 animate-spin" /> : <MapPin className="mr-3 h-6 w-6" />}
+              Set Destination <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
           </div>
         )}
 
         {step === 2 && (
           <div className="space-y-8 animate-in slide-in-from-right-8 duration-500">
-            <div className="text-center space-y-2">
-              <h3 className="font-headline text-3xl font-black">AI Classification</h3>
-              <p className="text-muted-foreground">Snap a photo. We'll identify the waste and set a fair price.</p>
+            <div className="space-y-3">
+              <h3 className="font-headline text-4xl font-black tracking-tighter uppercase">Scan Waste</h3>
+              <p className="text-muted-foreground font-medium">Snap a photo. Our AI identifies the contents for better recycling.</p>
             </div>
             <div 
-              className="group relative h-72 w-full rounded-2xl border-4 border-dashed border-muted hover:border-primary/50 transition-colors bg-muted/10 flex flex-col items-center justify-center cursor-pointer overflow-hidden"
+              className="group relative h-80 w-full rounded-[2rem] border-4 border-dashed border-black/5 hover:border-primary/50 transition-all bg-muted/30 flex flex-col items-center justify-center cursor-pointer overflow-hidden"
               onClick={handleImageUpload}
             >
                {loading ? (
-                 <div className="flex flex-col items-center gap-4">
+                 <div className="flex flex-col items-center gap-6">
                     <div className="relative">
                        <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping" />
                        <Loader2 className="h-16 w-16 text-primary animate-spin relative z-10" />
                     </div>
-                    <p className="font-bold text-primary animate-pulse tracking-widest uppercase text-xs">AI Analyzing Load...</p>
+                    <p className="font-black text-primary animate-pulse tracking-[0.2em] uppercase text-xs">AI Processing Load...</p>
                  </div>
                ) : (
-                 <div className="flex flex-col items-center gap-4 p-8 text-center">
-                    <div className="h-20 w-20 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                 <div className="flex flex-col items-center gap-6 p-10 text-center">
+                    <div className="h-24 w-24 rounded-3xl bg-black text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-2xl">
                       <Camera className="h-10 w-10" />
                     </div>
-                    <div>
-                      <p className="font-black text-xl">Upload or Snap Photo</p>
-                      <p className="text-sm text-muted-foreground mt-1">Classification helps us route to recycling centers.</p>
+                    <div className="space-y-2">
+                      <p className="font-black text-2xl uppercase tracking-tighter">Capture or Upload</p>
+                      <p className="text-sm text-black/40 font-medium">High accuracy classification enabled.</p>
                     </div>
                  </div>
                )}
             </div>
-            <Button variant="ghost" className="w-full h-12 text-muted-foreground font-bold hover:bg-transparent" onClick={() => setStep(1)} disabled={loading}>
+            <Button variant="ghost" className="w-full h-12 text-black/40 font-black uppercase tracking-widest text-[10px] hover:bg-transparent" onClick={() => setStep(1)} disabled={loading}>
               <ArrowRight className="mr-2 h-4 w-4 rotate-180" /> Change Location
             </Button>
           </div>
         )}
 
         {step === 3 && wasteData && (
-          <div className="space-y-6 animate-in slide-in-from-right-8 duration-500">
-             <div className="rounded-2xl bg-primary text-white p-8 shadow-2xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 p-4 opacity-10">
-                   <Trash2 className="h-32 w-32" />
+          <div className="space-y-8 animate-in slide-in-from-right-8 duration-500">
+             <div className="rounded-[2.5rem] bg-black text-white p-10 shadow-2xl relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-8 opacity-10">
+                   <Trash2 className="h-40 w-40" />
                 </div>
-                <div className="flex justify-between items-start mb-8 relative z-10">
+                <div className="flex justify-between items-start mb-10 relative z-10">
                    <div className="flex items-center gap-2">
-                      <Sparkles className="h-5 w-5" />
-                      <span className="font-black uppercase tracking-widest text-[10px]">AI Dynamic Price</span>
+                      <Sparkles className="h-5 w-5 text-primary" />
+                      <span className="font-black uppercase tracking-[0.2em] text-[10px] text-white/60">Dynamic Pricing Active</span>
                    </div>
-                   <Badge className="bg-white/20 text-white border-none font-bold">Priority Pickup</Badge>
+                   <Badge className="bg-white/10 text-white border-none font-bold uppercase tracking-widest text-[9px] px-3">Priority</Badge>
                 </div>
                 <div className="flex items-end justify-between relative z-10">
                    <div>
-                      <p className="text-5xl font-black">GHS {priceData?.pickupPrice.toFixed(2)}</p>
-                      <p className="text-sm opacity-90 mt-2 font-bold flex items-center gap-2">
+                      <p className="text-[10px] uppercase font-black tracking-widest text-white/40 mb-2">Estimated Total</p>
+                      <p className="text-6xl font-black">GHS {priceData?.pickupPrice.toFixed(2)}</p>
+                      <p className="text-xs text-primary mt-4 font-black uppercase tracking-widest flex items-center gap-2">
                          {wasteData.wasteCategories[0].replace('_', ' ')} • ~{wasteData.estimatedWeightKg}kg
                       </p>
                    </div>
                    <div className="text-right">
-                      <p className="text-[10px] uppercase font-black opacity-70 tracking-widest">ETA</p>
-                      <p className="font-black text-2xl">8 MINS</p>
+                      <p className="text-[10px] uppercase font-black text-white/40 tracking-widest mb-1">ETA</p>
+                      <p className="font-black text-3xl">8 MINS</p>
                    </div>
                 </div>
              </div>
 
              <div className="space-y-4">
-                <p className="text-xs font-black uppercase text-muted-foreground tracking-widest">Payment Method</p>
+                <p className="text-[10px] font-black uppercase text-black/40 tracking-[0.2em]">Payment Selection</p>
                 <div className="grid grid-cols-2 gap-4">
                    {[
                      { id: 'momo', label: 'Mobile Money', icon: Smartphone, color: 'text-yellow-500' },
                      { id: 'card', label: 'Debit Card', icon: CreditCard, color: 'text-blue-500' }
                    ].map((p) => (
-                     <Button key={p.id} variant="outline" className="h-20 rounded-2xl flex flex-col items-center justify-center gap-2 border-2 hover:border-primary hover:bg-primary/5 transition-all">
-                        <p.icon className={`h-6 w-6 ${p.color}`} />
-                        <span className="font-bold text-xs uppercase">{p.label}</span>
+                     <Button key={p.id} variant="outline" className="h-24 rounded-[1.5rem] flex flex-col items-center justify-center gap-3 border-2 border-black/5 hover:border-black hover:bg-black/5 transition-all">
+                        <p.icon className={`h-7 w-7 ${p.color}`} />
+                        <span className="font-black text-[10px] uppercase tracking-widest">{p.label}</span>
                      </Button>
                    ))}
                 </div>
              </div>
 
-             <div className="pt-4 space-y-4">
-                <Button className="w-full h-16 text-xl font-black rounded-2xl shadow-2xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all" onClick={handleConfirmOrder} disabled={loading}>
-                   {loading ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : "Confirm BorlaHaze"}
+             <div className="pt-6 space-y-6">
+                <Button className="w-full h-18 text-xl font-black rounded-2xl bg-black text-white shadow-2xl btn-hover-effect" onClick={handleConfirmOrder} disabled={loading}>
+                   {loading ? <Loader2 className="mr-3 h-6 w-6 animate-spin" /> : "Confirm Order"}
                 </Button>
-                <p className="text-[10px] text-center text-muted-foreground px-8 leading-relaxed">
-                  By confirming, you agree to our fair usage policy for household and commercial refuse collection.
+                <p className="text-[10px] text-center text-black/40 px-12 leading-relaxed font-bold uppercase tracking-tighter">
+                  By confirming, you agree to our fair usage policy for community refuse collection.
                 </p>
              </div>
           </div>
         )}
 
         {step === 4 && (
-          <div className="text-center py-10 animate-in zoom-in-95 duration-500 space-y-10">
-            <div className="relative mx-auto h-40 w-40">
-               <div className="absolute inset-0 bg-secondary/20 rounded-full animate-ping" />
-               <div className="relative h-40 w-40 rounded-full bg-secondary flex items-center justify-center text-white shadow-2xl">
-                 <Truck className="h-20 w-20" />
+          <div className="text-center py-10 animate-in zoom-in-95 duration-500 space-y-12">
+            <div className="relative mx-auto h-48 w-48">
+               <div className="absolute inset-0 bg-secondary/10 rounded-full animate-ping" />
+               <div className="relative h-48 w-48 rounded-full bg-black flex items-center justify-center text-white shadow-[0_40px_80px_-20px_rgba(0,0,0,0.3)]">
+                 <Truck className="h-24 w-24 text-primary" />
                </div>
             </div>
-            <div className="space-y-3">
-              <h2 className="font-headline text-4xl font-black">Driver Assigned!</h2>
-              <p className="text-muted-foreground text-lg max-w-xs mx-auto">Kojo is arriving in a White Compactor Truck.</p>
+            <div className="space-y-4">
+              <h2 className="font-headline text-5xl font-black tracking-tighter uppercase">Truck Assigned</h2>
+              <p className="text-muted-foreground font-medium text-lg max-w-xs mx-auto">Kojo Mensah is heading to your location now.</p>
             </div>
             
-            <Card className="uber-shadow border-none bg-muted/30 p-6 rounded-3xl">
-               <div className="flex items-center gap-5">
-                  <div className="h-16 w-16 rounded-2xl overflow-hidden border-2 border-primary shadow-lg">
+            <Card className="uber-shadow border-none bg-muted/30 p-8 rounded-[2rem]">
+               <div className="flex items-center gap-6">
+                  <div className="h-20 w-20 rounded-2xl overflow-hidden border-2 border-black shadow-xl">
                     <Image src="https://picsum.photos/seed/driver1/200/200" width={200} height={200} alt="Driver" />
                   </div>
                   <div className="flex-1 text-left">
-                     <p className="font-black text-xl">Kojo Mensah</p>
-                     <div className="flex items-center gap-2 mt-1">
-                        <div className="flex items-center gap-1 text-xs font-bold text-primary">
+                     <p className="font-black text-2xl uppercase tracking-tighter">Kojo Mensah</p>
+                     <div className="flex items-center gap-3 mt-1">
+                        <div className="flex items-center gap-1 text-[10px] font-black text-primary">
                           <Star className="h-4 w-4 fill-primary" />
                           <span>4.9</span>
                         </div>
-                        <span className="text-muted-foreground text-xs">• Verified Hub Driver</span>
+                        <span className="text-black/40 text-[10px] font-black uppercase tracking-widest">• Verified Driver</span>
                      </div>
                   </div>
                   <div className="text-right">
-                    <Badge variant="outline" className="border-primary text-primary font-black px-4 py-1">8 MINS</Badge>
+                    <div className="bg-black text-white font-black px-4 py-2 rounded-xl text-sm">8m</div>
                   </div>
                </div>
             </Card>
 
-            <Button className="w-full h-14 rounded-2xl font-black text-lg shadow-xl" variant="outline" onClick={() => window.location.reload()}>
+            <Button className="w-full h-16 rounded-2xl font-black text-lg bg-black text-white shadow-xl" variant="default" onClick={() => window.location.reload()}>
               Track Arrival Live
             </Button>
           </div>

@@ -2,8 +2,8 @@ import type {Metadata} from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'BorlaHaze | On-Demand Trash Hailing in Ghana',
-  description: 'Book reliable waste pickup from anywhere in Ghana with AI-powered classification and dynamic pricing.',
+  title: 'BorlaHaze | Premium Trash Hailing Ghana',
+  description: 'High-fidelity waste management infrastructure for Ghana. AI-powered classification and dynamic pricing.',
 };
 
 export default function RootLayout({
