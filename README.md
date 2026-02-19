@@ -14,7 +14,7 @@ Sustainable infrastructure for a cleaner, smarter Ghana. DEMO solves the "last-m
 
 **Scene 1: The Request (Customer Side)**
 *   **Persona:** Ama Owusu, chop bar owner in Madina.
-*   **Problem:** End of day, high volume of mixed waste (food leftovers, sachet plastics, ash). No formal street name.
+*   **Problem:** End of day, high volume of mixed waste. No formal street name.
 *   **Action:** Ama opens the **DEMO** app.
     *   **Landmark Resolution:** She enters "Opposite Yellow Kiosk, Zongo Junction."
     *   **AI Scan:** She takes a photo of the waste.
@@ -24,19 +24,50 @@ Sustainable infrastructure for a cleaner, smarter Ghana. DEMO solves the "last-m
 
 **Scene 2: The Acceptance (Collector Side)**
 *   **Persona:** Kwame Mensah, Mini-Truck operator.
-*   **Action:** Kwame is online and receives a "New Job Alert."
+*   **Action:** Kwame receives a "New Job Alert."
     *   **Mission:** Pickup at Zongo Junction for GH₵ 28.
-    *   **Acceptance:** Kwame reviews Ama’s rating and accepts.
-    *   **Navigation:** Guided routing avoids traffic and potholes.
+    *   **Acceptance:** Kwame reviews Ama’s details and accepts.
+    *   **Navigation:** Guided routing avoids traffic.
 
 **Scene 3: Fulfillment & Disposal**
 *   **Action:** Kwame arrives, Ama verifies. Kwame loads the truck.
 *   **Disposal:** The app routes Kwame to the nearest compatible authorized landfill (Madina Municipal Dump Site).
 *   **Earnings:** Kwame earns **GH₵ 23** instantly (after GH₵ 5 platform commission).
 
-**Scene 4: Fleet Command (Admin Side)**
-*   **Action:** Operations managers monitor the live heatmap.
-*   **Impact:** Real-time data on weight diversion and fleet efficiency.
+---
+
+## 📱 Page & Feature Guide
+
+### 1. Homepage (`/`)
+*   **Hero Section**: High-impact visual branding emphasizing "Trash Hailing Reimagined."
+*   **Trust Indicators**: Badges for verified operators, USSD support (*713#), and regional availability (Accra & Kumasi).
+*   **Solution Cards**: Clear paths for "Households" (Convenience) and "Business" (Fleet Management).
+
+### 2. Login Portal (`/login`)
+*   **Multi-Role Entry**: Dedicated access points for Customers, Collectors, and Admins.
+*   **Persona Identification**: Brief descriptions of each role to guide user simulation.
+
+### 3. Customer Dashboard (`/dashboard`)
+*   **Pickup Request Form**:
+    *   **Step 1: Location**: Choose between Landmarks, GhanaPost Digital Address, or GPS.
+    *   **Step 2: AI Scan**: Functional image upload simulating waste classification.
+    *   **Step 3: Quote**: Dynamic GHS pricing based on AI analysis.
+    *   **Step 4: Dispatch**: Real-time visual confirmation of the matched collector.
+*   **Live Tracking**: Interactive map view with collector profile, rating, and direct "Call" functionality.
+*   **Impact Metrics**: Real-time tracking of "Total Weight Diversion" and "Total Pickups."
+
+### 4. Collector Dashboard (`/collector`)
+*   **Duty Status**: Online/Offline toggle with immediate UI feedback.
+*   **Earnings Card**: Professional wallet view showing daily earnings, trip counts, and remaining vehicle capacity.
+*   **Incoming Mission**: "Uber-style" overlay for new requests with distance, price, and landmark details.
+*   **In-Job Navigation**: One-tap access to navigation and direct customer calling.
+*   **Landfill Availability**: Real-time traffic and tipping fee status for authorized disposal sites.
+
+### 5. Admin Fleet Command (`/admin`)
+*   **Network Overview**: Live stats on active drivers, network revenue, and total diverted tonnage.
+*   **Live Order Management**: A command center to review, approve, or cancel incoming requests.
+*   **Operational Heatmap**: Visualization of network activity and driver distribution.
+*   **Quick Dispatch**: Tools for re-routing idle trucks to high-demand zones.
 
 ---
 
@@ -45,20 +76,10 @@ Sustainable infrastructure for a cleaner, smarter Ghana. DEMO solves the "last-m
 *   **Frontend:** Next.js 15 (App Router), React 19, Tailwind CSS.
 *   **UI Components:** ShadCN UI (Custom Premium Theme).
 *   **AI Engine (Genkit):**
-    *   **Waste Classification:** Image-to-data flow for volume and type estimation.
-    *   **Dynamic Pricing:** Real-time calculation based on fuel, distance, and tipping fees.
-    *   **Landmark Resolution:** Translating local descriptions into precise GPS coordinates.
-    *   **Route Optimization:** Multi-stop routing for collectors.
-*   **Backend:** Genkit Server Actions with Firebase integration capability.
-
----
-
-## 🚀 Key Value Propositions
-
-1.  **Landmark Intelligence:** No digital address required. We understand "Yellow Kiosk" logic.
-2.  **Visual Quotes:** Stop haggling. AI sees the trash and sets a fair price.
-3.  **MoMo Integration:** Seamless cashless transactions for a digitized economy.
-4.  **Authorized Disposal:** We ensure trash goes to landfills, not gutters.
+    *   **Waste Classification**: Image-to-data flow for volume and type estimation.
+    *   **Dynamic Pricing**: Real-time calculation based on fuel, distance, and tipping fees.
+    *   **Landmark Resolution**: Translating local descriptions into precise GPS coordinates.
+*   **Backend:** Genkit Server Actions with simulation capability.
 
 ---
 
