@@ -17,18 +17,18 @@ const SmartCollectorMatchingInputSchema = z.object({
   }).describe('The GPS location of the user requesting trash pickup.'),
   wasteDetails: z.object({
     wasteType: z.string().describe('The primary type of waste (e.g., "sachet plastics", "organic market waste", "construction rubble").'),
-    estimatedVolume: z.number().min(0).describe('Estimated volume of waste in cubic meters (m³).'),
+    estimatedVolume: z.number().min(0).describe('Estimated volume of waste in cubic meters (m3).'),
     estimatedWeight: z.number().min(0).describe('Estimated weight of waste in kilograms (kg).'),
     requiredTruckType: z.string().optional().describe('Optional: Specific type of truck required if known (e.g., "compactor", "open-bed").'),
   }).describe('Details about the waste to be collected.'),
   availableCollectors: z.array(z.object({
     collectorId: z.string().describe('Unique identifier for the waste collector.'),
     currentLocation: z.object({
-      lat: z.number().describe('Latitude of the collector\u0027s current location.'),
-      lng: z.number().describe('Longitude of the collector\u0027s current location.'),
+      lat: z.number().describe("Latitude of the collector's current location."),
+      lng: z.number().describe("Longitude of the collector's current location."),
     }).describe('The current GPS location of the collector.'),
-    truckCapacityKg: z.number().min(0).describe('Maximum waste capacity of the collector\u0027s truck in kilograms (kg).'),
-    truckCapacityM3: z.number().min(0).describe('Maximum waste capacity of the collector\u0027s truck in cubic meters (m³).'),
+    truckCapacityKg: z.number().min(0).describe("Maximum waste capacity of the collector's truck in kilograms (kg)."),
+    truckCapacityM3: z.number().min(0).describe("Maximum waste capacity of the collector's truck in cubic meters (m3)."),
     acceptedWasteTypes: z.array(z.string()).describe('List of waste types the collector is equipped to handle.'),
     reliabilityScore: z.number().min(0).max(100).describe('A score between 0 and 100 indicating reliability.'),
     historicalAcceptanceRate: z.number().min(0).max(100).describe('Percentage between 0 and 100 of jobs historically accepted by this collector.'),
@@ -53,7 +53,33 @@ const smartCollectorMatchingPrompt = ai.definePrompt({
   name: 'smartCollectorMatchingPrompt',
   input: { schema: SmartCollectorMatchingInputSchema },
   output: { schema: SmartCollectorMatchingOutputSchema },
-  prompt: `You are the Smart Collector Matching Engine for a trash hailing service in Ghana. Your goal is to find the single best waste collector from a list of available collectors for a user's trash pickup request.\n\nConsider the following criteria for an optimal match, prioritizing efficiency, compatibility, and reliability to minimize travel time, idle fuel consumption, and missed service level agreements (SLAs):\n1.  **Collector Proximity:** The closer the collector is to the user, the better.\n2.  **Waste Type Compatibility:** The collector *must* accept the user's waste type.\n3.  **Remaining Capacity:** The collector's truck must have enough capacity (both weight and volume) to handle the user's estimated waste.\n4.  **Reliability Score:** Higher reliability scores are preferred.\n5.  **Historical Acceptance Rate:** Collectors with a higher acceptance rate are preferred.\n6.  **Route Efficiency Score:** Collectors with more efficient typical routes are preferred.\n7.  **Availability:** The collector *must* be marked as available.\n\nHere is the user's trash pickup request:\n- User Location: Latitude {{{userLocation.lat}}}, Longitude {{{userLocation.lng}}}\n- Waste Type: {{{wasteDetails.wasteType}}}\n- Estimated Volume: {{{wasteDetails.estimatedVolume}}} m³\n- Estimated Weight: {{{wasteDetails.estimatedWeight}}} kg\n{{#if wasteDetails.requiredTruckType}}- Required Truck Type: {{{wasteDetails.requiredTruckType}}}{{/if}}\n\nHere is a JSON array of currently available waste collectors. Each collector object contains their details:\n\n```json\n{{{json availableCollectors}}}\n```\n\nAnalyze the user's request and the available collectors thoroughly. Select the single best collector that meets all hard requirements (availability, waste type compatibility, capacity) and scores highest on the soft criteria (proximity, reliability, acceptance rate, route efficiency).\n\nProvide the 'matchedCollectorId' and a clear, concise 'reasoning' for your choice, explaining how the selected collector best fulfills the criteria. An optional 'matchScore' can also be provided.`
+  prompt: `You are the Smart Collector Matching Engine for a trash hailing service in Ghana. Your goal is to find the single best waste collector from a list of available collectors for a user's trash pickup request.
+
+Consider the following criteria for an optimal match, prioritizing efficiency, compatibility, and reliability to minimize travel time, idle fuel consumption, and missed service level agreements (SLAs):
+1.  **Collector Proximity:** The closer the collector is to the user, the better.
+2.  **Waste Type Compatibility:** The collector *must* accept the user's waste type.
+3.  **Remaining Capacity:** The collector's truck must have enough capacity (both weight and volume) to handle the user's estimated waste.
+4.  **Reliability Score:** Higher reliability scores are preferred.
+5.  **Historical Acceptance Rate:** Collectors with a higher acceptance rate are preferred.
+6.  **Route Efficiency Score:** Collectors with more efficient typical routes are preferred.
+7.  **Availability:** The collector *must* be marked as available.
+
+Here is the user's trash pickup request:
+- User Location: Latitude {{{userLocation.lat}}}, Longitude {{{userLocation.lng}}}
+- Waste Type: {{{wasteDetails.wasteType}}}
+- Estimated Volume: {{{wasteDetails.estimatedVolume}}} m3
+- Estimated Weight: {{{wasteDetails.estimatedWeight}}} kg
+{{#if wasteDetails.requiredTruckType}}- Required Truck Type: {{{wasteDetails.requiredTruckType}}}{{/if}}
+
+Here is a JSON array of currently available waste collectors. Each collector object contains their details:
+
+```json
+{{{json availableCollectors}}}
+```
+
+Analyze the user's request and the available collectors thoroughly. Select the single best collector that meets all hard requirements (availability, waste type compatibility, capacity) and scores highest on the soft criteria (proximity, reliability, acceptance rate, route efficiency).
+
+Provide the 'matchedCollectorId' and a clear, concise 'reasoning' for your choice, explaining how the selected collector best fulfills the criteria. An optional 'matchScore' can also be provided.`,
 });
 
 const smartCollectorMatchingFlow = ai.defineFlow(

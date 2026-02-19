@@ -45,7 +45,7 @@ export type WasteImageClassificationInput = z.infer<typeof WasteImageClassificat
 const WasteImageClassificationOutputSchema = z.object({
   wasteCategories: z.array(WasteCategorySchema).describe('An array of classified waste types relevant to Ghana.'),
   estimatedWeightKg: z.number().describe('The estimated weight of the waste in kilograms.'),
-  estimatedVolumeM3: z.number().describe('The estimated volume of the waste in cubic meters.'),
+  estimatedVolumeM3: z.number().describe('The estimated volume of the waste in cubic meters (m3).'),
   hazardDetected: z.boolean().describe('True if any hazardous materials are detected in the waste.'),
   pickupDifficultyScore: PickupDifficultySchema.describe('An assessment of the difficulty of picking up the waste.'),
   disposalRouteRecommendation: z.string().describe('A recommendation for the appropriate disposal route or facility.'),

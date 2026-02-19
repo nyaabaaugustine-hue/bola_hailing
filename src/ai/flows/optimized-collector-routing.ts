@@ -47,8 +47,8 @@ const OptimizedCollectorRoutingInputSchema = z.object({
   roadConditions: z.string().describe('General road conditions relevant to Ghana (e.g., "potholed roads in rural areas", "smooth highways").'),
   weatherData: z.string().describe('Current weather conditions (e.g., "heavy rainfall causing floods", "clear and sunny").'),
   landfills: z.array(LandfillSchema).describe('A list of available authorized disposal facilities with their details.'),
-  collectorCapacityKg: z.number().describe('The remaining capacity of the collector\u0027s truck in kilograms.'),
-  collectorCapacityM3: z.number().describe('The remaining capacity of the collector\u0027s truck in cubic meters.'),
+  collectorCapacityKg: z.number().describe("The remaining capacity of the collector's truck in kilograms."),
+  collectorCapacityM3: z.number().describe("The remaining capacity of the collector's truck in cubic meters."),
   collectorAcceptedWasteTypes: z.array(z.string()).describe('A list of waste types the collector is equipped to handle.'),
   municipalPolicies: z.string().describe('Any relevant municipal policies or guidelines affecting waste disposal (e.g., "all organic waste must go to composting facility A").').optional(),
 });
@@ -78,15 +78,15 @@ Given the following information, your task is to determine the most efficient an
 
 Collector Details:
 - Current Location: Lat: {{{collectorLocation.lat}}}, Lng: {{{collectorLocation.lng}}}
-- Remaining Capacity: {{{collectorCapacityKg}}} kg, {{{collectorCapacityM3}}} m³
-- Accepted Waste Types: {{{collectorAcceptedWasteTypes.join(', ')}1}}
+- Remaining Capacity: {{{collectorCapacityKg}}} kg, {{{collectorCapacityM3}}} m3
+- Accepted Waste Types: {{{collectorAcceptedWasteTypes}}}
 
 Pickup Requests:
 {{#each pickupRequests}}
 - Pickup ID: {{{this.pickupId}}}
   Location: Lat: {{{this.location.lat}}}, Lng: {{{this.location.lng}}}
   Waste Type: {{{this.wasteType}}}
-  Estimated Volume: {{{this.estimatedVolumeM3}}} m³
+  Estimated Volume: {{{this.estimatedVolumeM3}}} m3
   Estimated Weight: {{{this.estimatedWeightKg}}} kg
 {{/each}}
 
@@ -100,12 +100,12 @@ Available Disposal Facilities (Landfills/Recycling Centers):
 - Facility ID: {{{this.id}}}
   Name: {{{this.name}}}
   Location: Lat: {{{this.location.lat}}}, Lng: {{{this.location.lng}}}
-  Accepted Waste Types: {{{this.acceptedWasteTypes.join(', ')}1}}
+  Accepted Waste Types: {{{this.acceptedWasteTypes}}}
   Predicted Queue Time: {{{this.predictedQueueTimeHours}}} hours
   Current Tipping Fee: {{{this.currentTippingFee}}}
 {{/each}}
 
-Municipal Policies (if any): {{{municipalPolicies}}1}}
+Municipal Policies (if any): {{{municipalPolicies}}}
 
 Based on this data, provide the optimized route as a sequence of steps. Ensure that:
 1. The route starts from the collector's current location.
