@@ -35,7 +35,7 @@ export default function AdminPage() {
             <div className="space-y-1">
               <h1 className="font-headline text-4xl font-black tracking-tight uppercase">Fleet Command</h1>
               <p className="text-muted-foreground flex items-center gap-2 font-medium">
-                <Activity className="h-4 w-4 text-secondary" /> Monitoring live network operations in Accra & Kumasi.
+                <Activity className="h-4 w-4 text-secondary" /> Monitoring live network operations.
               </p>
             </div>
             <div className="flex gap-3">
@@ -143,7 +143,7 @@ export default function AdminPage() {
                   </div>
                   <p className="text-[10px] font-black uppercase tracking-widest opacity-60">Impact Leader</p>
                   <p className="text-2xl font-black mt-1">2.4 Tons saved</p>
-                  <p className="text-xs text-white/50 mt-2">Offset equivalent to 42 trees in Aburi.</p>
+                  <p className="text-xs text-white/50 mt-2">Equivalent to 42 trees in Aburi.</p>
                 </div>
               </CardContent>
             </Card>

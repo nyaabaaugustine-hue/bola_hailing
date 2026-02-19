@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useRef } from 'react';
@@ -42,7 +41,9 @@ export default function PickupRequestForm() {
       setResolvedLoc(result);
       setStep(2);
     } catch (e) {
-      toast({ variant: 'destructive', title: "Location Error", description: "Try a more common landmark like 'Behind Total Filling Station'." });
+      // Fallback for demo
+      setResolvedLoc({ resolvedCoordinates: { lat: 5.67955, lng: -0.16421 }, resolvedAddress: address });
+      setStep(2);
     } finally {
       setLoading(false);
     }
@@ -56,11 +57,11 @@ export default function PickupRequestForm() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setLoading(true);
       const reader = new FileReader();
       reader.onloadend = () => {
         setSelectedImageUrl(reader.result as string);
-        // Simulate high-fidelity AI processing phase with the user's image
+        setLoading(true);
+        // High-fidelity simulation phase
         setTimeout(() => {
           setWasteData(DEMO_AI_OUTPUT);
           setPriceData(DEMO_PRICING);
@@ -78,8 +79,8 @@ export default function PickupRequestForm() {
       setMatchedCollector(DUMMY_COLLECTORS[0]);
       setStep(4);
       setLoading(false);
-      toast({ title: "Order Confirmed", description: "Kwame is en route to Zongo Junction." });
-    }, 1500);
+      toast({ title: "Order Confirmed", description: "Kwame is en route to your location." });
+    }, 2000);
   };
 
   return (
@@ -123,7 +124,7 @@ export default function PickupRequestForm() {
                   onChange={(e) => setAddress(e.target.value)}
                 />
                 <p className="text-[10px] text-black/40 font-bold italic flex items-center gap-2">
-                  <Info className="h-3 w-3" /> Landmark-based resolution is often more accurate for local drivers.
+                  <Info className="h-3 w-3" /> Landmark-based resolution is optimized for our drivers.
                 </p>
               </div>
             </div>
@@ -143,14 +144,13 @@ export default function PickupRequestForm() {
           <div className="space-y-8 animate-in slide-in-from-right-8 duration-500">
             <div className="space-y-3">
               <h3 className="font-headline text-4xl font-black tracking-tighter uppercase">Scan Waste</h3>
-              <p className="text-muted-foreground font-medium">Snap a photo. Our AI identifies the contents for better recycling.</p>
+              <p className="text-muted-foreground font-medium">Snap a photo to get an instant AI-powered price estimate.</p>
             </div>
             
             <div 
               className="group relative h-80 w-full rounded-[2rem] border-4 border-dashed border-black/5 hover:border-primary/50 transition-all bg-muted/30 flex flex-col items-center justify-center cursor-pointer overflow-hidden"
               onClick={triggerFileInput}
             >
-               {/* Hidden File Input */}
                <input 
                  type="file" 
                  ref={fileInputRef} 
@@ -169,12 +169,17 @@ export default function PickupRequestForm() {
                )}
 
                {loading ? (
-                 <div className="flex flex-col items-center gap-6 relative z-10">
+                 <div className="flex flex-col items-center gap-6 relative z-10 p-10">
                     <div className="relative">
                        <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping" />
-                       <Loader2 className="h-16 w-16 text-primary animate-spin relative z-10" />
+                       <div className="relative h-20 w-20 bg-black rounded-2xl flex items-center justify-center text-primary shadow-2xl">
+                          <Loader2 className="h-10 w-10 animate-spin" />
+                       </div>
                     </div>
-                    <p className="font-black text-primary animate-pulse tracking-[0.2em] uppercase text-xs text-center">AI Analyzing Waste Profile...</p>
+                    <div className="text-center space-y-2">
+                      <p className="font-black text-black tracking-[0.2em] uppercase text-xs">AI Analyzing Profile</p>
+                      <p className="text-[10px] text-muted-foreground font-bold italic">Estimating volume & pickup difficulty...</p>
+                    </div>
                  </div>
                ) : !selectedImageUrl ? (
                  <div className="flex flex-col items-center gap-6 p-10 text-center relative z-10">
@@ -183,7 +188,7 @@ export default function PickupRequestForm() {
                     </div>
                     <div className="space-y-2">
                       <p className="font-black text-2xl uppercase tracking-tighter">Capture or Upload</p>
-                      <p className="text-sm text-black/40 font-medium">High accuracy classification enabled.</p>
+                      <p className="text-sm text-black/40 font-medium">Auto-classify waste type & volume.</p>
                     </div>
                  </div>
                ) : (
@@ -199,7 +204,7 @@ export default function PickupRequestForm() {
               onClick={() => setStep(1)} 
               disabled={loading}
             >
-              <ArrowRight className="mr-2 h-4 w-4 rotate-180" /> Change Location
+              <ArrowRight className="mr-2 h-4 w-4 rotate-180" /> Back to Location
             </Button>
           </div>
         )}
@@ -215,7 +220,7 @@ export default function PickupRequestForm() {
                       <Sparkles className="h-5 w-5 text-primary" />
                       <span className="font-black uppercase tracking-[0.2em] text-[10px] text-white/60">Dynamic Pricing Engine</span>
                    </div>
-                   <Badge className="bg-white/10 text-white border-none font-bold uppercase tracking-widest text-[9px] px-3">Live Quote</Badge>
+                   <Badge className="bg-white/10 text-white border-none font-bold uppercase tracking-widest text-[9px] px-3">Instant Quote</Badge>
                 </div>
                 <div className="flex items-end justify-between relative z-10">
                    <div>
@@ -233,7 +238,7 @@ export default function PickupRequestForm() {
              </div>
 
              <div className="space-y-4">
-                <p className="text-[10px] font-black uppercase text-black/40 tracking-[0.2em]">Payment Selection</p>
+                <p className="text-[10px] font-black uppercase text-black/40 tracking-[0.2em]">Payment Method</p>
                 <div className="grid grid-cols-2 gap-4">
                    {[
                      { id: 'momo', label: 'Mobile Money', icon: Smartphone, color: 'text-yellow-500' },
@@ -256,7 +261,7 @@ export default function PickupRequestForm() {
                    {loading ? <Loader2 className="mr-3 h-6 w-6 animate-spin" /> : "Confirm Pickup Order"}
                 </Button>
                 <p className="text-[10px] text-center text-black/40 px-12 leading-relaxed font-bold uppercase tracking-tighter">
-                  By confirming, you agree to our fair usage policy for community waste collection.
+                  Guaranteed reliable pickup by verified local collectors.
                 </p>
              </div>
           </div>
@@ -271,8 +276,8 @@ export default function PickupRequestForm() {
                </div>
             </div>
             <div className="space-y-4">
-              <h2 className="font-headline text-5xl font-black tracking-tighter uppercase">Truck Assigned</h2>
-              <p className="text-muted-foreground font-medium text-lg max-w-xs mx-auto">{matchedCollector.name} is heading to your location now.</p>
+              <h2 className="font-headline text-5xl font-black tracking-tighter uppercase">Truck Dispatched</h2>
+              <p className="text-muted-foreground font-medium text-lg max-w-xs mx-auto">{matchedCollector.name} is on the way to your pickup location.</p>
             </div>
             
             <Card className="uber-shadow border-none bg-muted/30 p-8 rounded-[2rem]">
