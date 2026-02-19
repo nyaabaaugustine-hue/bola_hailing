@@ -1,3 +1,4 @@
+
 import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -21,14 +22,11 @@ export default function Home() {
     <div className="flex min-h-screen flex-col bg-background font-body">
       <Navigation />
       
-      {/* Hero Section - Grand Height Optimized for Visual Impact */}
       <section className="relative pt-40 pb-32 md:pt-56 md:pb-48 overflow-hidden">
-        {/* Background Decorative Element */}
         <div className="absolute top-0 right-0 w-2/3 h-full bg-muted/30 -z-10 hidden lg:block rounded-bl-[10rem]" />
         
         <div className="container mx-auto px-4">
           <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
-            {/* Text Content */}
             <div className="lg:col-span-6 space-y-10 relative z-10">
               <div className="space-y-6">
                 <Badge variant="outline" className="px-5 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] border-black/10 bg-white/50 backdrop-blur-sm">
@@ -77,7 +75,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Enlarged Image Content */}
             <div className="lg:col-span-6 relative lg:-mr-20">
               <div className="aspect-[4/3] lg:aspect-square w-full rounded-[3rem] overflow-hidden shadow-[0_50px_120px_-30px_rgba(0,0,0,0.2)] border-[12px] border-white dark:border-muted relative">
                 {heroImage && (
@@ -90,7 +87,6 @@ export default function Home() {
                   />
                 )}
                 
-                {/* Overlay Badge for Image */}
                 <div className="absolute top-8 left-8 bg-white/90 dark:bg-black/80 backdrop-blur-md p-4 rounded-2xl shadow-xl hidden md:block">
                   <div className="flex items-center gap-3">
                      <div className="h-12 w-12 rounded-xl bg-primary flex items-center justify-center text-white">
@@ -104,7 +100,6 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Decorative floating card */}
               <div className="absolute -bottom-10 -left-10 bg-black text-white p-8 rounded-[2.5rem] shadow-2xl hidden xl:block border-4 border-white dark:border-muted">
                 <div className="space-y-4">
                   <div className="flex items-center gap-4">
@@ -122,7 +117,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Trust & Features */}
       <section className="bg-black text-white py-32">
         <div className="container mx-auto px-4">
           <div className="mb-16 space-y-4">
@@ -147,13 +141,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="bg-black text-white py-24 border-t border-white/10">
         <div className="container mx-auto px-4 grid gap-16 md:grid-cols-4">
           <div className="space-y-6">
             <Link href="/" className="flex items-center gap-2">
               {logo ? (
-                <div className="relative h-14 w-14 overflow-hidden rounded-[7%]">
+                <div className="relative h-16 w-16 overflow-hidden rounded-[7%]">
                   <Image src={logo.imageUrl} alt="Logo" fill className="object-contain" />
                 </div>
               ) : null}

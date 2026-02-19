@@ -19,7 +19,7 @@ export default function Navigation() {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
+    const savedTheme = typeof window !== 'undefined' ? localStorage.getItem('theme') as 'light' | 'dark' | null : null;
     if (savedTheme) {
       setTheme(savedTheme);
       document.documentElement.classList.toggle('dark', savedTheme === 'dark');
@@ -29,7 +29,9 @@ export default function Navigation() {
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('theme', newTheme);
+    }
     document.documentElement.classList.toggle('dark', newTheme === 'dark');
   };
 
@@ -43,7 +45,7 @@ export default function Navigation() {
       <div className="container mx-auto flex h-full items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2 group">
           {logo ? (
-            <div className="relative h-14 w-14 overflow-hidden rounded-[7%] shadow-sm">
+            <div className="relative h-16 w-16 overflow-hidden rounded-[7%]">
               <Image 
                 src={logo.imageUrl} 
                 alt="Logo" 
@@ -52,13 +54,12 @@ export default function Navigation() {
               />
             </div>
           ) : (
-            <div className="flex h-14 w-14 items-center justify-center rounded-[7%] bg-primary text-white shadow-xl group-hover:bg-primary/90 transition-colors">
+            <div className="flex h-16 w-16 items-center justify-center rounded-[7%] bg-primary text-white shadow-xl group-hover:bg-primary/90 transition-colors">
               <span className="font-headline text-2xl font-black italic">T</span>
             </div>
           )}
         </Link>
         
-        {/* Desktop Links */}
         <div className="hidden lg:flex items-center gap-8">
           <Link href="/dashboard" className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/60 hover:text-primary transition-colors flex items-center gap-2 group">
             <MapPin className="h-3 w-3 group-hover:scale-110 transition-transform" /> Order
@@ -107,7 +108,6 @@ export default function Navigation() {
             </>
           )}
           
-          {/* Mobile Menu */}
           <div className="lg:hidden">
             <Sheet>
               <SheetTrigger asChild>
