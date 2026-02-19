@@ -12,7 +12,7 @@
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    /* Vibrant WasteGo Orange #FF8C00 -> HSL(33, 100%, 50%) */
+    /* Vibrant WasteGo Orange #FF8C00 -> HSL(33, 100% 50%) */
     --primary: 33 100% 50%;
     /* Use black text on orange for accessibility/readability */
     --primary-foreground: 0 0% 0%;
@@ -89,4 +89,13 @@
 
 .animate-progress-indefinite {
   animation: progress-indefinite 2s infinite linear;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 40s linear infinite;
 }

@@ -16,6 +16,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 export default function Home() {
   const heroImage = PlaceHolderImages.find(img => img.id === 'hero-image');
   const logo = PlaceHolderImages.find(img => img.id === 'app-logo');
+  const partnersImage = PlaceHolderImages.find(img => img.id === 'payment-partners');
 
   return (
     <div className="flex min-h-screen flex-col bg-background font-body">
@@ -113,6 +114,29 @@ export default function Home() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Partners Marquee */}
+      <section className="bg-white py-16 overflow-hidden border-y border-black/5">
+        <div className="container mx-auto px-4 mb-8">
+           <p className="text-[10px] font-black uppercase tracking-[0.4em] text-center text-muted-foreground">Ecosystem Infrastructure Partners</p>
+        </div>
+        <div className="flex whitespace-nowrap animate-marquee">
+           <div className="flex items-center gap-32 px-16">
+              {partnersImage && Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="relative h-16 w-64 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all">
+                   <Image src={partnersImage.imageUrl} alt="Partner" fill className="object-contain" />
+                </div>
+              ))}
+           </div>
+           <div className="flex items-center gap-32 px-16">
+              {partnersImage && Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="relative h-16 w-64 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all">
+                   <Image src={partnersImage.imageUrl} alt="Partner" fill className="object-contain" />
+                </div>
+              ))}
+           </div>
         </div>
       </section>
 
