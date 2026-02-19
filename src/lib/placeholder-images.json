@@ -59,6 +59,48 @@
       "description": "Supported payment methods including MoMo and Cards",
       "imageUrl": "https://res.cloudinary.com/dwsl2ktt2/image/upload/v1771504250/pay_vcdbyo.png",
       "imageHint": "payment partners"
+    },
+    {
+      "id": "partner-1",
+      "description": "Partner 1",
+      "imageUrl": "https://res.cloudinary.com/dwsl2ktt2/image/upload/v1771236535/nyhaho_rznhuo.png",
+      "imageHint": "partner logo"
+    },
+    {
+      "id": "partner-2",
+      "description": "Partner 2",
+      "imageUrl": "https://res.cloudinary.com/dwsl2ktt2/image/upload/v1771235536/facebook-cover-rr_mmzmgv.jpg",
+      "imageHint": "partner logo"
+    },
+    {
+      "id": "partner-3",
+      "description": "Partner 3",
+      "imageUrl": "https://res.cloudinary.com/dwsl2ktt2/image/upload/v1771235434/facebook-cover-1a_nfq5ui.jpg",
+      "imageHint": "partner logo"
+    },
+    {
+      "id": "partner-4",
+      "description": "Partner 4",
+      "imageUrl": "https://res.cloudinary.com/dwsl2ktt2/image/upload/v1771235434/facebook-cover-3_zq0xre.png",
+      "imageHint": "partner logo"
+    },
+    {
+      "id": "partner-5",
+      "description": "Partner 5",
+      "imageUrl": "https://res.cloudinary.com/dwsl2ktt2/image/upload/v1771506208/bu_oup6ys.png",
+      "imageHint": "partner logo"
+    },
+    {
+      "id": "partner-6",
+      "description": "Partner 6",
+      "imageUrl": "https://res.cloudinary.com/dwsl2ktt2/image/upload/v1771506208/as_g9b1tj.jpg",
+      "imageHint": "partner logo"
+    },
+    {
+      "id": "partner-7",
+      "description": "Partner 7",
+      "imageUrl": "https://res.cloudinary.com/dwsl2ktt2/image/upload/v1771506208/xz_ytdm3m.png",
+      "imageHint": "partner logo"
     }
   ]
 }
