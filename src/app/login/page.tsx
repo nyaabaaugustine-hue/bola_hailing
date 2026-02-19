@@ -113,7 +113,7 @@ export default function LoginPage() {
 
       <Navigation />
 
-      <main className="relative z-10 container mx-auto pt-32 pb-12 px-4 md:pt-48 flex items-center justify-center min-h-[calc(100vh-80px)]">
+      <main className="relative z-10 container mx-auto pt-[20vh] md:pt-48 pb-12 px-4 flex items-start md:items-center justify-center min-h-[calc(100vh-80px)]">
         <div className="w-full max-w-5xl space-y-12">
           {!user ? (
             <div className="grid gap-8 lg:grid-cols-2 items-center max-w-4xl mx-auto animate-in fade-in zoom-in-95 duration-700">
