@@ -9,8 +9,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Clock, MapPin, Truck, CheckCircle2, Navigation2, MoreHorizontal, Phone, Star } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
-import { RECENT_PICKUPS, DUMMY_COLLECTORS, DEMO_USER, DEMO_COLLECTOR } from '@/lib/dummy-data';
+import { useState, useEffect } from 'react';
+import { RECENT_PICKUPS, DUMMY_COLLECTORS, DEMO_USER, DEMO_COLLECTOR, DEMO_ROUTING } from '@/lib/dummy-data';
 
 // Dynamically import the map to avoid SSR issues
 const LiveTrackingMap = dynamic(() => import('@/components/LiveTrackingMap'), { 
@@ -20,11 +20,35 @@ const LiveTrackingMap = dynamic(() => import('@/components/LiveTrackingMap'), {
 
 export default function Dashboard() {
   const [activeJob, setActiveJob] = useState(true);
-  const activeCollector = DUMMY_COLLECTORS[0];
+  const [collectorPos, setCollectorPos] = useState<[number, number]>([DEMO_COLLECTOR.currentLocation.lat, DEMO_COLLECTOR.currentLocation.lng]);
+  const [eta, setEta] = useState(DEMO_ROUTING.etaPickup);
   
-  // Coordinates from dummy data
+  const activeCollector = DUMMY_COLLECTORS[0];
   const pickupCoords: [number, number] = [DEMO_USER.location.lat, DEMO_USER.location.lng];
-  const collectorCoords: [number, number] = [DEMO_COLLECTOR.currentLocation.lat, DEMO_COLLECTOR.currentLocation.lng];
+  const routePoints = DEMO_ROUTING.collectorToPickup;
+
+  // Simulation Logic: Move the truck along the route
+  useEffect(() => {
+    if (!activeJob) return;
+
+    let pointIndex = 0;
+    const interval = setInterval(() => {
+      if (pointIndex < routePoints.length) {
+        setCollectorPos(routePoints[pointIndex] as [number, number]);
+        
+        // Simple ETA reduction simulation
+        if (pointIndex === 1) setEta("2 mins");
+        if (pointIndex === 2) setEta("Arriving");
+        
+        pointIndex++;
+      } else {
+        // Loop back for continuous simulation effect in prototype
+        pointIndex = 0;
+      }
+    }, 4000); // Update every 4 seconds
+
+    return () => clearInterval(interval);
+  }, [activeJob, routePoints]);
 
   return (
     <div className="min-h-screen bg-background font-body">
@@ -44,9 +68,9 @@ export default function Dashboard() {
                 {/* Real Interactive Map */}
                 <div className="relative aspect-video w-full rounded-2xl overflow-hidden border uber-shadow bg-muted shadow-2xl">
                   <LiveTrackingMap 
-                    center={collectorCoords}
+                    center={collectorPos}
                     pickupPos={pickupCoords}
-                    collectorPos={collectorCoords}
+                    collectorPos={collectorPos}
                   />
                   
                   <div className="absolute bottom-6 left-6 right-6 z-[1000]">
@@ -86,14 +110,14 @@ export default function Dashboard() {
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {[
-                    { label: 'ETA', val: '4 mins', icon: Clock },
+                    { label: 'ETA', val: eta, icon: Clock },
                     { label: 'Distance', val: '1.2 km', icon: Navigation2 },
                     { label: 'Estimated', val: 'GHS 25', icon: CheckCircle2 },
-                    { label: 'Status', val: 'En Route', icon: Truck }
+                    { label: 'Status', val: eta === 'Arriving' ? 'At Location' : 'En Route', icon: Truck }
                   ].map((item, i) => (
                     <Card key={i} className="uber-shadow border-none">
                       <CardContent className="p-4 flex flex-col items-center text-center">
-                        <item.icon className="h-5 w-5 text-primary mb-2" />
+                        <item.icon className={`h-5 w-5 mb-2 ${item.val === 'Arriving' ? 'text-secondary animate-pulse' : 'text-primary'}`} />
                         <p className="text-[10px] uppercase font-bold text-muted-foreground">{item.label}</p>
                         <p className="font-bold">{item.val}</p>
                       </CardContent>
