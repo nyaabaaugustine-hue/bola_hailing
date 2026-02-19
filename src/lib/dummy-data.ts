@@ -98,7 +98,7 @@ export const DEMO_PRICING = {
   distance_km: 2.3,
   zoneDemandFactor: 1.2,
   fuelIndex: 0.95,
-  tippingFee: 0, // Simplified: Disposal not relevant to our platform
+  tippingFee: 0,
   serviceUrgency: "NORMAL",
   pickupFee: 28.00,
   platformCommission: 5.00,
