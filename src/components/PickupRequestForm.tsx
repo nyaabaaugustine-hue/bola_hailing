@@ -8,12 +8,9 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Camera, MapPin, Loader2, Sparkles, CreditCard, Truck, Smartphone, Star, Trash2, ArrowRight, Info } from 'lucide-react';
 import { resolveGhanaAddress } from '@/ai/flows/ghana-address-voice-resolution';
-import { wasteImageClassification } from '@/ai/flows/waste-image-classification-flow';
-import { dynamicPickupPricing } from '@/ai/flows/dynamic-pickup-pricing-flow';
-import { smartCollectorMatching } from '@/ai/flows/smart-collector-matching';
 import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
-import { DUMMY_COLLECTORS } from '@/lib/dummy-data';
+import { DUMMY_COLLECTORS, DEMO_AI_OUTPUT, DEMO_PRICING, DEMO_ROUTING } from '@/lib/dummy-data';
 
 export default function PickupRequestForm() {
   const { toast } = useToast();
@@ -33,6 +30,7 @@ export default function PickupRequestForm() {
     }
     setLoading(true);
     try {
+      // Simulate real landmark resolution logic
       const result = await resolveGhanaAddress({
         locationType: locationType as any,
         landmarkDescription: locationType === 'LANDMARK' ? address : undefined,
@@ -49,60 +47,23 @@ export default function PickupRequestForm() {
 
   const handleImageUpload = async () => {
     setLoading(true);
-    // Simulate real AI processing
-    setTimeout(async () => {
-      const mockDataUri = "data:image/jpeg;base64,...";
-      try {
-        const result = await wasteImageClassification({
-          photoDataUri: mockDataUri,
-          userDescription: "Household cleanup"
-        });
-        setWasteData(result);
-        
-        const priceResult = await dynamicPickupPricing({
-          wasteType: 'Mixed domestic refuse',
-          estimatedWeight: result.estimatedWeightKg,
-          estimatedVolume: result.estimatedVolumeM3,
-          userLocation: resolvedLoc.resolvedCoordinates,
-          collectorLocation: { lat: 5.61, lng: -0.11 },
-          trafficConditions: 'moderate',
-          zoneDemandDensity: 'medium',
-          timeOfRequest: new Date().toISOString(),
-          landfillTippingFees: 15,
-          fuelCostIndex: 1.2,
-          serviceUrgency: 'immediate'
-        });
-        setPriceData(priceResult);
-        setStep(3);
-      } catch (e) {
-        toast({ variant: 'destructive', title: "AI Error", description: "Could not classify waste. Please try again." });
-      } finally {
-        setLoading(false);
-      }
-    }, 1500);
+    // Simulate high-fidelity AI processing phase
+    setTimeout(() => {
+      setWasteData(DEMO_AI_OUTPUT);
+      setPriceData(DEMO_PRICING);
+      setStep(3);
+      setLoading(false);
+    }, 2000);
   };
 
   const handleConfirmOrder = async () => {
     setLoading(true);
-    try {
-      const result = await smartCollectorMatching({
-        userLocation: resolvedLoc.resolvedCoordinates,
-        wasteDetails: {
-          wasteType: wasteData.wasteCategories[0],
-          estimatedVolume: wasteData.estimatedVolumeM3,
-          estimatedWeight: wasteData.estimatedWeightKg,
-        },
-        availableCollectors: DUMMY_COLLECTORS.filter(c => c.isAvailable)
-      });
-      
-      const collector = DUMMY_COLLECTORS.find(c => c.collectorId === result.matchedCollectorId);
-      setMatchedCollector(collector || DUMMY_COLLECTORS[0]);
+    setTimeout(() => {
+      setMatchedCollector(DUMMY_COLLECTORS[0]);
       setStep(4);
-    } catch (e) {
-      toast({ variant: 'destructive', title: "No Collectors", description: "All trucks are currently busy in your zone." });
-    } finally {
       setLoading(false);
-    }
+      toast({ title: "Order Confirmed", description: "Kwame is en route to Zongo Junction." });
+    }, 1500);
   };
 
   return (
@@ -141,7 +102,7 @@ export default function PickupRequestForm() {
                 <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-black/40">Address / Description</Label>
                 <Input 
                   className="h-16 text-lg px-6 rounded-2xl border-2 border-black/5 bg-muted/30 focus:bg-white focus:border-black transition-all"
-                  placeholder={locationType === 'LANDMARK' ? 'e.g. Behind Total Filling Station' : 'e.g. GA-123-4567'}
+                  placeholder={locationType === 'LANDMARK' ? 'e.g. Opposite Yellow Kiosk, Zongo Junction' : 'e.g. GA-123-4567'}
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                 />
@@ -216,19 +177,19 @@ export default function PickupRequestForm() {
                       <Sparkles className="h-5 w-5 text-primary" />
                       <span className="font-black uppercase tracking-[0.2em] text-[10px] text-white/60">Dynamic Pricing Engine</span>
                    </div>
-                   <Badge className="bg-white/10 text-white border-none font-bold uppercase tracking-widest text-[9px] px-3" variant="outline">Live Quote</Badge>
+                   <Badge className="bg-white/10 text-white border-none font-bold uppercase tracking-widest text-[9px] px-3">Live Quote</Badge>
                 </div>
                 <div className="flex items-end justify-between relative z-10">
                    <div>
                       <p className="text-[10px] uppercase font-black tracking-widest text-white/40 mb-2">Estimated Total</p>
-                      <p className="text-6xl font-black">GHS {priceData?.pickupPrice.toFixed(2)}</p>
+                      <p className="text-6xl font-black">GHS {priceData?.pickupFee.toFixed(2)}</p>
                       <p className="text-xs text-primary mt-4 font-black uppercase tracking-widest flex items-center gap-2">
-                         {wasteData.wasteCategories[0].replace(/_/g, ' ')} • ~{wasteData.estimatedWeightKg}kg
+                         {wasteData.wasteType.replace(/_/g, ' ')} • ~{wasteData.estimatedWeight_kg}kg
                       </p>
                    </div>
                    <div className="text-right">
                       <p className="text-[10px] uppercase font-black text-white/40 tracking-widest mb-1">ETA</p>
-                      <p className="font-black text-3xl">8 MINS</p>
+                      <p className="font-black text-3xl">{DEMO_ROUTING.etaPickup}</p>
                    </div>
                 </div>
              </div>
@@ -279,7 +240,7 @@ export default function PickupRequestForm() {
             <Card className="uber-shadow border-none bg-muted/30 p-8 rounded-[2rem]">
                <div className="flex items-center gap-6">
                   <div className="h-20 w-20 rounded-2xl overflow-hidden border-2 border-black shadow-xl">
-                    <Image src={matchedCollector.image} width={200} height={200} alt="Driver" />
+                    <Image src={matchedCollector.image} width={200} height={200} alt="Driver" className="object-cover" />
                   </div>
                   <div className="flex-1 text-left">
                      <p className="font-black text-2xl uppercase tracking-tighter">{matchedCollector.name}</p>
@@ -292,7 +253,7 @@ export default function PickupRequestForm() {
                      </div>
                   </div>
                   <div className="text-right">
-                    <div className="bg-black text-white font-black px-4 py-2 rounded-xl text-sm">8 MINS</div>
+                    <div className="bg-black text-white font-black px-4 py-2 rounded-xl text-sm">{DEMO_ROUTING.etaPickup}</div>
                   </div>
                </div>
             </Card>
@@ -307,6 +268,6 @@ export default function PickupRequestForm() {
   );
 }
 
-function Badge({ className, variant, ...props }: any) {
-  return <div className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${className}`} {...props} />
+function Badge({ className, children }: any) {
+  return <div className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${className}`}>{children}</div>
 }

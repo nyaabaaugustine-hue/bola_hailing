@@ -5,11 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
-import { Truck, Navigation2, MapPin, Camera, Fuel, Phone, MessageSquare, Power, User, CheckCircle2 } from 'lucide-react';
+import { Truck, Navigation2, MapPin, Camera, Fuel, Phone, Power, User, CheckCircle2, DollarSign } from 'lucide-react';
 import { useState } from 'react';
 import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { DUMMY_LANDFILLS, DUMMY_COLLECTORS, ACTIVE_SCENARIO_JOB } from '@/lib/dummy-data';
+import { DUMMY_LANDFILLS, DEMO_COLLECTOR, ACTIVE_SCENARIO_JOB, DEMO_TRANSACTION } from '@/lib/dummy-data';
 
 export default function CollectorPage() {
   const [isOnline, setIsOnline] = useState(true);
@@ -17,8 +16,7 @@ export default function CollectorPage() {
   const [jobAccepted, setJobAccepted] = useState(false);
   const [jobCompleted, setJobCompleted] = useState(false);
   
-  const activeUser = DUMMY_COLLECTORS[0]; // Kwame Asante
-  const customerImage = PlaceHolderImages.find(img => img.id === 'waste-collection-action');
+  const activeUser = DEMO_COLLECTOR;
 
   const handleAcceptJob = () => {
     setJobAccepted(true);
@@ -85,8 +83,8 @@ export default function CollectorPage() {
                         <p className="text-xl font-bold">{jobCompleted ? '13' : '12'}</p>
                      </div>
                      <div className="space-y-1">
-                        <p className="text-[10px] uppercase font-bold opacity-60">Score</p>
-                        <p className="text-xl font-bold">{activeUser.reliabilityScore}</p>
+                        <p className="text-[10px] uppercase font-bold opacity-60">Wallet</p>
+                        <p className="text-xl font-bold">GHS {jobCompleted ? '23.00' : '0.00'}</p>
                      </div>
                   </CardContent>
                </Card>
@@ -108,7 +106,7 @@ export default function CollectorPage() {
                            <Truck className="h-5 w-5 text-primary" />
                            <span className="text-sm font-bold">Capacity</span>
                         </div>
-                        <span className="font-bold text-primary">380kg Free</span>
+                        <span className="font-bold text-primary">{activeUser.capacity_m3}m³ Total</span>
                      </div>
                   </CardContent>
                </Card>
@@ -138,7 +136,7 @@ export default function CollectorPage() {
                           <p className="text-xs font-black uppercase tracking-widest text-primary">New Pickup Alert</p>
                           <p className="font-black text-2xl text-primary">{ACTIVE_SCENARIO_JOB.price}</p>
                        </div>
-                       <CardTitle className="text-2xl font-black">Ama (Chop Bar)</CardTitle>
+                       <CardTitle className="text-2xl font-black">{ACTIVE_SCENARIO_JOB.customerName}</CardTitle>
                        <CardDescription className="text-black/60 font-medium">
                          {ACTIVE_SCENARIO_JOB.wasteType} • {ACTIVE_SCENARIO_JOB.volume}
                        </CardDescription>
@@ -147,7 +145,7 @@ export default function CollectorPage() {
                        <div className="p-5 rounded-2xl bg-white border-2 border-primary/20 flex items-start gap-4">
                           <MapPin className="h-6 w-6 text-primary mt-1" />
                           <div>
-                             <p className="font-black text-lg">Zongo Junction</p>
+                             <p className="font-black text-lg">Landmark</p>
                              <p className="text-sm text-muted-foreground">{ACTIVE_SCENARIO_JOB.landmark}</p>
                           </div>
                        </div>
@@ -169,7 +167,7 @@ export default function CollectorPage() {
                              <User className="h-6 w-6 text-muted-foreground" />
                           </div>
                           <div>
-                             <CardTitle className="text-xl font-bold">Heading to Ama</CardTitle>
+                             <CardTitle className="text-xl font-bold">Heading to {ACTIVE_SCENARIO_JOB.customerName.split(' ')[0]}</CardTitle>
                              <CardDescription>Estimated Arrival: 7 mins</CardDescription>
                           </div>
                        </div>
@@ -191,18 +189,31 @@ export default function CollectorPage() {
                           </Button>
                        </div>
 
-                       <Button 
-                        className="w-full h-16 rounded-2xl bg-secondary text-white font-black text-lg" 
-                        onClick={handleCompleteJob}
-                       >
-                          <Camera className="mr-2 h-6 w-6" /> VERIFY PICKUP & COMPLETE
-                       </Button>
+                       {!jobCompleted ? (
+                         <Button 
+                          className="w-full h-16 rounded-2xl bg-secondary text-white font-black text-lg" 
+                          onClick={handleCompleteJob}
+                         >
+                            <Camera className="mr-2 h-6 w-6" /> VERIFY PICKUP & COMPLETE
+                         </Button>
+                       ) : (
+                         <div className="space-y-4 animate-in fade-in zoom-in-95">
+                            <div className="p-6 rounded-2xl bg-secondary/10 border-2 border-secondary/20 text-secondary text-center">
+                               <CheckCircle2 className="h-12 w-12 mx-auto mb-2" />
+                               <p className="font-black text-xl">PICKUP COMPLETED</p>
+                               <p className="text-sm">GHS 23.00 credited to your wallet.</p>
+                            </div>
+                            <Button className="w-full h-14 rounded-2xl bg-black text-white font-black" onClick={() => { setJobAccepted(false); setJobCompleted(false); }}>
+                               READY FOR NEXT JOB
+                            </Button>
+                         </div>
+                       )}
                     </CardContent>
                  </Card>
                ) : (
                  <div className="flex flex-col items-center justify-center py-20 border-4 border-dashed rounded-[2.5rem] bg-muted/10 text-center space-y-4">
                     <Truck className="h-16 w-16 text-muted-foreground opacity-20" />
-                    <p className="font-black text-muted-foreground">Waiting for nearby requests...</p>
+                    <p className="font-black text-muted-foreground">Waiting for nearby requests in Madina...</p>
                  </div>
                )}
 
@@ -212,7 +223,7 @@ export default function CollectorPage() {
                     <Card key={i} className="uber-shadow border-none p-4 flex flex-col items-center text-center">
                        <p className="text-[10px] font-black uppercase text-muted-foreground">{l.name}</p>
                        <p className="text-xl font-black mt-1">{l.time}</p>
-                       <Badge className={`mt-2 ${l.status === 'Low' ? 'bg-secondary' : l.status === 'High' ? 'bg-destructive' : 'bg-orange-500'}`} variant="default">
+                       <Badge className={`mt-2 ${l.status === 'Low' ? 'bg-secondary' : l.status === 'High' ? 'bg-destructive' : 'bg-orange-500'} text-white border-none`} variant="default">
                           {l.status} Traffic
                        </Badge>
                     </Card>
