@@ -1,21 +1,19 @@
+
 import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { 
   ArrowRight, 
-  MapPin, 
-  Phone, 
-  ShieldCheck, 
   Smartphone,
   Truck,
   Zap,
-  CheckCircle2,
+  ShieldCheck,
   Globe
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { Card } from '@/components/ui/card';
 
 export default function Home() {
   const heroImage = PlaceHolderImages.find(img => img.id === 'hero-image');
@@ -26,7 +24,7 @@ export default function Home() {
       
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 md:pt-48 md:pb-40 overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-muted/30 -z-10 clip-path-hero hidden lg:block" />
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-muted/30 -z-10 hidden lg:block" />
         <div className="container mx-auto px-4">
           <div className="grid gap-16 lg:grid-cols-12 lg:items-center">
             <div className="lg:col-span-7 space-y-10">
@@ -180,7 +178,7 @@ export default function Home() {
             <h4 className="font-black uppercase tracking-widest text-[10px] text-white/40 mb-6">Connect</h4>
             <div className="flex gap-4">
               <div className="h-10 w-10 bg-white/10 rounded-full hover:bg-primary transition-colors cursor-pointer flex items-center justify-center">
-                <Phone className="h-4 w-4" />
+                <Smartphone className="h-4 w-4" />
               </div>
               <div className="h-10 w-10 bg-white/10 rounded-full hover:bg-primary transition-colors cursor-pointer flex items-center justify-center">
                 <Globe className="h-4 w-4" />
