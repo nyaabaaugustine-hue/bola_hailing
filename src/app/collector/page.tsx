@@ -5,10 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
-import { Truck, Navigation2, MapPin, Camera, Fuel, Phone, Power, User, CheckCircle2, DollarSign } from 'lucide-react';
+import { Truck, Navigation2, MapPin, Camera, Fuel, Phone, Power, User, CheckCircle2 } from 'lucide-react';
 import { useState } from 'react';
 import Image from 'next/image';
-import { DUMMY_LANDFILLS, DEMO_COLLECTOR, ACTIVE_SCENARIO_JOB, DEMO_TRANSACTION } from '@/lib/dummy-data';
+import { DEMO_COLLECTOR, ACTIVE_SCENARIO_JOB } from '@/lib/dummy-data';
 
 export default function CollectorPage() {
   const [isOnline, setIsOnline] = useState(true);
@@ -218,19 +218,6 @@ export default function CollectorPage() {
                     <p className="font-black text-muted-foreground">Waiting for nearby requests in Madina...</p>
                  </div>
                )}
-
-               {/* Landfill availability */}
-               <div className="grid md:grid-cols-3 gap-4">
-                  {DUMMY_LANDFILLS.map((l, i) => (
-                    <Card key={i} className="uber-shadow border-none p-4 flex flex-col items-center text-center">
-                       <p className="text-[10px] font-black uppercase text-muted-foreground">{l.name}</p>
-                       <p className="text-xl font-black mt-1">{l.time}</p>
-                       <Badge className={`mt-2 ${l.status === 'Low' ? 'bg-secondary' : l.status === 'High' ? 'bg-destructive' : 'bg-orange-500'} text-white border-none`} variant="default">
-                          {l.status} Traffic
-                       </Badge>
-                    </Card>
-                  ))}
-               </div>
             </div>
           </div>
         )}

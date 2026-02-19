@@ -27,11 +27,11 @@ Sustainable infrastructure for a cleaner, smarter Ghana. DEMO solves the "last-m
 *   **Action:** Kwame receives a "New Job Alert."
     *   **Mission:** Pickup at Zongo Junction for GH₵ 28.
     *   **Acceptance:** Kwame reviews Ama’s details and accepts.
-    *   **Navigation:** Guided routing avoids traffic.
+    *   **Navigation:** Guided routing avoids traffic to reach Ama.
 
-**Scene 3: Fulfillment & Disposal**
+**Scene 3: Fulfillment & Success**
 *   **Action:** Kwame arrives, Ama verifies. Kwame loads the truck.
-*   **Disposal:** The app routes Kwame to the nearest compatible authorized landfill (Madina Municipal Dump Site).
+*   **Completion:** Kwame confirms pickup on the app. The vendor's internal processing takes over from here.
 *   **Earnings:** Kwame earns **GH₵ 23** instantly (after GH₵ 5 platform commission).
 
 ---
@@ -61,13 +61,11 @@ Sustainable infrastructure for a cleaner, smarter Ghana. DEMO solves the "last-m
 *   **Earnings Card**: Professional wallet view showing daily earnings, trip counts, and remaining vehicle capacity.
 *   **Incoming Mission**: "Uber-style" overlay for new requests with distance, price, and landmark details.
 *   **In-Job Navigation**: One-tap access to navigation and direct customer calling.
-*   **Landfill Availability**: Real-time traffic and tipping fee status for authorized disposal sites.
 
 ### 5. Admin Fleet Command (`/admin`)
-*   **Network Overview**: Live stats on active drivers, network revenue, and total diverted tonnage.
+*   **Network Overview**: Live stats on active drivers, network revenue, and total pickups.
 *   **Live Order Management**: A command center to review, approve, or cancel incoming requests.
 *   **Operational Heatmap**: Visualization of network activity and driver distribution.
-*   **Quick Dispatch**: Tools for re-routing idle trucks to high-demand zones.
 
 ---
 
@@ -77,7 +75,7 @@ Sustainable infrastructure for a cleaner, smarter Ghana. DEMO solves the "last-m
 *   **UI Components:** ShadCN UI (Custom Premium Theme).
 *   **AI Engine (Genkit):**
     *   **Waste Classification**: Image-to-data flow for volume and type estimation.
-    *   **Dynamic Pricing**: Real-time calculation based on fuel, distance, and tipping fees.
+    *   **Dynamic Pricing**: Real-time calculation based on fuel, distance, and density.
     *   **Landmark Resolution**: Translating local descriptions into precise GPS coordinates.
 *   **Backend:** Genkit Server Actions with simulation capability.
 

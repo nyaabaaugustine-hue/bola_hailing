@@ -9,7 +9,6 @@ export const BOOKING_STATUS = {
   COLLECTOR_EN_ROUTE: 'COLLECTOR_EN_ROUTE',
   ARRIVED: 'ARRIVED',
   PICKED_UP: 'PICKED_UP',
-  DISPOSED: 'DISPOSED',
   COMPLETED: 'COMPLETED',
   CANCELLED: 'CANCELLED'
 };
@@ -99,7 +98,7 @@ export const DEMO_PRICING = {
   distance_km: 2.3,
   zoneDemandFactor: 1.2,
   fuelIndex: 0.95,
-  tippingFee: 4.00,
+  tippingFee: 0, // Simplified: Disposal not relevant to our platform
   serviceUrgency: "NORMAL",
   pickupFee: 28.00,
   platformCommission: 5.00,
@@ -112,36 +111,7 @@ export const DEMO_ROUTING = {
     [5.67830, -0.16350],
     [5.67955, -0.16421]
   ],
-  pickupToLandfill: [
-    [5.67955, -0.16421],
-    [5.68210, -0.16690],
-    [5.68400, -0.17010]
-  ],
-  etaPickup: "7 mins",
-  etaDisposal: "14 mins"
-};
-
-export const DEMO_LANDFILL = {
-  id: "LAN001",
-  name: "Madina Municipal Dump Site",
-  lat: 5.68400,
-  lng: -0.17010,
-  acceptedWasteTypes: [
-    "MIXED_DOMESTIC",
-    "ORGANIC_MARKET"
-  ],
-  tippingFee: 4.00,
-  queuePrediction: "LOW",
-  status: 'Low Traffic',
-  time: '14m'
-};
-
-export const DEMO_TRANSACTION = {
-  transactionId: "TXN983223",
-  network: "MTN",
-  amount: 28.00,
-  status: "SUCCESS",
-  timestamp: "2026-02-19T18:34:21Z"
+  etaPickup: "7 mins"
 };
 
 export const RECENT_PICKUPS = [
@@ -183,12 +153,6 @@ export const DUMMY_COLLECTORS = [
     phone: '0244009988',
     image: 'https://picsum.photos/seed/amara/200/200'
   }
-];
-
-export const DUMMY_LANDFILLS = [
-  { id: 'LAN001', name: 'Madina Municipal Dump Site', status: 'Low', time: '14m', fee: 4 },
-  { id: 'LAN002', name: 'Mallam Site', status: 'Low', time: '5m', fee: 15 },
-  { id: 'LAN003', name: 'Kpone Landfill', status: 'High', time: '45m', fee: 20 }
 ];
 
 export const ACTIVE_SCENARIO_JOB = {
