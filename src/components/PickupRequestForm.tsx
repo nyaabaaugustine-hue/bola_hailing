@@ -6,7 +6,24 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Camera, MapPin, Loader2, Sparkles, CreditCard, Truck, Smartphone, Star, Trash2, ArrowRight, Info, Phone, ShieldCheck, CheckCircle2, Mic, Activity } from 'lucide-react';
+import { 
+  Camera, 
+  MapPin, 
+  Loader2, 
+  Sparkles, 
+  CreditCard, 
+  Truck, 
+  Smartphone, 
+  Star, 
+  Trash2, 
+  ArrowRight, 
+  Info, 
+  Phone, 
+  ShieldCheck, 
+  CheckCircle2, 
+  Mic, 
+  Activity 
+} from 'lucide-react';
 import { resolveGhanaAddress } from '@/ai/flows/ghana-address-voice-resolution';
 import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
@@ -173,9 +190,11 @@ export default function PickupRequestForm() {
                      <button 
                        key={mode.id}
                        onClick={() => setLocationType(mode.id)}
-                       className={`p-4 rounded-2xl flex flex-col items-center gap-2 border-2 transition-all ${locationType === mode.id ? 'border-black bg-black text-white shadow-xl' : 'border-black/5 bg-muted/30 text-black/60 hover:border-black/20'}`}
+                       className={`p-4 rounded-2xl flex flex-col items-center gap-3 border-2 transition-all ${locationType === mode.id ? 'border-black bg-black text-white shadow-xl' : 'border-black/5 bg-muted/30 text-black/60 hover:border-black/20'}`}
                      >
-                        <mode.icon className="h-5 w-5" />
+                        <div className={`h-10 w-10 rounded-xl flex items-center justify-center ${locationType === mode.id ? 'bg-white/20' : 'bg-black/5'}`}>
+                           <mode.icon className="h-6 w-6" />
+                        </div>
                         <span className="text-[9px] font-black uppercase tracking-widest">{mode.label}</span>
                      </button>
                    ))}
