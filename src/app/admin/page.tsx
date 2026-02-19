@@ -226,7 +226,7 @@ export default function AdminPage() {
                     </div>
                     <div className="flex items-center gap-4">
                        <Badge variant={alert.severity === 'Critical' ? 'destructive' : 'secondary'}>{alert.severity}</Badge>
-                       <Button variant="outline" className="rounded-xl border-2 font-bold gap-2">
+                       <Button variant="outline" size="sm" className="rounded-xl border-2 font-bold gap-2">
                          Dispatch Truck <ArrowUpRight className="h-4 w-4" />
                        </Button>
                     </div>

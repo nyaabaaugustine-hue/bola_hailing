@@ -5,19 +5,29 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
-import { Truck, Navigation2, MapPin, Camera, Fuel, Phone, MessageSquare, Power, User } from 'lucide-react';
+import { Truck, Navigation2, MapPin, Camera, Fuel, Phone, MessageSquare, Power, User, CheckCircle2 } from 'lucide-react';
 import { useState } from 'react';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { DUMMY_LANDFILLS, DUMMY_COLLECTORS } from '@/lib/dummy-data';
+import { DUMMY_LANDFILLS, DUMMY_COLLECTORS, ACTIVE_SCENARIO_JOB } from '@/lib/dummy-data';
 
 export default function CollectorPage() {
   const [isOnline, setIsOnline] = useState(true);
-  const driverImage = PlaceHolderImages.find(img => img.id === 'driver-profile');
-  const customerImage = PlaceHolderImages.find(img => img.id === 'waste-collection-action');
+  const [hasJob, setHasJob] = useState(false);
+  const [jobAccepted, setJobAccepted] = useState(false);
+  const [jobCompleted, setJobCompleted] = useState(false);
   
-  // Use the first collector as the active user for testing
-  const activeUser = DUMMY_COLLECTORS[0];
+  const activeUser = DUMMY_COLLECTORS[0]; // Kwame Asante
+  const customerImage = PlaceHolderImages.find(img => img.id === 'waste-collection-action');
+
+  const handleAcceptJob = () => {
+    setJobAccepted(true);
+  };
+
+  const handleCompleteJob = () => {
+    setJobCompleted(true);
+    setHasJob(false);
+  };
 
   return (
     <div className="min-h-screen bg-background font-body">
@@ -67,16 +77,16 @@ export default function CollectorPage() {
                   <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
                   <CardHeader className="relative z-10">
                      <p className="text-xs font-bold uppercase tracking-widest opacity-60">Today's Earnings</p>
-                     <CardTitle className="text-5xl font-black text-secondary">GHS 420.50</CardTitle>
+                     <CardTitle className="text-5xl font-black text-secondary">GHS {jobCompleted ? '443.50' : '420.50'}</CardTitle>
                   </CardHeader>
                   <CardContent className="relative z-10 grid grid-cols-2 gap-4 border-t border-white/10 pt-6">
                      <div className="space-y-1">
                         <p className="text-[10px] uppercase font-bold opacity-60">Trips</p>
-                        <p className="text-xl font-bold">12</p>
+                        <p className="text-xl font-bold">{jobCompleted ? '13' : '12'}</p>
                      </div>
                      <div className="space-y-1">
-                        <p className="text-[10px] uppercase font-bold opacity-60">Hours</p>
-                        <p className="text-xl font-bold">5.4h</p>
+                        <p className="text-[10px] uppercase font-bold opacity-60">Score</p>
+                        <p className="text-xl font-bold">{activeUser.reliabilityScore}</p>
                      </div>
                   </CardContent>
                </Card>
@@ -91,92 +101,112 @@ export default function CollectorPage() {
                            <Fuel className="h-5 w-5 text-orange-500" />
                            <span className="text-sm font-bold">Fuel Level</span>
                         </div>
-                        <span className="font-bold">65%</span>
+                        <span className="font-bold">62%</span>
                      </div>
                      <div className="flex items-center justify-between p-4 rounded-xl bg-muted/30">
                         <div className="flex items-center gap-3">
                            <Truck className="h-5 w-5 text-primary" />
                            <span className="text-sm font-bold">Capacity</span>
                         </div>
-                        <span className="font-bold text-primary">450kg Free</span>
+                        <span className="font-bold text-primary">380kg Free</span>
                      </div>
                   </CardContent>
                </Card>
+
+               <Button 
+                variant="outline" 
+                className="w-full h-14 rounded-2xl border-2 font-black"
+                onClick={() => setHasJob(true)}
+                disabled={hasJob || jobAccepted}
+               >
+                 SIMULATE INCOMING JOB
+               </Button>
             </div>
 
             {/* Right Col: Active Job & Navigation */}
             <div className="lg:col-span-8 space-y-6">
                <div className="flex items-center justify-between">
                   <h2 className="font-headline text-2xl font-black">Current Mission</h2>
-                  <Badge variant="outline" className="text-secondary border-secondary animate-pulse">New Job</Badge>
+                  {hasJob && !jobAccepted && <Badge variant="destructive" className="animate-pulse">URGENT REQUEST</Badge>}
+                  {jobAccepted && <Badge variant="secondary" className="bg-secondary text-white">IN PROGRESS</Badge>}
                </div>
 
-               <Card className="uber-shadow border-4 border-secondary/20 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-24 h-24">
-                     <div className="absolute top-0 right-0 w-0 h-0 border-t-[80px] border-t-secondary border-l-[80px] border-l-transparent" />
-                     <Navigation2 className="absolute top-3 right-3 h-5 w-5 text-white" />
-                  </div>
-                  <CardHeader>
-                     <div className="flex items-center gap-4 mb-2">
-                        <div className="h-12 w-12 rounded-full overflow-hidden border-2 border-muted">
-                           {customerImage ? (
-                             <Image 
-                               src={customerImage.imageUrl} 
-                               width={100} 
-                               height={100} 
-                               alt="Customer Site" 
-                               className="object-cover"
-                               data-ai-hint={customerImage.imageHint}
-                             />
-                           ) : (
-                             <div className="bg-muted w-full h-full flex items-center justify-center">
-                               <MapPin className="h-6 w-6 text-muted-foreground" />
-                             </div>
-                           )}
-                        </div>
-                        <div>
-                           <CardTitle className="text-xl font-bold">Pickup from Amara</CardTitle>
-                           <CardDescription>Household Mixed Waste • ~25 kg</CardDescription>
-                        </div>
-                     </div>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                     <div className="rounded-2xl border-2 bg-muted/10 p-6 space-y-4 relative">
-                        <div className="flex items-start gap-3">
-                           <MapPin className="h-5 w-5 text-primary mt-1" />
-                           <div>
-                              <p className="font-black text-lg">East Legon (Near ANC Mall)</p>
-                              <p className="text-sm text-muted-foreground italic">"Right after the red container, before the blue gate"</p>
-                           </div>
-                        </div>
-                        <div className="absolute right-6 top-6">
-                           <div className="bg-white px-3 py-1 rounded-full uber-shadow text-xs font-black text-secondary border border-secondary/20">
-                              4.2 KM AWAY
-                           </div>
-                        </div>
-                     </div>
+               {hasJob && !jobAccepted ? (
+                 <Card className="uber-shadow border-4 border-primary/40 bg-primary/5 animate-in zoom-in-95">
+                    <CardHeader>
+                       <div className="flex items-center justify-between mb-4">
+                          <p className="text-xs font-black uppercase tracking-widest text-primary">New Pickup Alert</p>
+                          <p className="font-black text-2xl text-primary">{ACTIVE_SCENARIO_JOB.price}</p>
+                       </div>
+                       <CardTitle className="text-2xl font-black">Ama (Chop Bar)</CardTitle>
+                       <CardDescription className="text-black/60 font-medium">
+                         {ACTIVE_SCENARIO_JOB.wasteType} • {ACTIVE_SCENARIO_JOB.volume}
+                       </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                       <div className="p-5 rounded-2xl bg-white border-2 border-primary/20 flex items-start gap-4">
+                          <MapPin className="h-6 w-6 text-primary mt-1" />
+                          <div>
+                             <p className="font-black text-lg">Zongo Junction</p>
+                             <p className="text-sm text-muted-foreground">{ACTIVE_SCENARIO_JOB.landmark}</p>
+                          </div>
+                       </div>
+                       <div className="grid grid-cols-2 gap-4">
+                          <Button className="h-16 rounded-2xl bg-primary text-white font-black text-lg hover:bg-primary/90" onClick={handleAcceptJob}>
+                            ACCEPT JOB
+                          </Button>
+                          <Button variant="ghost" className="h-16 rounded-2xl font-black text-black/40" onClick={() => setHasJob(false)}>
+                            DECLINE
+                          </Button>
+                       </div>
+                    </CardContent>
+                 </Card>
+               ) : jobAccepted ? (
+                 <Card className="uber-shadow border-none relative overflow-hidden">
+                    <CardHeader>
+                       <div className="flex items-center gap-4">
+                          <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center">
+                             <User className="h-6 w-6 text-muted-foreground" />
+                          </div>
+                          <div>
+                             <CardTitle className="text-xl font-bold">Heading to Ama</CardTitle>
+                             <CardDescription>Estimated Arrival: 7 mins</CardDescription>
+                          </div>
+                       </div>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                       <div className="rounded-2xl border-2 bg-muted/10 p-6 space-y-4">
+                          <div className="flex items-start gap-3">
+                             <MapPin className="h-5 w-5 text-primary mt-1" />
+                             <p className="font-black">{ACTIVE_SCENARIO_JOB.landmark}</p>
+                          </div>
+                       </div>
 
-                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <Button className="col-span-2 h-16 rounded-2xl bg-black text-white font-black text-lg hover:bg-black/90 group">
-                           <Navigation2 className="mr-2 h-6 w-6 group-hover:translate-x-1 transition-transform" />
-                           NAVIGATE
-                        </Button>
-                        <Button variant="outline" className="h-16 rounded-2xl border-2 font-black">
-                           <Phone className="h-5 w-5" />
-                        </Button>
-                        <Button variant="outline" className="h-16 rounded-2xl border-2 font-black">
-                           <MessageSquare className="h-5 w-5" />
-                        </Button>
-                     </div>
+                       <div className="grid grid-cols-3 gap-4">
+                          <Button className="col-span-2 h-16 rounded-2xl bg-black text-white font-black">
+                             <Navigation2 className="mr-2 h-5 w-5" /> NAVIGATE
+                          </Button>
+                          <Button variant="outline" className="h-16 rounded-2xl border-2">
+                             <Phone className="h-5 w-5" />
+                          </Button>
+                       </div>
 
-                     <Button variant="outline" className="w-full h-14 rounded-2xl border-dashed border-2 hover:bg-primary/10 transition-colors">
-                        <Camera className="mr-2 h-5 w-5 text-primary" />
-                        VERIFY PICKUP & COMPLETE
-                     </Button>
-                  </CardContent>
-               </Card>
+                       <Button 
+                        className="w-full h-16 rounded-2xl bg-secondary text-white font-black text-lg" 
+                        onClick={handleCompleteJob}
+                       >
+                          <Camera className="mr-2 h-6 w-6" /> VERIFY PICKUP & COMPLETE
+                       </Button>
+                    </CardContent>
+                 </Card>
+               ) : (
+                 <div className="flex flex-col items-center justify-center py-20 border-4 border-dashed rounded-[2.5rem] bg-muted/10 text-center space-y-4">
+                    <Truck className="h-16 w-16 text-muted-foreground opacity-20" />
+                    <p className="font-black text-muted-foreground">Waiting for nearby requests...</p>
+                 </div>
+               )}
 
-               {/* Landfill availability as a secondary concern */}
+               {/* Landfill availability */}
                <div className="grid md:grid-cols-3 gap-4">
                   {DUMMY_LANDFILLS.map((l, i) => (
                     <Card key={i} className="uber-shadow border-none p-4 flex flex-col items-center text-center">
