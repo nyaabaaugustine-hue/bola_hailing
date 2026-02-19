@@ -19,7 +19,8 @@ import {
   TrendingUp, 
   Sparkles, 
   Activity, 
-  Star 
+  Star,
+  Loader2
 } from 'lucide-react';
 import { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
@@ -37,6 +38,9 @@ export default function CollectorPage() {
   
   const activeUser = DEMO_COLLECTOR;
 
+  // Safe check for localStorage to avoid SSR errors
+  const isDemoMode = typeof window !== 'undefined' && localStorage.getItem('demo_mode') === 'true';
+
   // Listen for active jobs assigned to this collector or pending requested jobs
   const pendingJobsQuery = query(
     collection(db, 'jobs'),
@@ -46,7 +50,8 @@ export default function CollectorPage() {
   );
   
   const activeJobQuery = useMemo(() => {
-    // If no user, we might be in demo mode
+    // If no user and not in demo mode, don't query
+    if (!authUser && !isDemoMode) return null;
     const uid = authUser?.uid || 'demo-collector-123';
     return query(
       collection(db, 'jobs'),
@@ -54,7 +59,7 @@ export default function CollectorPage() {
       where('status', 'in', ['MATCHED', 'EN_ROUTE', 'ARRIVED']),
       limit(1)
     );
-  }, [db, authUser]);
+  }, [db, authUser, isDemoMode]);
 
   const { data: pendingJobs } = useCollection(pendingJobsQuery);
   const { data: activeJobs } = useCollection(activeJobQuery);

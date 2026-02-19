@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -50,8 +49,10 @@ export default function LoginPage() {
     });
     
     // Store demo session locally
-    localStorage.setItem('demo_mode', 'true');
-    localStorage.setItem('demo_role', role);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('demo_mode', 'true');
+      localStorage.setItem('demo_role', role);
+    }
 
     const paths = {
       customer: '/dashboard',
@@ -227,7 +228,7 @@ export default function LoginPage() {
           )}
           
           <div className="text-center pt-8">
-            <p className="text-[10px] font-black uppercase tracking-widest text-white/40">Verified Infrastructure • Sustainable Ghana • © 2025 DEMO</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-white/40">Verified Infrastructure • Sustainable Ghana • © 2026 DEMO</p>
           </div>
         </div>
       </main>

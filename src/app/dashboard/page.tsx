@@ -1,4 +1,3 @@
-
 "use client";
 
 import dynamic from 'next/dynamic';
@@ -22,9 +21,12 @@ export default function Dashboard() {
   const { user } = useUser();
   const db = useFirestore();
 
+  // Safe check for localStorage
+  const isDemoMode = typeof window !== 'undefined' && localStorage.getItem('demo_mode') === 'true';
+
   // Real-time tracking of the active job
   const activeJobQuery = useMemo(() => {
-    if (!user && !localStorage.getItem('demo_mode')) return null;
+    if (!user && !isDemoMode) return null;
     const uid = user?.uid || 'demo-user-123';
     return query(
       collection(db, 'jobs'),
@@ -33,14 +35,14 @@ export default function Dashboard() {
       orderBy('status', 'desc'),
       limit(1)
     );
-  }, [db, user]);
+  }, [db, user, isDemoMode]);
 
   const { data: activeJobs } = useCollection(activeJobQuery);
   const activeJob = activeJobs[0] as any;
 
   // History query for Impact scoring
   const historyQuery = useMemo(() => {
-    if (!user && !localStorage.getItem('demo_mode')) return null;
+    if (!user && !isDemoMode) return null;
     const uid = user?.uid || 'demo-user-123';
     return query(
       collection(db, 'jobs'),
@@ -48,7 +50,7 @@ export default function Dashboard() {
       where('status', 'in', ['COMPLETED']),
       limit(10)
     );
-  }, [db, user]);
+  }, [db, user, isDemoMode]);
 
   const { data: history } = useCollection(historyQuery);
 

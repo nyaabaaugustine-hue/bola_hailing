@@ -183,7 +183,7 @@ export default function Home() {
           </div>
         </div>
         <div className="container mx-auto px-4 mt-24 pt-8 border-t border-white/10 text-center text-[10px] font-black uppercase tracking-widest text-white/20">
-          © 2025 DEMO. Made in Accra.
+          © 2026 DEMO. Made in Accra.
         </div>
       </footer>
     </div>
