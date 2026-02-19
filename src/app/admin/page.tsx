@@ -33,8 +33,8 @@ export default function AdminPage() {
         <div className="space-y-8">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="space-y-1">
-              <h1 className="font-headline text-4xl font-black tracking-tight">Fleet Command</h1>
-              <p className="text-muted-foreground flex items-center gap-2">
+              <h1 className="font-headline text-4xl font-black tracking-tight uppercase">Fleet Command</h1>
+              <p className="text-muted-foreground flex items-center gap-2 font-medium">
                 <Activity className="h-4 w-4 text-secondary" /> Monitoring live network operations in Accra & Kumasi.
               </p>
             </div>
@@ -47,7 +47,7 @@ export default function AdminPage() {
                 <Filter className="h-4 w-4" /> Filters
               </Button>
               <Button className="rounded-xl font-bold bg-black text-white hover:bg-black/90">
-                Network Health: 98.4%
+                Network: 98.4%
               </Button>
             </div>
           </div>
@@ -75,7 +75,6 @@ export default function AdminPage() {
           </div>
 
           <div className="grid gap-8 lg:grid-cols-3">
-            {/* Real-time Heatmap */}
             <Card className="lg:col-span-2 uber-shadow border-none overflow-hidden">
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
@@ -87,7 +86,7 @@ export default function AdminPage() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="aspect-[21/9] w-full rounded-2xl bg-muted relative overflow-hidden group">
+                <div className="aspect-[21/9] w-full rounded-2xl bg-muted relative overflow-hidden group border-2 border-black/5">
                    {mapImage && (
                     <Image 
                       src={mapImage.imageUrl} 
@@ -98,7 +97,6 @@ export default function AdminPage() {
                     />
                    )}
                    
-                   {/* Simulated Hotspots */}
                    <div className="absolute top-1/4 left-1/3 h-16 w-16 bg-red-500/20 rounded-full animate-pulse border border-red-500/40">
                       <div className="absolute inset-0 m-auto h-4 w-4 bg-red-500 rounded-full shadow-lg shadow-red-500/50" />
                    </div>
@@ -109,13 +107,12 @@ export default function AdminPage() {
                    <div className="absolute bottom-4 left-4 bg-black/80 backdrop-blur-md p-3 rounded-xl text-white space-y-2 max-w-xs">
                       <p className="text-[10px] font-black tracking-widest uppercase opacity-60">Peak Demand</p>
                       <p className="text-sm font-bold">Kasoa Underbridge • 14 Requests</p>
-                      <Button size="sm" className="w-full bg-secondary h-8 text-[10px] font-black">RE-ROUTE NEAREST TRUCKS</Button>
+                      <Button size="sm" className="w-full bg-secondary h-8 text-[10px] font-black rounded-lg">RE-ROUTE TRUCKS</Button>
                    </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Sustainability Metrics */}
             <Card className="uber-shadow border-none">
               <CardHeader>
                 <CardTitle className="font-headline text-xl flex items-center gap-2">
@@ -146,13 +143,12 @@ export default function AdminPage() {
                   </div>
                   <p className="text-[10px] font-black uppercase tracking-widest opacity-60">Impact Leader</p>
                   <p className="text-2xl font-black mt-1">2.4 Tons saved</p>
-                  <p className="text-xs text-white/50 mt-2">Carbon offset equivalent to 42 planted trees in Aburi.</p>
+                  <p className="text-xs text-white/50 mt-2">Offset equivalent to 42 trees in Aburi.</p>
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* Active Fleets Table */}
           <Card className="uber-shadow border-none">
             <CardHeader>
               <CardTitle className="font-headline text-xl">Active Network Nodes</CardTitle>
@@ -172,8 +168,8 @@ export default function AdminPage() {
                   {DUMMY_COLLECTORS.map((collector, i) => (
                     <TableRow key={i} className="hover:bg-muted/30">
                       <TableCell className="font-bold flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-full overflow-hidden border">
-                          <Image src={collector.image} width={32} height={32} alt={collector.name} />
+                        <div className="h-10 w-10 rounded-xl overflow-hidden border-2 border-black/5 shadow-sm">
+                          <Image src={collector.image} width={40} height={40} alt={collector.name} className="object-cover" />
                         </div>
                         {collector.name}
                       </TableCell>
@@ -189,8 +185,8 @@ export default function AdminPage() {
                         </div>
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                          <ArrowUpRight className="h-4 w-4" />
+                        <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl hover:bg-black hover:text-white transition-colors">
+                          <ArrowUpRight className="h-5 w-5" />
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -200,12 +196,11 @@ export default function AdminPage() {
             </CardContent>
           </Card>
 
-          {/* High Priority Alerts */}
           <Card className="uber-shadow border-none overflow-hidden">
             <CardHeader className="bg-destructive/5 border-b border-destructive/10">
               <div className="flex items-center gap-2 text-destructive">
                 <AlertTriangle className="h-5 w-5" />
-                <CardTitle className="font-headline text-lg">System Alerts</CardTitle>
+                <CardTitle className="font-headline text-lg uppercase tracking-tight">System Alerts</CardTitle>
               </div>
             </CardHeader>
             <CardContent className="p-0">
@@ -221,12 +216,12 @@ export default function AdminPage() {
                       </div>
                       <div>
                         <h4 className="font-black text-lg">{alert.loc}</h4>
-                        <p className="text-sm text-muted-foreground">{alert.issue} • {alert.time}</p>
+                        <p className="text-sm text-muted-foreground font-medium">{alert.issue} • {alert.time}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-4">
-                       <Badge variant={alert.severity === 'Critical' ? 'destructive' : 'secondary'}>{alert.severity}</Badge>
-                       <Button variant="outline" size="sm" className="rounded-xl border-2 font-bold gap-2">
+                       <Badge variant={alert.severity === 'Critical' ? 'destructive' : 'secondary'} className="uppercase font-black text-[9px] px-3">{alert.severity}</Badge>
+                       <Button variant="outline" size="sm" className="rounded-xl border-2 font-black gap-2 h-10 px-4">
                          Dispatch Truck <ArrowUpRight className="h-4 w-4" />
                        </Button>
                     </div>
