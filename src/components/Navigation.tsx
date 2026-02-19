@@ -41,7 +41,7 @@ export default function Navigation() {
   };
 
   return (
-    <nav className="fixed top-0 z-50 w-full glass-nav h-24">
+    <nav className="fixed top-0 z-50 w-full glass-nav h-28">
       <div className="container mx-auto flex h-full items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2 group">
           {logo ? (
