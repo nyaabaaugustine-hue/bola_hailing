@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useRef } from 'react';
@@ -242,18 +243,18 @@ export default function PickupRequestForm() {
         {step === 1 && (
           <div className="space-y-10 animate-in slide-in-from-right-8 duration-500">
             <div className="space-y-4">
-              <h2 className="font-headline text-5xl font-black tracking-tighter uppercase leading-[0.9] text-secondary">Pickup Landmark</h2>
+              <h2 className="font-headline text-5xl font-black tracking-tighter uppercase leading-[0.9] text-secondary">Set Landmark</h2>
               <p className="text-secondary font-medium text-lg">WasteGo AI resolves local landmarks instantly.</p>
             </div>
             
             <div className="space-y-8">
               <div className="space-y-4">
-                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary">Location Mode</Label>
+                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary">Resolution Mode</Label>
                 <div className="grid grid-cols-3 gap-6">
                    {[
-                     { id: 'LANDMARK', label: 'Local Landmark', icon: MapPin, color: 'text-primary' },
-                     { id: 'GHANA_POST', label: 'Ghana Post', icon: ShieldCheck, color: 'text-secondary' },
-                     { id: 'GPS_COORDINATE', label: 'Live GPS', icon: Activity, color: 'text-orange-500' }
+                     { id: 'LANDMARK', label: 'Landmark', icon: MapPin, color: 'text-primary' },
+                     { id: 'GHANA_POST', label: 'Digital Addr', icon: ShieldCheck, color: 'text-secondary' },
+                     { id: 'GPS_COORDINATE', label: 'GPS Pin', icon: Activity, color: 'text-orange-500' }
                    ].map((mode) => (
                      <button 
                        key={mode.id}
@@ -270,7 +271,7 @@ export default function PickupRequestForm() {
               </div>
               
               <div className="space-y-4">
-                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary">Landmark Detail</Label>
+                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary">Landmark Description</Label>
                 <div className="relative group">
                    <Input 
                     className="h-24 text-2xl px-10 pr-24 rounded-[2rem] border-4 border-black/5 bg-muted/30 focus:bg-white focus:border-black transition-all font-black placeholder:font-medium shadow-inner text-secondary"
@@ -288,7 +289,7 @@ export default function PickupRequestForm() {
                 <div className="flex items-center gap-4 p-6 bg-secondary/5 rounded-[1.5rem] border-2 border-secondary/10">
                    <Sparkles className="h-6 w-6 text-secondary shrink-0" />
                    <p className="text-[10px] font-bold text-secondary uppercase tracking-widest leading-relaxed">
-                     WasteGo's landmark resolution engine is active. Voice transcriptions will be automatically geo-coded for drivers.
+                     Our landmark resolution engine is active. Voice transcriptions will be automatically geo-coded.
                    </p>
                 </div>
               </div>
@@ -300,7 +301,7 @@ export default function PickupRequestForm() {
               disabled={loading || !address}
             >
               {loading ? <Loader2 className="mr-3 h-8 w-8 animate-spin" /> : <Compass className="mr-3 h-8 w-8" />}
-              <span className="text-secondary">SECURE LOCATION</span> <ArrowRight className="ml-2 h-8 w-8 group-hover:translate-x-3 transition-transform text-secondary" />
+              <span className="text-secondary">CONFIRM POSITION</span> <ArrowRight className="ml-2 h-8 w-8 group-hover:translate-x-3 transition-transform text-secondary" />
             </Button>
           </div>
         )}
