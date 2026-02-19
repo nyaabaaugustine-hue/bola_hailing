@@ -67,7 +67,7 @@
 }
 
 .glass-nav {
-  @apply bg-background/95 backdrop-blur-3xl border-b border-black/5;
+  @apply bg-background/85 backdrop-blur-3xl border-b border-black/5;
 }
 
 .btn-hover-effect {
