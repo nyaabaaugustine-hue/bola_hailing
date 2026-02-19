@@ -2,7 +2,7 @@ import type {Metadata} from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'BorlaHaze | Premium Trash Hailing Ghana',
+  title: 'DEMO | Premium Trash Hailing Ghana',
   description: 'High-fidelity waste management infrastructure for Ghana. AI-powered classification and dynamic pricing.',
 };
 

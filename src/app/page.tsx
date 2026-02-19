@@ -39,7 +39,7 @@ export default function Home() {
                     Clean surroundings are just a tap away.
                   </p>
                   <p className="text-lg text-muted-foreground leading-relaxed font-medium">
-                    BorlaHaze connects you to the nearest waste collectors instantly. Smart classification, fair pricing, and reliable service at your doorstep.
+                    DEMO connects you to the nearest waste collectors instantly. Smart classification, fair pricing, and reliable service at your doorstep.
                   </p>
                 </div>
               </div>
@@ -151,7 +151,7 @@ export default function Home() {
         <div className="container mx-auto px-4 grid gap-16 md:grid-cols-4">
           <div className="space-y-6">
             <Link href="/" className="flex items-center gap-2">
-              <span className="font-headline text-3xl font-black uppercase">Borla<span className="text-primary">Haze</span></span>
+              <span className="font-headline text-3xl font-black uppercase">DEMO<span className="text-primary"></span></span>
             </Link>
             <p className="text-white/40 font-medium">Sustainable infrastructure for a cleaner, smarter Ghana.</p>
           </div>
@@ -186,7 +186,7 @@ export default function Home() {
           </div>
         </div>
         <div className="container mx-auto px-4 mt-24 pt-8 border-t border-white/10 text-center text-[10px] font-black uppercase tracking-widest text-white/20">
-          © 2025 BorlaHaze. Made in Accra.
+          © 2025 DEMO. Made in Accra.
         </div>
       </footer>
     </div>

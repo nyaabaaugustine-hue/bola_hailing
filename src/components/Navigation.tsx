@@ -12,7 +12,7 @@ export default function Navigation() {
             <Recycle className="h-6 w-6" />
           </div>
           <span className="font-headline text-2xl font-black tracking-tighter text-black uppercase">
-            Borla<span className="text-primary">Haze</span>
+            DEMO<span className="text-primary"></span>
           </span>
         </Link>
         
