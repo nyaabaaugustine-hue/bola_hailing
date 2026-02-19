@@ -86,16 +86,16 @@ export default function AdminPage() {
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { label: 'Active Fleet', val: DUMMY_COLLECTORS.length.toString(), icon: Truck, color: 'text-primary' },
+              { label: 'Active Fleet', val: DUMMY_COLLECTORS.length.toString(), icon: Truck, color: 'text-secondary' },
               { label: 'Live Bookings', val: (jobs?.filter((o: any) => o.status !== 'COMPLETED').length || 0).toString(), icon: Activity, color: 'text-secondary' },
-              { label: 'Carbon Offset', val: '14.2t', icon: Leaf, color: 'text-green-500' },
-              { label: 'Net Revenue', val: 'GHS 12k', icon: BarChart3, color: 'text-orange-600' }
+              { label: 'Carbon Offset', val: '14.2t', icon: Leaf, color: 'text-secondary' },
+              { label: 'Net Revenue', val: 'GHS 12k', icon: BarChart3, color: 'text-secondary' }
             ].map((stat, i) => (
               <Card key={i} className="uber-shadow border-none rounded-[2rem] hover:translate-y-[-8px] transition-all duration-500 group overflow-hidden bg-white">
                 <CardContent className="p-8 flex items-center justify-between">
                   <div className="space-y-1">
                     <p className="text-[9px] text-muted-foreground font-black uppercase tracking-[0.3em]">{stat.label}</p>
-                    <p className="text-4xl font-black tracking-tighter">{stat.val}</p>
+                    <p className={`text-4xl font-black tracking-tighter ${stat.color}`}>{stat.val}</p>
                   </div>
                   <div className={`h-14 w-14 rounded-[1.25rem] bg-muted/50 flex items-center justify-center group-hover:scale-110 transition-transform ${stat.color} shadow-sm`}>
                     <stat.icon className="h-7 w-7" />
