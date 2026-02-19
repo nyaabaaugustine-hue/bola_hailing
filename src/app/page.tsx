@@ -23,11 +23,14 @@ export default function Home() {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 md:pt-48 md:pb-40 overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-muted/30 -z-10 hidden lg:block" />
+      <section className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden">
+        {/* Background Decorative Element */}
+        <div className="absolute top-0 right-0 w-2/3 h-full bg-muted/30 -z-10 hidden lg:block rounded-bl-[10rem]" />
+        
         <div className="container mx-auto px-4">
-          <div className="grid gap-16 lg:grid-cols-12 lg:items-center">
-            <div className="lg:col-span-7 space-y-10">
+          <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
+            {/* Text Content */}
+            <div className="lg:col-span-6 space-y-10 relative z-10">
               <div className="space-y-6">
                 <Badge variant="outline" className="px-5 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] border-black/10 bg-white/50 backdrop-blur-sm">
                   Service available in Accra & Kumasi 🇬🇭
@@ -74,22 +77,46 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="lg:col-span-5 relative">
-              <div className="aspect-[4/5] w-full rounded-[2.5rem] overflow-hidden shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] border-8 border-white">
+            {/* Enlarged Image Content */}
+            <div className="lg:col-span-6 relative lg:-mr-20">
+              <div className="aspect-[4/3] lg:aspect-square w-full rounded-[3rem] overflow-hidden shadow-[0_50px_120px_-30px_rgba(0,0,0,0.2)] border-[12px] border-white relative">
                 {heroImage && (
                   <Image 
                     src={heroImage.imageUrl} 
                     alt={heroImage.description} 
                     fill 
-                    className="object-cover"
+                    className="object-cover scale-105 hover:scale-100 transition-transform duration-700"
                     priority
+                    data-ai-hint="garbage truck"
                   />
                 )}
+                
+                {/* Overlay Badge for Image */}
+                <div className="absolute top-8 left-8 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-xl hidden md:block">
+                  <div className="flex items-center gap-3">
+                     <div className="h-12 w-12 rounded-xl bg-primary flex items-center justify-center text-white">
+                        <Truck className="h-6 w-6" />
+                     </div>
+                     <div>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-black/40">Active Network</p>
+                        <p className="font-bold text-lg">142 Trucks Live</p>
+                     </div>
+                  </div>
+                </div>
               </div>
-              <div className="absolute -bottom-10 -left-10 bg-black text-white p-8 rounded-[2rem] shadow-2xl hidden md:block">
-                <Truck className="h-10 w-10 text-primary mb-4" />
-                <p className="text-[10px] font-black uppercase tracking-widest opacity-60">Fleet Live</p>
-                <p className="text-xl font-bold">142 Trucks Online</p>
+
+              {/* Decorative floating card */}
+              <div className="absolute -bottom-10 -left-10 bg-black text-white p-8 rounded-[2.5rem] shadow-2xl hidden xl:block border-4 border-white">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4">
+                    <div className="h-3 w-3 rounded-full bg-secondary animate-pulse" />
+                    <span className="text-[10px] font-black uppercase tracking-widest opacity-60">System Operational</span>
+                  </div>
+                  <p className="text-2xl font-black">98.4% Efficiency</p>
+                  <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                    <div className="h-full bg-secondary w-[98.4%]" />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -154,7 +181,7 @@ export default function Home() {
         <div className="container mx-auto px-4 grid gap-16 md:grid-cols-4">
           <div className="space-y-6">
             <Link href="/" className="flex items-center gap-2">
-              <span className="font-headline text-3xl font-black uppercase">DEMO<span className="text-primary"></span></span>
+              <span className="font-headline text-3xl font-black uppercase">DEMO</span>
             </Link>
             <p className="text-white/40 font-medium">Sustainable infrastructure for a cleaner, smarter Ghana.</p>
           </div>
