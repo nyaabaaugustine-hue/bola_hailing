@@ -22,7 +22,8 @@ import {
   Phone,
   ShieldCheck,
   Zap,
-  Sparkles
+  Sparkles,
+  Loader2
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';

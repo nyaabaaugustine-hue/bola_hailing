@@ -6,7 +6,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Camera, MapPin, Loader2, Sparkles, CreditCard, Truck, Smartphone, Star, Trash2, ArrowRight, Info, Phone, ShieldCheck, CheckCircle2, Mic, Activity } from 'lucide-react';
 import { resolveGhanaAddress } from '@/ai/flows/ghana-address-voice-resolution';
 import { useToast } from '@/hooks/use-toast';

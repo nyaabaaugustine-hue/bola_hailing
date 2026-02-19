@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
-import { Truck, Navigation2, MapPin, Camera, Fuel, Phone, Power, User, CheckCircle2, Loader2, Zap, TrendingUp, Sparkles, Activity } from 'lucide-react';
+import { Truck, Navigation2, MapPin, Camera, Fuel, Phone, Power, User, CheckCircle2, Loader2, Zap, TrendingUp, Sparkles, Activity, Star } from 'lucide-react';
 import { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
 import { DEMO_COLLECTOR } from '@/lib/dummy-data';
@@ -41,8 +41,8 @@ export default function CollectorPage() {
     );
   }, [db, authUser]);
 
-  const { data: pendingJobs, loading: pendingLoading } = useCollection(pendingJobsQuery);
-  const { data: activeJobs, loading: activeLoading } = useCollection(activeJobQuery);
+  const { data: pendingJobs } = useCollection(pendingJobsQuery);
+  const { data: activeJobs } = useCollection(activeJobQuery);
 
   const pendingJob = pendingJobs[0] as any;
   const activeJob = activeJobs[0] as any;
