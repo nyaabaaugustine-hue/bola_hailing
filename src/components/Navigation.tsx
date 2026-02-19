@@ -3,16 +3,19 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Recycle, MapPin, Truck, ShieldCheck, Info, LogOut, User, Globe } from 'lucide-react';
+import { MapPin, Truck, ShieldCheck, LogOut, User, Globe } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 import { useUser, useAuth } from '@/firebase';
 import { signOut } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function Navigation() {
   const { user, loading } = useUser();
   const auth = useAuth();
   const router = useRouter();
+  const logo = PlaceHolderImages.find(img => img.id === 'app-logo');
 
   const handleLogout = async () => {
     await signOut(auth);
@@ -23,9 +26,20 @@ export default function Navigation() {
     <nav className="fixed top-0 z-50 w-full glass-nav h-20">
       <div className="container mx-auto flex h-full items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2 group">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-black text-white shadow-xl group-hover:bg-primary transition-colors">
-            <Recycle className="h-6 w-6" />
-          </div>
+          {logo ? (
+            <div className="relative h-12 w-12 overflow-hidden rounded-xl bg-black shadow-lg">
+              <Image 
+                src={logo.imageUrl} 
+                alt="Logo" 
+                fill 
+                className="object-contain p-1"
+              />
+            </div>
+          ) : (
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-black text-white shadow-xl group-hover:bg-primary transition-colors">
+              <span className="font-headline text-xl font-black">D</span>
+            </div>
+          )}
           <span className="font-headline text-2xl font-black tracking-tighter text-black uppercase">
             DEMO
           </span>

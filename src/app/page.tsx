@@ -16,6 +16,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function Home() {
   const heroImage = PlaceHolderImages.find(img => img.id === 'hero-image');
+  const logo = PlaceHolderImages.find(img => img.id === 'app-logo');
 
   return (
     <div className="flex min-h-screen flex-col bg-background font-body">
@@ -152,6 +153,11 @@ export default function Home() {
         <div className="container mx-auto px-4 grid gap-16 md:grid-cols-4">
           <div className="space-y-6">
             <Link href="/" className="flex items-center gap-2">
+              {logo ? (
+                <div className="relative h-10 w-10 overflow-hidden rounded-lg bg-white p-1">
+                  <Image src={logo.imageUrl} alt="Logo" fill className="object-contain" />
+                </div>
+              ) : null}
               <span className="font-headline text-3xl font-black uppercase">DEMO</span>
             </Link>
             <p className="text-white/40 font-medium">Sustainable infrastructure for a cleaner, smarter Ghana.</p>

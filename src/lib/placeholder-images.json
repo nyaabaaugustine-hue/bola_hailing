@@ -1,6 +1,12 @@
 {
   "placeholderImages": [
     {
+      "id": "app-logo",
+      "description": "DEMO App Logo",
+      "imageUrl": "https://res.cloudinary.com/dwsl2ktt2/image/upload/v1771501831/trash_logo_exropq.png",
+      "imageHint": "trash logo"
+    },
+    {
       "id": "hero-image",
       "description": "Clean Ghanaian street with waste collection truck",
       "imageUrl": "https://res.cloudinary.com/daxrrb0nv/image/upload/v1771489317/asdfg_mds7si.jpg",
