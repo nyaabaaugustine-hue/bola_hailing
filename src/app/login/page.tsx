@@ -5,18 +5,20 @@ import { useState } from 'react';
 import Navigation from '@/components/Navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { User, Truck, ShieldCheck, ArrowRight, Loader2 } from 'lucide-react';
+import { User, Truck, ShieldCheck, ArrowRight, Loader2, KeyRound, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth, useUser } from '@/firebase';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { useToast } from '@/hooks/use-toast';
 
 export default function LoginPage() {
   const { user, loading: authLoading } = useUser();
   const auth = useAuth();
   const router = useRouter();
+  const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const loginBg = PlaceHolderImages.find(img => img.id === 'login-bg');
 
@@ -25,11 +27,33 @@ export default function LoginPage() {
     try {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Sign-in error:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Auth Error',
+        description: error.message.includes('api-key-not-valid') 
+          ? 'Firebase API Key is missing. Use "Demo Access" below for testing.' 
+          : 'Could not sign in with Google.'
+      });
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDemoLogin = (role: 'customer' | 'collector' | 'admin') => {
+    toast({
+      title: `Demo Access: ${role.toUpperCase()}`,
+      description: "Entering portal in demo mode..."
+    });
+    
+    const paths = {
+      customer: '/dashboard',
+      collector: '/collector',
+      admin: '/admin'
+    };
+    
+    router.push(paths[role]);
   };
 
   const roles = [
@@ -85,13 +109,15 @@ export default function LoginPage() {
       <main className="relative z-10 container mx-auto pt-32 pb-12 px-4 md:pt-48 flex items-center justify-center min-h-[calc(100vh-80px)]">
         <div className="w-full max-w-5xl space-y-12">
           {!user ? (
-            <div className="animate-in fade-in zoom-in-95 duration-700">
-              <Card className="uber-shadow border-none max-w-md mx-auto overflow-hidden rounded-[2.5rem] bg-white/95 shadow-2xl">
-                <CardHeader className="p-12 pb-6 text-center">
+            <div className="grid gap-8 lg:grid-cols-2 items-center max-w-4xl mx-auto animate-in fade-in zoom-in-95 duration-700">
+              
+              {/* Login Card */}
+              <Card className="uber-shadow border-none overflow-hidden rounded-[2.5rem] bg-white/95 shadow-2xl">
+                <CardHeader className="p-10 pb-6 text-center">
                   <CardTitle className="font-headline text-4xl font-black uppercase tracking-tighter mb-4">Welcome</CardTitle>
-                  <CardDescription className="text-lg font-medium text-black/60">Log in or sign up to access the DEMO infrastructure.</CardDescription>
+                  <CardDescription className="text-lg font-medium text-black/60">Secure access to Ghana's waste infrastructure.</CardDescription>
                 </CardHeader>
-                <CardContent className="p-12 pt-6 space-y-6">
+                <CardContent className="p-10 pt-6 space-y-6">
                   <Button 
                     className="w-full h-16 rounded-2xl font-black bg-black text-white hover:bg-black/90 text-lg shadow-xl flex items-center justify-center gap-3 transition-all active:scale-[0.98]"
                     onClick={handleGoogleSignIn}
@@ -111,19 +137,61 @@ export default function LoginPage() {
                       </>
                     )}
                   </Button>
+
                   <div className="relative">
                     <div className="absolute inset-0 flex items-center">
                       <span className="w-full border-t border-black/10"></span>
                     </div>
                     <div className="relative flex justify-center text-[10px] font-black uppercase tracking-widest">
-                      <span className="bg-white/95 px-4 text-black/40">Secure Infrastructure</span>
+                      <span className="bg-white/95 px-4 text-black/40">Infrastructure Only</span>
                     </div>
                   </div>
-                  <p className="text-[10px] text-center text-black/40 px-8 font-bold uppercase tracking-tighter">
-                    Sustainable Waste Hailing for Ghana
-                  </p>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                     <Button variant="outline" className="h-14 rounded-xl font-bold border-2 text-xs">Email / USSD</Button>
+                     <Button variant="outline" className="h-14 rounded-xl font-bold border-2 text-xs">Phone Access</Button>
+                  </div>
                 </CardContent>
               </Card>
+
+              {/* Quick Access/Demo Card */}
+              <div className="space-y-6">
+                <div className="bg-black/40 backdrop-blur-md p-8 rounded-[2.5rem] border border-white/10 text-white space-y-6">
+                   <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+                         <Sparkles className="h-5 w-5" />
+                      </div>
+                      <h3 className="text-xl font-black uppercase tracking-tighter">Demo Access</h3>
+                   </div>
+                   <p className="text-sm text-white/60 font-medium leading-relaxed">
+                     Skip the setup. Enter the portal as a pre-configured role to test the real-time waste infrastructure immediately.
+                   </p>
+                   <div className="space-y-3">
+                      <Button 
+                        onClick={() => handleDemoLogin('customer')}
+                        className="w-full h-14 bg-white/10 hover:bg-white/20 text-white justify-between rounded-2xl border border-white/10 group transition-all"
+                      >
+                         <span className="flex items-center gap-3 font-bold"><User className="h-4 w-4" /> Enter as Customer</span>
+                         <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                      </Button>
+                      <Button 
+                        onClick={() => handleDemoLogin('collector')}
+                        className="w-full h-14 bg-white/10 hover:bg-white/20 text-white justify-between rounded-2xl border border-white/10 group transition-all"
+                      >
+                         <span className="flex items-center gap-3 font-bold"><Truck className="h-4 w-4" /> Enter as Collector</span>
+                         <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                      </Button>
+                      <Button 
+                        onClick={() => handleDemoLogin('admin')}
+                        className="w-full h-14 bg-white/10 hover:bg-white/20 text-white justify-between rounded-2xl border border-white/10 group transition-all"
+                      >
+                         <span className="flex items-center gap-3 font-bold"><ShieldCheck className="h-4 w-4" /> Enter as Admin</span>
+                         <ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                      </Button>
+                   </div>
+                </div>
+              </div>
+
             </div>
           ) : (
             <div className="animate-in slide-in-from-bottom-8 duration-700">
@@ -132,7 +200,7 @@ export default function LoginPage() {
                 <p className="text-xl text-white/80 font-medium">Signed in as <span className="text-primary font-black">{user.displayName}</span>.</p>
               </div>
 
-              <div className="grid gap-6 md:grid-cols-3">
+              <div className="grid gap-6 md:grid-cols-3 max-w-5xl mx-auto">
                 {roles.map((role, i) => (
                   <Card key={i} className="uber-shadow border-none hover:translate-y-[-8px] transition-all duration-300 group overflow-hidden rounded-[2.5rem] bg-white/95">
                     <CardHeader className="p-8 pb-4">
@@ -156,7 +224,7 @@ export default function LoginPage() {
           )}
           
           <div className="text-center pt-8">
-            <p className="text-[10px] font-black uppercase tracking-widest text-white/40">Verified Multi-Role Entry • Sustainable Ghana • © 2025 DEMO</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-white/40">Verified Infrastructure • Sustainable Ghana • © 2025 DEMO</p>
           </div>
         </div>
       </main>

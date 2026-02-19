@@ -1,6 +1,11 @@
 
 'use client';
 
+/**
+ * @fileOverview Firebase configuration object.
+ * NOTE: For production, replace these with values from your Firebase Console.
+ */
+
 export const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "demo-key",
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "demo-project.firebaseapp.com",
