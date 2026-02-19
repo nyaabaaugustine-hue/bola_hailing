@@ -173,7 +173,7 @@ export default function Home() {
           </div>
         </div>
         <div className="container mx-auto px-4 mt-12 pt-8 border-t text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} BorlaHaze. Made with ❤️ in Accra.
+          © 2025 BorlaHaze. Made with ❤️ in Accra.
         </div>
       </footer>
     </div>
