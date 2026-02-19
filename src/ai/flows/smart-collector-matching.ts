@@ -73,9 +73,9 @@ Here is the user's trash pickup request:
 
 Here is a JSON array of currently available waste collectors. Each collector object contains their details:
 
-```json
+\`\`\`json
 {{{json availableCollectors}}}
-```
+\`\`\`
 
 Analyze the user's request and the available collectors thoroughly. Select the single best collector that meets all hard requirements (availability, waste type compatibility, capacity) and scores highest on the soft criteria (proximity, reliability, acceptance rate, route efficiency).
 
