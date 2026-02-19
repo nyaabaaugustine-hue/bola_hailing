@@ -4,46 +4,46 @@
 
 @layer base {
   :root {
-    --background: 0 0% 94%;
-    --foreground: 0 0% 10%;
+    --background: 0 0% 98%;
+    --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 10%;
+    --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 10%;
+    --popover-foreground: 240 10% 3.9%;
     --primary: 33 100% 50%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 120 61% 34%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 0 0% 90%;
-    --muted-foreground: 0 0% 40%;
-    --accent: 120 61% 34%;
-    --accent-foreground: 0 0% 100%;
+    --secondary: 142.1 76.2% 36.3%;
+    --secondary-foreground: 355.7 100% 97.3%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 85%;
-    --input: 0 0% 85%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
     --ring: 33 100% 50%;
-    --radius: 0.75rem;
+    --radius: 1rem;
   }
   .dark {
-    --background: 0 0% 10%;
+    --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
-    --card: 0 0% 12%;
+    --card: 240 10% 3.9%;
     --card-foreground: 0 0% 98%;
-    --popover: 0 0% 12%;
+    --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
     --primary: 33 100% 50%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 120 61% 40%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 0 0% 20%;
-    --muted-foreground: 0 0% 65%;
-    --accent: 120 61% 40%;
-    --accent-foreground: 0 0% 100%;
+    --secondary: 142.1 70.6% 45.3%;
+    --secondary-foreground: 144.9 80.4% 10%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
     --ring: 33 100% 50%;
   }
 }
@@ -55,4 +55,12 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.uber-shadow {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.map-gradient {
+  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%);
 }
