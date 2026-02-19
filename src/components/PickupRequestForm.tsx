@@ -25,7 +25,10 @@ export default function PickupRequestForm() {
   const [priceData, setPriceData] = useState<any>(null);
 
   const handleAddressResolve = async () => {
-    if (!address) return;
+    if (!address) {
+      toast({ variant: 'destructive', title: "Missing Information", description: "Please enter an address or landmark." });
+      return;
+    }
     setLoading(true);
     try {
       const result = await resolveGhanaAddress({
@@ -44,6 +47,7 @@ export default function PickupRequestForm() {
 
   const handleImageUpload = async () => {
     setLoading(true);
+    // Simulate real AI processing
     setTimeout(async () => {
       const mockDataUri = "data:image/jpeg;base64,...";
       try {
@@ -110,23 +114,25 @@ export default function PickupRequestForm() {
 
   return (
     <Card className="uber-shadow border-none overflow-hidden bg-white rounded-[2rem]">
+      {/* Progress Bar */}
       <div className="flex bg-muted/10 p-5 gap-3 border-b border-black/5">
         {[1, 2, 3, 4].map((s) => (
           <div key={s} className={`h-1.5 flex-1 rounded-full transition-all duration-700 ${s <= step ? 'bg-black' : 'bg-black/5'}`} />
         ))}
       </div>
+      
       <CardContent className="p-10">
         {step === 1 && (
           <div className="space-y-8 animate-in slide-in-from-right-8 duration-500">
             <div className="space-y-4">
               <h2 className="font-headline text-4xl font-black tracking-tighter uppercase">Pickup Location</h2>
-              <p className="text-muted-foreground font-medium">Select your preferred location method for a precise match.</p>
+              <p className="text-muted-foreground font-medium">Where should we find you?</p>
             </div>
             
             <div className="space-y-6">
               <div className="space-y-3">
                 <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-black/40">Method</Label>
-                <Select defaultValue={locationType} onValueChange={setLocationType}>
+                <Select value={locationType} onValueChange={setLocationType}>
                   <SelectTrigger className="h-16 text-lg rounded-2xl border-2 border-black/5 bg-muted/30 focus:bg-white focus:border-black transition-all">
                     <SelectValue placeholder="How should we find you?" />
                   </SelectTrigger>
@@ -152,7 +158,11 @@ export default function PickupRequestForm() {
               </div>
             </div>
 
-            <Button className="w-full h-16 text-lg font-black rounded-2xl bg-black text-white hover:bg-black/90 btn-hover-effect group mt-4 shadow-xl shadow-black/10" onClick={handleAddressResolve} disabled={loading || !address}>
+            <Button 
+              className="w-full h-16 text-lg font-black rounded-2xl bg-black text-white hover:bg-black/90 btn-hover-effect group mt-4 shadow-xl shadow-black/10" 
+              onClick={handleAddressResolve} 
+              disabled={loading || !address}
+            >
               {loading ? <Loader2 className="mr-3 h-6 w-6 animate-spin" /> : <MapPin className="mr-3 h-6 w-6" />}
               Set Destination <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
@@ -165,6 +175,7 @@ export default function PickupRequestForm() {
               <h3 className="font-headline text-4xl font-black tracking-tighter uppercase">Scan Waste</h3>
               <p className="text-muted-foreground font-medium">Snap a photo. Our AI identifies the contents for better recycling.</p>
             </div>
+            
             <div 
               className="group relative h-80 w-full rounded-[2rem] border-4 border-dashed border-black/5 hover:border-primary/50 transition-all bg-muted/30 flex flex-col items-center justify-center cursor-pointer overflow-hidden"
               onClick={handleImageUpload}
@@ -175,7 +186,7 @@ export default function PickupRequestForm() {
                        <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping" />
                        <Loader2 className="h-16 w-16 text-primary animate-spin relative z-10" />
                     </div>
-                    <p className="font-black text-primary animate-pulse tracking-[0.2em] uppercase text-xs">AI Processing Load...</p>
+                    <p className="font-black text-primary animate-pulse tracking-[0.2em] uppercase text-xs text-center">AI Analyzing Waste Profile...</p>
                  </div>
                ) : (
                  <div className="flex flex-col items-center gap-6 p-10 text-center">
@@ -189,7 +200,13 @@ export default function PickupRequestForm() {
                  </div>
                )}
             </div>
-            <Button variant="ghost" className="w-full h-12 text-black/40 font-black uppercase tracking-widest text-[10px] hover:bg-transparent" onClick={() => setStep(1)} disabled={loading}>
+            
+            <Button 
+              variant="ghost" 
+              className="w-full h-12 text-black/40 font-black uppercase tracking-widest text-[10px] hover:bg-transparent" 
+              onClick={() => setStep(1)} 
+              disabled={loading}
+            >
               <ArrowRight className="mr-2 h-4 w-4 rotate-180" /> Change Location
             </Button>
           </div>
@@ -204,16 +221,16 @@ export default function PickupRequestForm() {
                 <div className="flex justify-between items-start mb-10 relative z-10">
                    <div className="flex items-center gap-2">
                       <Sparkles className="h-5 w-5 text-primary" />
-                      <span className="font-black uppercase tracking-[0.2em] text-[10px] text-white/60">Dynamic Pricing Active</span>
+                      <span className="font-black uppercase tracking-[0.2em] text-[10px] text-white/60">Dynamic Pricing Engine</span>
                    </div>
-                   <Badge className="bg-white/10 text-white border-none font-bold uppercase tracking-widest text-[9px] px-3">Priority</Badge>
+                   <Badge className="bg-white/10 text-white border-none font-bold uppercase tracking-widest text-[9px] px-3">Live Quote</Badge>
                 </div>
                 <div className="flex items-end justify-between relative z-10">
                    <div>
                       <p className="text-[10px] uppercase font-black tracking-widest text-white/40 mb-2">Estimated Total</p>
                       <p className="text-6xl font-black">GHS {priceData?.pickupPrice.toFixed(2)}</p>
                       <p className="text-xs text-primary mt-4 font-black uppercase tracking-widest flex items-center gap-2">
-                         {wasteData.wasteCategories[0].replace('_', ' ')} • ~{wasteData.estimatedWeightKg}kg
+                         {wasteData.wasteCategories[0].replace(/_/g, ' ')} • ~{wasteData.estimatedWeightKg}kg
                       </p>
                    </div>
                    <div className="text-right">
@@ -239,11 +256,15 @@ export default function PickupRequestForm() {
              </div>
 
              <div className="pt-6 space-y-6">
-                <Button className="w-full h-18 text-xl font-black rounded-2xl bg-black text-white shadow-2xl btn-hover-effect" onClick={handleConfirmOrder} disabled={loading}>
-                   {loading ? <Loader2 className="mr-3 h-6 w-6 animate-spin" /> : "Confirm Order"}
+                <Button 
+                  className="w-full h-20 text-xl font-black rounded-2xl bg-black text-white shadow-2xl btn-hover-effect" 
+                  onClick={handleConfirmOrder} 
+                  disabled={loading}
+                >
+                   {loading ? <Loader2 className="mr-3 h-6 w-6 animate-spin" /> : "Confirm Pickup Order"}
                 </Button>
                 <p className="text-[10px] text-center text-black/40 px-12 leading-relaxed font-bold uppercase tracking-tighter">
-                  By confirming, you agree to our fair usage policy for community refuse collection.
+                  By confirming, you agree to our fair usage policy for community waste collection.
                 </p>
              </div>
           </div>
@@ -271,14 +292,14 @@ export default function PickupRequestForm() {
                      <p className="font-black text-2xl uppercase tracking-tighter">Kojo Mensah</p>
                      <div className="flex items-center gap-3 mt-1">
                         <div className="flex items-center gap-1 text-[10px] font-black text-primary">
-                          <Star className="h-4 w-4 fill-primary" />
+                          <Star className="h-4 w-4 fill-primary text-primary" />
                           <span>4.9</span>
                         </div>
                         <span className="text-black/40 text-[10px] font-black uppercase tracking-widest">• Verified Driver</span>
                      </div>
                   </div>
                   <div className="text-right">
-                    <div className="bg-black text-white font-black px-4 py-2 rounded-xl text-sm">8m</div>
+                    <Badge className="bg-black text-white font-black px-4 py-2 rounded-xl text-sm border-none">8 MINS</Badge>
                   </div>
                </div>
             </Card>
