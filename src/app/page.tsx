@@ -23,7 +23,7 @@ export default function Home() {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden">
+      <section className="relative pt-40 pb-32 md:pt-56 md:pb-48 overflow-hidden">
         {/* Background Decorative Element */}
         <div className="absolute top-0 right-0 w-2/3 h-full bg-muted/30 -z-10 hidden lg:block rounded-bl-[10rem]" />
         
@@ -35,8 +35,9 @@ export default function Home() {
                 <Badge variant="outline" className="px-5 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] border-black/10 bg-white/50 backdrop-blur-sm">
                   Service available in Accra & Kumasi 🇬🇭
                 </Badge>
-                <h1 className="font-headline text-6xl font-black leading-[1.05] tracking-tighter md:text-8xl lg:text-9xl">
-                  Trash Hailing <br /><span className="text-primary italic">Reimagined</span>.
+                <h1 className="font-headline text-6xl font-black leading-[1.05] tracking-tighter md:text-8xl lg:text-9xl flex flex-col">
+                  <span>Trash Hailing</span>
+                  <span className="text-primary italic text-3xl md:text-5xl lg:text-6xl mt-2">Reimagined.</span>
                 </h1>
                 <div className="space-y-4 max-w-xl">
                   <p className="text-2xl font-black text-black leading-tight">
