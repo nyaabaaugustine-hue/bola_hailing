@@ -1,0 +1,93 @@
+
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Standard user profile for customers and administrators.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "phone": { "type": "string" },
+        "role": { "type": "string", "enum": ["customer", "admin"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "role"]
+    },
+    "CollectorProfile": {
+      "title": "CollectorProfile",
+      "description": "Profile for waste collectors including vehicle and live status.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "vehicleInfo": { "type": "string" },
+        "isOnline": { "type": "boolean" },
+        "currentLocation": {
+          "type": "object",
+          "properties": {
+            "lat": { "type": "number" },
+            "lng": { "type": "number" }
+          }
+        },
+        "rating": { "type": "number" }
+      },
+      "required": ["uid", "isOnline"]
+    },
+    "PickupJob": {
+      "title": "PickupJob",
+      "description": "A trash pickup request and its real-time status.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "customerId": { "type": "string" },
+        "collectorId": { "type": "string" },
+        "status": { "type": "string", "enum": ["REQUESTED", "APPROVED", "MATCHED", "EN_ROUTE", "ARRIVED", "COMPLETED", "CANCELLED"] },
+        "pickupLocation": {
+          "type": "object",
+          "properties": {
+            "lat": { "type": "number" },
+            "lng": { "type": "number" },
+            "address": { "type": "string" },
+            "landmark": { "type": "string" }
+          }
+        },
+        "wasteDetails": {
+          "type": "object",
+          "properties": {
+            "type": { "type": "string" },
+            "weight": { "type": "number" },
+            "volume": { "type": "number" }
+          }
+        },
+        "price": { "type": "number" },
+        "liveCollectorLocation": {
+          "type": "object",
+          "properties": {
+            "lat": { "type": "number" },
+            "lng": { "type": "number" }
+          }
+        }
+      }
+    }
+  },
+  "auth": {
+    "providers": ["password", "google"]
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Customer and admin profiles."
+    },
+    "/collectors/{collectorId}": {
+      "schema": "CollectorProfile",
+      "description": "Collector status and live location."
+    },
+    "/jobs/{jobId}": {
+      "schema": "PickupJob",
+      "description": "Active pickup missions."
+    }
+  }
+}
