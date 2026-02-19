@@ -87,7 +87,6 @@ export default function LiveTrackingMap({ center, collectorPos, pickupPos, zoom 
         <RecenterMap center={center} />
       </MapContainer>
       
-      {/* Visual Overlay to make it feel more "App-like" */}
       <div className="absolute inset-0 pointer-events-none ring-1 ring-inset ring-black/5 rounded-2xl" />
     </div>
   );
