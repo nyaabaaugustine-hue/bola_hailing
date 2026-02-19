@@ -153,7 +153,7 @@ export default function Home() {
           <div className="space-y-6">
             <Link href="/" className="flex items-center gap-2">
               {logo ? (
-                <div className="relative h-10 w-10 overflow-hidden rounded-[7%]">
+                <div className="relative h-14 w-14 overflow-hidden rounded-[7%]">
                   <Image src={logo.imageUrl} alt="Logo" fill className="object-contain" />
                 </div>
               ) : null}

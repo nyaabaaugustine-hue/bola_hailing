@@ -12,15 +12,11 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { useState, useEffect } from 'react';
 
 export default function Navigation() {
-  const { user, loading } = userHook();
+  const { user, loading } = useUser();
   const auth = useAuth();
   const router = useRouter();
   const logo = PlaceHolderImages.find(img => img.id === 'app-logo');
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
-
-  function userHook() {
-    return useUser();
-  }
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
@@ -47,7 +43,7 @@ export default function Navigation() {
       <div className="container mx-auto flex h-full items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2 group">
           {logo ? (
-            <div className="relative h-12 w-12 overflow-hidden rounded-[7%] shadow-sm">
+            <div className="relative h-14 w-14 overflow-hidden rounded-[7%] shadow-sm">
               <Image 
                 src={logo.imageUrl} 
                 alt="Logo" 
@@ -56,8 +52,8 @@ export default function Navigation() {
               />
             </div>
           ) : (
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary text-white shadow-xl group-hover:bg-primary/90 transition-colors">
-              <span className="font-headline text-xl font-black italic">T</span>
+            <div className="flex h-14 w-14 items-center justify-center rounded-[7%] bg-primary text-white shadow-xl group-hover:bg-primary/90 transition-colors">
+              <span className="font-headline text-2xl font-black italic">T</span>
             </div>
           )}
         </Link>
