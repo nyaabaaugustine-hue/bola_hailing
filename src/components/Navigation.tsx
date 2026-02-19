@@ -1,9 +1,23 @@
+'use client';
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Recycle, MapPin, Truck, LayoutDashboard, User, Menu, ShieldCheck, Briefcase, Info, LogOut } from 'lucide-react';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Recycle, MapPin, Truck, ShieldCheck, Info, LogOut, User } from 'lucide-react';
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
+import { useUser, useAuth } from '@/firebase';
+import { signOut } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
 
 export default function Navigation() {
+  const { user, loading } = useUser();
+  const auth = useAuth();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    router.push('/');
+  };
+
   return (
     <nav className="fixed top-0 z-50 w-full glass-nav h-20">
       <div className="container mx-auto flex h-full items-center justify-between px-4">
@@ -12,7 +26,7 @@ export default function Navigation() {
             <Recycle className="h-6 w-6" />
           </div>
           <span className="font-headline text-2xl font-black tracking-tighter text-black uppercase">
-            DEMO<span className="text-primary"></span>
+            DEMO
           </span>
         </Link>
         
@@ -33,32 +47,56 @@ export default function Navigation() {
         </div>
 
         <div className="flex items-center gap-4">
-          <Link href="/login">
-            <Button variant="ghost" size="icon" className="rounded-full hover:bg-black/5 hidden sm:flex">
-              <LogOut className="h-5 w-5" />
-            </Button>
-          </Link>
-          <Link href="/dashboard">
-             <Button className="bg-black text-white hover:bg-black/90 font-bold px-8 h-12 rounded-full shadow-lg btn-hover-effect">
-               Request Pickup
-             </Button>
-          </Link>
+          {!loading && (
+            <>
+              {user ? (
+                <div className="flex items-center gap-4">
+                  <Link href="/dashboard">
+                    <Button variant="ghost" className="hidden sm:flex items-center gap-2 font-bold text-sm">
+                      <User className="h-4 w-4" /> {user.displayName?.split(' ')[0] || 'Account'}
+                    </Button>
+                  </Link>
+                  <Button variant="ghost" size="icon" className="rounded-full hover:bg-black/5" onClick={handleLogout}>
+                    <LogOut className="h-5 w-5" />
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 sm:gap-4">
+                  <Link href="/login">
+                    <Button variant="ghost" className="font-bold text-sm px-4">Log in</Button>
+                  </Link>
+                  <Link href="/login">
+                    <Button className="bg-black text-white hover:bg-black/90 font-bold px-6 h-11 rounded-full shadow-lg btn-hover-effect">
+                      Get Started
+                    </Button>
+                  </Link>
+                </div>
+              )}
+            </>
+          )}
           
           {/* Mobile Menu */}
           <div className="lg:hidden">
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="hover:bg-black/5">
-                  <Menu className="h-6 w-6" />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-menu"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px] border-l-4 border-primary">
-                <div className="flex flex-col gap-8 pt-12">
-                  <Link href="/dashboard" className="text-3xl font-black uppercase tracking-tighter hover:text-primary transition-colors">Book</Link>
+                <SheetTitle className="text-left font-black uppercase tracking-tighter text-2xl mb-8">Navigation</SheetTitle>
+                <div className="flex flex-col gap-6">
+                  <Link href="/dashboard" className="text-3xl font-black uppercase tracking-tighter hover:text-primary transition-colors">Book Pickup</Link>
                   <Link href="/collector" className="text-3xl font-black uppercase tracking-tighter hover:text-primary transition-colors">Drive</Link>
-                  <Link href="/admin" className="text-3xl font-black uppercase tracking-tighter hover:text-primary transition-colors">Admin</Link>
+                  <Link href="/admin" className="text-3xl font-black uppercase tracking-tighter hover:text-primary transition-colors">Command</Link>
                   <div className="h-px bg-black/10 w-full" />
-                  <Link href="/login" className="text-xl font-bold uppercase tracking-widest text-black/40">Switch Role</Link>
+                  {user ? (
+                    <Button variant="outline" className="h-14 rounded-xl font-black border-2" onClick={handleLogout}>LOGOUT</Button>
+                  ) : (
+                    <Link href="/login" className="w-full">
+                      <Button className="w-full h-14 rounded-xl font-black bg-black text-white">GET STARTED</Button>
+                    </Link>
+                  )}
                 </div>
               </SheetContent>
             </Sheet>

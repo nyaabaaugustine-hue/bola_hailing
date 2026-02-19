@@ -1,4 +1,3 @@
-
 import Navigation from '@/components/Navigation';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -6,10 +5,9 @@ import {
   ArrowRight, 
   Smartphone,
   Truck,
-  Zap,
   ShieldCheck,
   Globe,
-  Info
+  Zap
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -37,7 +35,6 @@ export default function Home() {
                 </Badge>
                 <h1 className="font-headline text-6xl font-black leading-[1.05] tracking-tighter md:text-8xl lg:text-9xl flex flex-col">
                   <span>Trash Hailing</span>
-                  {/* Reduced 'Reimagined' text size for sophisticated hierarchy */}
                   <span className="text-primary italic text-3xl md:text-5xl lg:text-6xl mt-2">Reimagined.</span>
                 </h1>
                 <div className="space-y-4 max-w-xl">
@@ -53,7 +50,7 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row gap-5">
                 <Link href="/login">
                   <Button size="lg" className="h-16 px-10 text-lg font-bold bg-black text-white hover:bg-black/90 shadow-2xl btn-hover-effect rounded-2xl">
-                    Book a Pickup Now <ArrowRight className="ml-3 h-6 w-6" />
+                    Get Started <ArrowRight className="ml-3 h-6 w-6" />
                   </Button>
                 </Link>
                 <Link href="/collector">
@@ -89,7 +86,6 @@ export default function Home() {
                     fill 
                     className="object-cover scale-105 hover:scale-100 transition-transform duration-700"
                     priority
-                    data-ai-hint="garbage truck"
                   />
                 )}
                 
@@ -150,34 +146,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Solutions Section */}
-      <section className="py-32 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="p-12 rounded-[2.5rem] bg-muted/50 border-2 border-black/5 space-y-8">
-              <div className="space-y-4">
-                <h3 className="text-3xl font-black uppercase tracking-tighter">For Households</h3>
-                <p className="text-xl font-bold text-primary">On-Demand Convenience</p>
-                <p className="text-muted-foreground font-medium">Schedule a pickup for your weekly refuse or one-off cleanup. Pay with MoMo or Card instantly.</p>
-              </div>
-              <Button variant="link" className="p-0 font-black uppercase text-xs tracking-widest flex items-center gap-2">
-                Learn more <ArrowRight className="h-4 w-4" />
-              </Button>
-            </div>
-            <div className="p-12 rounded-[2.5rem] bg-black text-white space-y-8">
-              <div className="space-y-4">
-                <h3 className="text-3xl font-black uppercase tracking-tighter">For Business</h3>
-                <p className="text-xl font-bold text-secondary">Fleet Management</p>
-                <p className="text-white/60 font-medium">Enterprise-grade tools for waste management companies to track, optimize, and scale their operations.</p>
-              </div>
-              <Button variant="link" className="p-0 font-black uppercase text-xs tracking-widest text-white flex items-center gap-2">
-                Partner with us <ArrowRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Footer */}
       <footer className="bg-black text-white py-24 border-t border-white/10">
         <div className="container mx-auto px-4 grid gap-16 md:grid-cols-4">
@@ -191,18 +159,15 @@ export default function Home() {
             <h4 className="font-black uppercase tracking-widest text-[10px] text-white/40 mb-6">Service</h4>
             <ul className="space-y-4 font-bold">
               <li><Link href="/dashboard" className="hover:text-primary">Order Pickup</Link></li>
-              <li><Link href="#" className="hover:text-primary">Commercial Solutions</Link></li>
               <li><Link href="/collector" className="hover:text-primary">Drive With Us</Link></li>
-              <li><Link href="#" className="hover:text-primary">USSD Guide</Link></li>
+              <li><Link href="/admin" className="hover:text-primary">Admin Command</Link></li>
             </ul>
           </div>
           <div>
             <h4 className="font-black uppercase tracking-widest text-[10px] text-white/40 mb-6">Company</h4>
             <ul className="space-y-4 font-bold">
-              <li><Link href="#" className="hover:text-primary">About Impact</Link></li>
               <li><Link href="#" className="hover:text-primary">Safety Standards</Link></li>
-              <li><Link href="#" className="hover:text-primary">Terms & Conditions</Link></li>
-              <li><Link href="#" className="hover:text-primary">Privacy Policy</Link></li>
+              <li><Link href="#" className="hover:text-primary">Terms & Privacy</Link></li>
             </ul>
           </div>
           <div>
