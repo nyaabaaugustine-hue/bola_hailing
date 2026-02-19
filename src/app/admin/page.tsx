@@ -1,3 +1,4 @@
+
 "use client";
 
 import Navigation from '@/components/Navigation';
@@ -24,21 +25,35 @@ import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { DUMMY_COLLECTORS, DUMMY_ORDERS } from '@/lib/dummy-data';
-import { useState } from 'react';
+import { DUMMY_COLLECTORS } from '@/lib/dummy-data';
+import { useFirestore, useCollection } from '@/firebase';
+import { collection, query, orderBy, doc, updateDoc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 
 export default function AdminPage() {
   const { toast } = useToast();
+  const db = useFirestore();
   const mapImage = PlaceHolderImages.find(img => img.id === 'admin-fleet-map');
-  const [orders, setOrders] = useState(DUMMY_ORDERS);
 
-  const handleStatusChange = (orderId: string, newStatus: string) => {
-    setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
-    toast({
-      title: `Order ${newStatus}`,
-      description: `Order ${orderId} has been ${newStatus.toLowerCase()}.`
-    });
+  // Fetch live jobs from Firestore
+  const jobsQuery = query(collection(db, 'jobs'), orderBy('createdAt', 'desc'));
+  const { data: jobs, loading } = useCollection(jobsQuery);
+
+  const handleStatusChange = async (jobId: string, newStatus: string) => {
+    try {
+      const jobRef = doc(db, 'jobs', jobId);
+      await updateDoc(jobRef, { status: newStatus });
+      toast({
+        title: `Order ${newStatus}`,
+        description: `Order ${jobId} has been ${newStatus.toLowerCase()}.`
+      });
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Failed to update order status.'
+      });
+    }
   };
 
   return (
@@ -64,11 +79,10 @@ export default function AdminPage() {
             </div>
           </div>
 
-          {/* Network Stats */}
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {[
               { label: 'Active Drivers', val: DUMMY_COLLECTORS.length.toString(), icon: Truck, color: 'text-primary' },
-              { label: 'Live Bookings', val: orders.filter(o => o.status !== 'COMPLETED').length.toString(), icon: Activity, color: 'text-secondary' },
+              { label: 'Live Bookings', val: (jobs?.filter((o: any) => o.status !== 'COMPLETED').length || 0).toString(), icon: Activity, color: 'text-secondary' },
               { label: 'Total Weight', val: '14.2 Tons', icon: Leaf, color: 'text-blue-500' },
               { label: 'Network Revenue', val: 'GHS 12k', icon: BarChart3, color: 'text-orange-600' }
             ].map((stat, i) => (
@@ -86,68 +100,71 @@ export default function AdminPage() {
             ))}
           </div>
 
-          {/* Manage Orders Section */}
           <Card className="uber-shadow border-none overflow-hidden">
             <CardHeader className="border-b bg-muted/10">
               <CardTitle className="font-headline text-2xl uppercase tracking-tighter">Live Order Management</CardTitle>
               <CardDescription>Track, approve, and manage service requests in real-time.</CardDescription>
             </CardHeader>
             <CardContent className="p-0">
-              <Table>
-                <TableHeader>
-                  <TableRow className="border-b-2 hover:bg-transparent">
-                    <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">Order Details</TableHead>
-                    <TableHead className="font-black uppercase text-[10px] tracking-widest">Customer</TableHead>
-                    <TableHead className="font-black uppercase text-[10px] tracking-widest">Status</TableHead>
-                    <TableHead className="font-black uppercase text-[10px] tracking-widest">Amount</TableHead>
-                    <TableHead className="text-right font-black uppercase text-[10px] tracking-widest px-6">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {orders.map((order) => (
-                    <TableRow key={order.id} className="hover:bg-muted/20">
-                      <TableCell className="px-6">
-                        <p className="font-black text-sm">{order.id}</p>
-                        <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
-                          <MapIcon className="h-3 w-3" /> {order.location}
-                        </p>
-                      </TableCell>
-                      <TableCell>
-                         <p className="font-bold">{order.customer}</p>
-                         <a href={`tel:${order.phone}`} className="text-xs text-primary font-bold flex items-center gap-1 mt-1 hover:underline">
-                           <Phone className="h-3 w-3" /> {order.phone}
-                         </a>
-                      </TableCell>
-                      <TableCell>
-                        <Badge 
-                          variant={order.status === 'COMPLETED' ? 'secondary' : order.status === 'CANCELLED' ? 'destructive' : 'outline'}
-                          className="rounded-lg uppercase font-black text-[9px] px-3 py-1"
-                        >
-                          {order.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="font-black text-secondary">{order.price}</TableCell>
-                      <TableCell className="text-right px-6 space-x-2">
-                        {order.status === 'REQUESTED' && (
-                          <>
-                            <Button size="sm" className="bg-secondary text-white rounded-xl h-10 px-4 font-black text-xs" onClick={() => handleStatusChange(order.id, 'APPROVED')}>
-                              <CheckCircle2 className="h-4 w-4 mr-2" /> APPROVE
-                            </Button>
-                            <Button size="sm" variant="ghost" className="text-destructive rounded-xl h-10 px-4 font-black text-xs hover:bg-destructive/10" onClick={() => handleStatusChange(order.id, 'CANCELLED')}>
-                              <XCircle className="h-4 w-4 mr-2" /> CANCEL
-                            </Button>
-                          </>
-                        )}
-                        {order.status !== 'REQUESTED' && (
-                          <Button variant="outline" size="sm" className="rounded-xl h-10 px-4 font-black text-xs border-2">
-                             VIEW LOGS
-                          </Button>
-                        )}
-                      </TableCell>
+              {loading ? (
+                <div className="p-10 text-center text-muted-foreground font-bold">Synchronizing Fleet...</div>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow className="border-b-2 hover:bg-transparent">
+                      <TableHead className="font-black uppercase text-[10px] tracking-widest px-6">Order Details</TableHead>
+                      <TableHead className="font-black uppercase text-[10px] tracking-widest">Customer</TableHead>
+                      <TableHead className="font-black uppercase text-[10px] tracking-widest">Status</TableHead>
+                      <TableHead className="font-black uppercase text-[10px] tracking-widest">Amount</TableHead>
+                      <TableHead className="text-right font-black uppercase text-[10px] tracking-widest px-6">Actions</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {jobs?.map((order: any) => (
+                      <TableRow key={order.id} className="hover:bg-muted/20">
+                        <TableCell className="px-6">
+                          <p className="font-black text-sm">{order.id.slice(0, 8)}</p>
+                          <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
+                            <MapIcon className="h-3 w-3" /> {order.pickupLocation?.landmark || 'Location'}
+                          </p>
+                        </TableCell>
+                        <TableCell>
+                           <p className="font-bold">{order.customerName || 'Demo User'}</p>
+                           <a href={`tel:${order.customerPhone}`} className="text-xs text-primary font-bold flex items-center gap-1 mt-1 hover:underline">
+                             <Phone className="h-3 w-3" /> {order.customerPhone}
+                           </a>
+                        </TableCell>
+                        <TableCell>
+                          <Badge 
+                            variant={order.status === 'COMPLETED' ? 'secondary' : order.status === 'CANCELLED' ? 'destructive' : 'outline'}
+                            className="rounded-lg uppercase font-black text-[9px] px-3 py-1"
+                          >
+                            {order.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="font-black text-secondary">GHS {order.price}</TableCell>
+                        <TableCell className="text-right px-6 space-x-2">
+                          {order.status === 'REQUESTED' && (
+                            <>
+                              <Button size="sm" className="bg-secondary text-white rounded-xl h-10 px-4 font-black text-xs" onClick={() => handleStatusChange(order.id, 'APPROVED')}>
+                                <CheckCircle2 className="h-4 w-4 mr-2" /> APPROVE
+                              </Button>
+                              <Button size="sm" variant="ghost" className="text-destructive rounded-xl h-10 px-4 font-black text-xs hover:bg-destructive/10" onClick={() => handleStatusChange(order.id, 'CANCELLED')}>
+                                <XCircle className="h-4 w-4 mr-2" /> CANCEL
+                              </Button>
+                            </>
+                          )}
+                          {order.status !== 'REQUESTED' && (
+                            <Button variant="outline" size="sm" className="rounded-xl h-10 px-4 font-black text-xs border-2">
+                               VIEW LOGS
+                            </Button>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
             </CardContent>
           </Card>
 

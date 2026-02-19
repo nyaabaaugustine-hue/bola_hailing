@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useRef } from 'react';
@@ -11,9 +12,13 @@ import { resolveGhanaAddress } from '@/ai/flows/ghana-address-voice-resolution';
 import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
 import { DUMMY_COLLECTORS, DEMO_AI_OUTPUT, DEMO_PRICING, DEMO_ROUTING } from '@/lib/dummy-data';
+import { useFirestore, useUser } from '@/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 export default function PickupRequestForm() {
   const { toast } = useToast();
+  const { user } = useUser();
+  const db = useFirestore();
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [step, setStep] = useState(1);
@@ -41,7 +46,6 @@ export default function PickupRequestForm() {
       setResolvedLoc(result);
       setStep(2);
     } catch (e) {
-      // Fallback for demo
       setResolvedLoc({ resolvedCoordinates: { lat: 5.67955, lng: -0.16421 }, resolvedAddress: address });
       setStep(2);
     } finally {
@@ -61,7 +65,6 @@ export default function PickupRequestForm() {
       reader.onloadend = () => {
         setSelectedImageUrl(reader.result as string);
         setLoading(true);
-        // High-fidelity simulation phase
         setTimeout(() => {
           setWasteData(DEMO_AI_OUTPUT);
           setPriceData(DEMO_PRICING);
@@ -74,18 +77,48 @@ export default function PickupRequestForm() {
   };
 
   const handleConfirmOrder = async () => {
+    if (!user) {
+      toast({ variant: 'destructive', title: "Auth Required", description: "Please sign in to place an order." });
+      return;
+    }
+
     setLoading(true);
-    setTimeout(() => {
+    try {
+      const jobData = {
+        customerId: user.uid,
+        customerName: user.displayName || 'Demo User',
+        customerPhone: user.phoneNumber || '0244001122',
+        status: 'REQUESTED',
+        pickupLocation: {
+          lat: resolvedLoc.resolvedCoordinates.lat,
+          lng: resolvedLoc.resolvedCoordinates.lng,
+          address: resolvedLoc.resolvedAddress,
+          landmark: address
+        },
+        wasteDetails: {
+          type: wasteData.wasteType,
+          volume: wasteData.estimatedVolume_m3,
+          weight: wasteData.estimatedWeight_kg
+        },
+        price: priceData.pickupFee,
+        createdAt: serverTimestamp()
+      };
+
+      await addDoc(collection(db, 'jobs'), jobData);
+      
       setMatchedCollector(DUMMY_COLLECTORS[0]);
       setStep(4);
+      toast({ title: "Order Confirmed", description: "Your request has been broadcast to our fleet." });
+    } catch (error) {
+      console.error("Order error:", error);
+      toast({ variant: 'destructive', title: "Order Failed", description: "Could not save your request. Try again." });
+    } finally {
       setLoading(false);
-      toast({ title: "Order Confirmed", description: "Kwame is en route to your location." });
-    }, 2000);
+    }
   };
 
   return (
     <Card className="uber-shadow border-none overflow-hidden bg-white rounded-[2rem]">
-      {/* Progress Bar */}
       <div className="flex bg-muted/10 p-5 gap-3 border-b border-black/5">
         {[1, 2, 3, 4].map((s) => (
           <div key={s} className={`h-1.5 flex-1 rounded-full transition-all duration-700 ${s <= step ? 'bg-black' : 'bg-black/5'}`} />
