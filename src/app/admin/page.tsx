@@ -14,8 +14,12 @@ import {
   AlertTriangle,
   ArrowUpRight,
   TrendingUp,
-  Activity
+  Activity,
+  Search,
+  Filter
 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 export default function AdminPage() {
   return (
@@ -31,11 +35,15 @@ export default function AdminPage() {
               </p>
             </div>
             <div className="flex gap-3">
+              <div className="relative hidden md:block">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input placeholder="Search collectors..." className="pl-10 w-64 rounded-xl border-2" />
+              </div>
               <Button variant="outline" className="rounded-xl border-2 font-bold gap-2">
-                <TrendingUp className="h-4 w-4" /> Full Analytics
+                <Filter className="h-4 w-4" /> Filters
               </Button>
               <Button className="rounded-xl font-bold bg-black text-white hover:bg-black/90">
-                System Health: Good
+                Network Health: 98.4%
               </Button>
             </div>
           </div>
@@ -45,7 +53,7 @@ export default function AdminPage() {
             {[
               { label: 'Active Drivers', val: '142', icon: Truck, color: 'text-primary' },
               { label: 'Live Bookings', val: '28', icon: Activity, color: 'text-secondary' },
-              { label: 'Total Users', val: '1.2k', icon: Users, color: 'text-blue-500' },
+              { label: 'Total Weight', val: '14.2 Tons', icon: Leaf, color: 'text-blue-500' },
               { label: 'Network Revenue', val: 'GHS 12k', icon: BarChart3, color: 'text-orange-600' }
             ].map((stat, i) => (
               <Card key={i} className="uber-shadow border-none hover:translate-y-[-4px] transition-transform duration-300">
@@ -64,7 +72,7 @@ export default function AdminPage() {
 
           <div className="grid gap-8 lg:grid-cols-3">
             {/* Real-time Heatmap */}
-            <Card className="lg:col-span-2 uber-shadow border-none overflow-hidden h-full">
+            <Card className="lg:col-span-2 uber-shadow border-none overflow-hidden">
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
                    <div>
@@ -132,6 +140,55 @@ export default function AdminPage() {
             </Card>
           </div>
 
+          {/* Active Fleets Table */}
+          <Card className="uber-shadow border-none">
+            <CardHeader>
+              <CardTitle className="font-headline text-xl">Active Network Nodes</CardTitle>
+              <CardDescription>Real-time status of independent collectors</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-b-2">
+                    <TableHead className="font-bold">Collector</TableHead>
+                    <TableHead className="font-bold">Zone</TableHead>
+                    <TableHead className="font-bold">Load</TableHead>
+                    <TableHead className="font-bold">Status</TableHead>
+                    <TableHead className="text-right font-bold">Action</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {[
+                    { name: 'Kojo Mensah', zone: 'East Legon', load: '65%', status: 'Active' },
+                    { name: 'Amara Okafor', zone: 'Madina', load: '12%', status: 'En Route' },
+                    { name: 'David Tetteh', zone: 'Osu', load: '98%', status: 'Full' }
+                  ].map((row, i) => (
+                    <TableRow key={i} className="hover:bg-muted/30">
+                      <TableCell className="font-bold">{row.name}</TableCell>
+                      <TableCell>{row.zone}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Progress value={parseInt(row.load)} className="h-2 w-16" />
+                          <span className="text-xs font-bold">{row.load}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={row.status === 'Full' ? 'destructive' : 'secondary'} className="rounded-md">
+                          {row.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                          <ArrowUpRight className="h-4 w-4" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+
           {/* High Priority Alerts */}
           <Card className="uber-shadow border-none overflow-hidden">
             <CardHeader className="bg-destructive/5 border-b border-destructive/10">
@@ -159,7 +216,7 @@ export default function AdminPage() {
                     <div className="flex items-center gap-4">
                        <Badge variant={alert.severity === 'Critical' ? 'destructive' : 'secondary'}>{alert.severity}</Badge>
                        <Button variant="outline" className="rounded-xl border-2 font-bold gap-2">
-                         Dispatch <ArrowUpRight className="h-4 w-4" />
+                         Dispatch Truck <ArrowUpRight className="h-4 w-4" />
                        </Button>
                     </div>
                   </div>
