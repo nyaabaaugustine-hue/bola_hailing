@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -113,7 +112,8 @@ export default function LoginPage() {
 
       <Navigation />
 
-      <main className="relative z-10 container mx-auto pt-[20vh] md:pt-48 pb-12 px-4 flex items-start md:items-center justify-center min-h-[calc(100vh-80px)]">
+      {/* content shifted down by 15% via padding/items-start as requested */}
+      <main className="relative z-10 container mx-auto pt-[35vh] md:pt-[25vh] pb-12 px-4 flex items-start justify-center min-h-[calc(100vh-80px)]">
         <div className="w-full max-w-5xl space-y-12">
           {!user ? (
             <div className="grid gap-8 lg:grid-cols-2 items-center max-w-4xl mx-auto animate-in fade-in zoom-in-95 duration-700">
@@ -229,7 +229,7 @@ export default function LoginPage() {
           )}
           
           <div className="text-center pt-8">
-            <p className="text-[10px] font-black uppercase tracking-widest text-white/40">Verified Infrastructure • Sustainable Ghana • © 2026 DEMO</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-white/40">Verified Infrastructure • Sustainable Ghana • © 2026 WasteGo</p>
           </div>
         </div>
       </main>

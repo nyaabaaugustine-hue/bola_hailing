@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useRef } from 'react';
@@ -235,7 +234,7 @@ export default function PickupRequestForm() {
     <Card className="uber-shadow border-none overflow-hidden bg-white rounded-[3rem]">
       <div className="flex bg-muted/10 p-6 gap-3 border-b border-black/5">
         {[1, 2, 3, 4, 5].map((s) => (
-          <div key={s} className={`h-2 flex-1 rounded-full transition-all duration-700 ${s <= step ? 'bg-black' : 'bg-black/10'}`} />
+          <div key={s} className={`h-2 flex-1 rounded-full transition-all duration-700 ${s <= step ? 'bg-secondary' : 'bg-black/10'}`} />
         ))}
       </div>
       
@@ -243,45 +242,45 @@ export default function PickupRequestForm() {
         {step === 1 && (
           <div className="space-y-10 animate-in slide-in-from-right-8 duration-500">
             <div className="space-y-4">
-              <h2 className="font-headline text-5xl font-black tracking-tighter uppercase leading-[0.9] text-secondary">Set Landmark</h2>
+              <h2 className="font-headline text-5xl font-black tracking-tighter uppercase leading-[0.9] text-secondary">Pickup Landmark</h2>
               <p className="text-secondary font-medium text-lg">WasteGo AI resolves local landmarks instantly.</p>
             </div>
             
             <div className="space-y-8">
               <div className="space-y-4">
-                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary">Resolution Mode</Label>
+                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary">Location Mode</Label>
                 <div className="grid grid-cols-3 gap-6">
                    {[
-                     { id: 'LANDMARK', label: 'Landmark', icon: MapPin, color: 'text-primary' },
-                     { id: 'GHANA_POST', label: 'Digital Addr', icon: ShieldCheck, color: 'text-secondary' },
-                     { id: 'GPS_COORDINATE', label: 'GPS Pin', icon: Activity, color: 'text-orange-500' }
+                     { id: 'LANDMARK', label: 'Local Landmark', icon: MapPin, color: 'text-primary' },
+                     { id: 'GHANA_POST', label: 'Ghana Post', icon: ShieldCheck, color: 'text-secondary' },
+                     { id: 'GPS_COORDINATE', label: 'Live GPS', icon: Activity, color: 'text-orange-500' }
                    ].map((mode) => (
                      <button 
                        key={mode.id}
                        onClick={() => setLocationType(mode.id)}
-                       className={`p-6 rounded-[2.5rem] flex flex-col items-center gap-4 border-4 transition-all duration-300 ${locationType === mode.id ? 'border-black bg-black text-white shadow-[0_20px_40px_rgba(0,0,0,0.2)] scale-105' : 'border-black/5 bg-muted/30 text-black/60 hover:border-black/20'}`}
+                       className={`p-6 rounded-[2.5rem] flex flex-col items-center gap-4 border-4 transition-all duration-300 ${locationType === mode.id ? 'border-secondary bg-secondary text-white shadow-[0_20px_40px_rgba(34,139,34,0.2)] scale-105' : 'border-black/5 bg-muted/30 text-black/60 hover:border-black/20'}`}
                      >
                         <div className={`h-16 w-16 rounded-[1.5rem] flex items-center justify-center shadow-lg ${locationType === mode.id ? 'bg-white/20' : 'bg-white'}`}>
                            <mode.icon className={`h-8 w-8 ${locationType === mode.id ? 'text-white' : mode.color}`} />
                         </div>
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary">{mode.label}</span>
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em]">{mode.label}</span>
                      </button>
                    ))}
                 </div>
               </div>
               
               <div className="space-y-4">
-                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary">Landmark Description</Label>
+                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary">Landmark Detail</Label>
                 <div className="relative group">
                    <Input 
-                    className="h-24 text-2xl px-10 pr-24 rounded-[2rem] border-4 border-black/5 bg-muted/30 focus:bg-white focus:border-black transition-all font-black placeholder:font-medium shadow-inner text-secondary"
+                    className="h-24 text-2xl px-10 pr-24 rounded-[2rem] border-4 border-secondary/10 bg-muted/30 focus:bg-white focus:border-secondary transition-all font-black placeholder:font-medium shadow-inner text-secondary"
                     placeholder={locationType === 'LANDMARK' ? 'e.g. Opposite the Blue Kiosk' : 'e.g. GA-123-4567'}
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                   />
                   <button 
                     onClick={simulateVoiceInput}
-                    className={`absolute right-4 top-4 h-16 w-16 rounded-2xl flex items-center justify-center transition-all ${isRecording ? 'bg-destructive text-white animate-pulse' : 'bg-black text-white hover:bg-primary shadow-xl'}`}
+                    className={`absolute right-4 top-4 h-16 w-16 rounded-2xl flex items-center justify-center transition-all ${isRecording ? 'bg-destructive text-white animate-pulse' : 'bg-black text-white hover:bg-secondary shadow-xl'}`}
                   >
                     {isRecording ? <Activity className="h-8 w-8" /> : <Mic className="h-8 w-8" />}
                   </button>
@@ -289,19 +288,19 @@ export default function PickupRequestForm() {
                 <div className="flex items-center gap-4 p-6 bg-secondary/5 rounded-[1.5rem] border-2 border-secondary/10">
                    <Sparkles className="h-6 w-6 text-secondary shrink-0" />
                    <p className="text-[10px] font-bold text-secondary uppercase tracking-widest leading-relaxed">
-                     Our landmark resolution engine is active. Voice transcriptions will be automatically geo-coded.
+                     WasteGo's landmark resolution engine is active. Voice transcriptions will be automatically geo-coded for drivers.
                    </p>
                 </div>
               </div>
             </div>
 
             <Button 
-              className="w-full h-24 text-2xl font-black rounded-[2rem] bg-black text-white hover:bg-black/90 btn-hover-effect group mt-4 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.4)]" 
+              className="w-full h-24 text-2xl font-black rounded-[2rem] bg-secondary text-white hover:bg-secondary/90 btn-hover-effect group mt-4 shadow-[0_30px_60px_-15px_rgba(34,139,34,0.4)]" 
               onClick={handleAddressResolve} 
               disabled={loading || !address}
             >
               {loading ? <Loader2 className="mr-3 h-8 w-8 animate-spin" /> : <Compass className="mr-3 h-8 w-8" />}
-              <span className="text-secondary">CONFIRM POSITION</span> <ArrowRight className="ml-2 h-8 w-8 group-hover:translate-x-3 transition-transform text-secondary" />
+              <span>SECURE LOCATION</span> <ArrowRight className="ml-2 h-8 w-8 group-hover:translate-x-3 transition-transform" />
             </Button>
           </div>
         )}
@@ -478,7 +477,7 @@ export default function PickupRequestForm() {
                   </div>
                </div>
 
-               <div className="flex items-center gap-4 p-6 bg-secondary/10 rounded-3xl text-secondary border-2 border-secondary/20 shadow-sm">
+               <div className="flex items-center gap-4 p-6 bg-secondary/10 rounded-3xl text-white border-2 border-secondary/20 shadow-sm">
                   <ShieldCheck className="h-8 w-8 shrink-0" />
                   <p className="text-[11px] font-black uppercase tracking-widest leading-relaxed">
                     Sandbox Mode: No funds will be deducted during this demonstration pickup.
