@@ -1,6 +1,7 @@
+
 "use client";
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,6 +15,8 @@ import { DUMMY_COLLECTORS, DEMO_AI_OUTPUT, DEMO_PRICING, DEMO_ROUTING } from '@/
 
 export default function PickupRequestForm() {
   const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [address, setAddress] = useState('');
@@ -22,6 +25,7 @@ export default function PickupRequestForm() {
   const [wasteData, setWasteData] = useState<any>(null);
   const [priceData, setPriceData] = useState<any>(null);
   const [matchedCollector, setMatchedCollector] = useState<any>(null);
+  const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
 
   const handleAddressResolve = async () => {
     if (!address) {
@@ -30,7 +34,6 @@ export default function PickupRequestForm() {
     }
     setLoading(true);
     try {
-      // Simulate real landmark resolution logic
       const result = await resolveGhanaAddress({
         locationType: locationType as any,
         landmarkDescription: locationType === 'LANDMARK' ? address : undefined,
@@ -45,15 +48,28 @@ export default function PickupRequestForm() {
     }
   };
 
-  const handleImageUpload = async () => {
-    setLoading(true);
-    // Simulate high-fidelity AI processing phase
-    setTimeout(() => {
-      setWasteData(DEMO_AI_OUTPUT);
-      setPriceData(DEMO_PRICING);
-      setStep(3);
-      setLoading(false);
-    }, 2000);
+  const triggerFileInput = () => {
+    if (loading) return;
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setLoading(true);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSelectedImageUrl(reader.result as string);
+        // Simulate high-fidelity AI processing phase with the user's image
+        setTimeout(() => {
+          setWasteData(DEMO_AI_OUTPUT);
+          setPriceData(DEMO_PRICING);
+          setStep(3);
+          setLoading(false);
+        }, 3000);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleConfirmOrder = async () => {
@@ -132,18 +148,36 @@ export default function PickupRequestForm() {
             
             <div 
               className="group relative h-80 w-full rounded-[2rem] border-4 border-dashed border-black/5 hover:border-primary/50 transition-all bg-muted/30 flex flex-col items-center justify-center cursor-pointer overflow-hidden"
-              onClick={handleImageUpload}
+              onClick={triggerFileInput}
             >
+               {/* Hidden File Input */}
+               <input 
+                 type="file" 
+                 ref={fileInputRef} 
+                 className="hidden" 
+                 accept="image/*" 
+                 onChange={handleFileChange} 
+               />
+
+               {selectedImageUrl && (
+                 <Image 
+                   src={selectedImageUrl} 
+                   alt="Waste Preview" 
+                   fill 
+                   className="object-cover opacity-50 grayscale group-hover:grayscale-0 transition-all"
+                 />
+               )}
+
                {loading ? (
-                 <div className="flex flex-col items-center gap-6">
+                 <div className="flex flex-col items-center gap-6 relative z-10">
                     <div className="relative">
                        <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping" />
                        <Loader2 className="h-16 w-16 text-primary animate-spin relative z-10" />
                     </div>
                     <p className="font-black text-primary animate-pulse tracking-[0.2em] uppercase text-xs text-center">AI Analyzing Waste Profile...</p>
                  </div>
-               ) : (
-                 <div className="flex flex-col items-center gap-6 p-10 text-center">
+               ) : !selectedImageUrl ? (
+                 <div className="flex flex-col items-center gap-6 p-10 text-center relative z-10">
                     <div className="h-24 w-24 rounded-3xl bg-black text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-2xl">
                       <Camera className="h-10 w-10" />
                     </div>
@@ -151,6 +185,10 @@ export default function PickupRequestForm() {
                       <p className="font-black text-2xl uppercase tracking-tighter">Capture or Upload</p>
                       <p className="text-sm text-black/40 font-medium">High accuracy classification enabled.</p>
                     </div>
+                 </div>
+               ) : (
+                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20">
+                    <p className="text-white font-black uppercase tracking-widest text-sm">Tap to change image</p>
                  </div>
                )}
             </div>
