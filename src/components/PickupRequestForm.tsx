@@ -65,7 +65,7 @@ export default function PickupRequestForm() {
 
   const handleAddressResolve = async () => {
     if (!address) {
-      toast({ variant: 'destructive', title: "Missing Information", description: "Please enter an address or landmark." });
+      toast({ variant: 'destructive', title: "Missing Information", description: "Please enter a landmark or address." });
       return;
     }
     setLoading(true);
@@ -126,9 +126,9 @@ export default function PickupRequestForm() {
           setPriceData(pricing);
           
           setStep(3);
-          toast({ title: "AI Scan Complete", description: `Classified as ${classification.wasteCategories[0].replace(/_/g, ' ')}.` });
+          toast({ title: "AI Scan Complete", description: `Waste identified as ${classification.wasteCategories[0].replace(/_/g, ' ')}.` });
         } catch (error) {
-          console.warn("AI Analysis failed, applying high-fidelity fallback:", error);
+          console.warn("AI Analysis failed, applying fallback:", error);
           setWasteData({
             wasteCategories: ['MIXED_DOMESTIC'],
             estimatedWeightKg: 42,
@@ -136,7 +136,7 @@ export default function PickupRequestForm() {
           });
           setPriceData({
             pickupPrice: 28.50,
-            explanation: "Calculated based on estimated volume and standard local distance."
+            explanation: "Calculated based on standard volume and local area benchmarks."
           });
           setStep(3);
         } finally {
@@ -149,7 +149,7 @@ export default function PickupRequestForm() {
 
   const handleProceedToPayment = () => {
     if (!paymentMethod) {
-      toast({ variant: 'destructive', title: "Selection Required", description: "Please choose a payment method." });
+      toast({ variant: 'destructive', title: "Selection Required", description: "Please select your preferred payment method." });
       return;
     }
     setStep(4);
@@ -157,7 +157,7 @@ export default function PickupRequestForm() {
 
   const handleConfirmOrder = async () => {
     if (!paymentDetail) {
-      toast({ variant: 'destructive', title: "Payment Required", description: "Please enter your MoMo number or card details." });
+      toast({ variant: 'destructive', title: "Information Required", description: "Please enter your payment identification details." });
       return;
     }
 
@@ -224,7 +224,7 @@ export default function PickupRequestForm() {
       setStep(5);
     } catch (error) {
       console.error("Order error:", error);
-      toast({ variant: 'destructive', title: "Order Failed", description: "Could not save your request. Try again." });
+      toast({ variant: 'destructive', title: "Request Failed", description: "Network error saving your request. Please try again." });
     } finally {
       setLoading(false);
     }
@@ -242,18 +242,18 @@ export default function PickupRequestForm() {
         {step === 1 && (
           <div className="space-y-10 animate-in slide-in-from-right-8 duration-500">
             <div className="space-y-4">
-              <h2 className="font-headline text-5xl font-black tracking-tighter uppercase leading-[0.9]">Set Landmark</h2>
-              <p className="text-muted-foreground font-medium text-lg">Our AI resolves local landmarks instantly.</p>
+              <h2 className="font-headline text-5xl font-black tracking-tighter uppercase leading-[0.9]">Pickup Landmark</h2>
+              <p className="text-muted-foreground font-medium text-lg">WasteGo AI resolves local landmarks instantly.</p>
             </div>
             
             <div className="space-y-8">
               <div className="space-y-4">
-                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-black/40">Resolution Mode</Label>
+                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-black/40">Location Mode</Label>
                 <div className="grid grid-cols-3 gap-6">
                    {[
-                     { id: 'LANDMARK', label: 'Landmark', icon: MapPin, color: 'text-primary' },
-                     { id: 'GHANA_POST', label: 'Digital Addr', icon: ShieldCheck, color: 'text-secondary' },
-                     { id: 'GPS_COORDINATE', label: 'GPS Pin', icon: Activity, color: 'text-orange-500' }
+                     { id: 'LANDMARK', label: 'Local Landmark', icon: MapPin, color: 'text-primary' },
+                     { id: 'GHANA_POST', label: 'Ghana Post', icon: ShieldCheck, color: 'text-secondary' },
+                     { id: 'GPS_COORDINATE', label: 'Live GPS', icon: Activity, color: 'text-orange-500' }
                    ].map((mode) => (
                      <button 
                        key={mode.id}
@@ -270,11 +270,11 @@ export default function PickupRequestForm() {
               </div>
               
               <div className="space-y-4">
-                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-black/40">Landmark Description</Label>
+                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-black/40">Landmark Detail</Label>
                 <div className="relative group">
                    <Input 
                     className="h-24 text-2xl px-10 pr-24 rounded-[2rem] border-4 border-black/5 bg-muted/30 focus:bg-white focus:border-black transition-all font-black placeholder:font-medium shadow-inner"
-                    placeholder={locationType === 'LANDMARK' ? 'Opposite Yellow Kiosk...' : 'e.g. GA-123-4567'}
+                    placeholder={locationType === 'LANDMARK' ? 'e.g. Opposite the Blue Kiosk' : 'e.g. GA-123-4567'}
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                   />
@@ -288,7 +288,7 @@ export default function PickupRequestForm() {
                 <div className="flex items-center gap-4 p-6 bg-primary/5 rounded-[1.5rem] border-2 border-primary/10">
                    <Sparkles className="h-6 w-6 text-primary shrink-0" />
                    <p className="text-[10px] font-bold text-primary uppercase tracking-widest leading-relaxed">
-                     Our landmark resolution engine is active. Voice transcriptions will be automatically geo-coded.
+                     WasteGo's landmark resolution engine is active. Voice transcriptions will be automatically geo-coded for drivers.
                    </p>
                 </div>
               </div>
@@ -300,7 +300,7 @@ export default function PickupRequestForm() {
               disabled={loading || !address}
             >
               {loading ? <Loader2 className="mr-3 h-8 w-8 animate-spin" /> : <Compass className="mr-3 h-8 w-8" />}
-              CONFIRM POSITION <ArrowRight className="ml-2 h-8 w-8 group-hover:translate-x-3 transition-transform" />
+              SECURE LOCATION <ArrowRight className="ml-2 h-8 w-8 group-hover:translate-x-3 transition-transform" />
             </Button>
           </div>
         )}
@@ -309,7 +309,7 @@ export default function PickupRequestForm() {
           <div className="space-y-10 animate-in slide-in-from-right-8 duration-500">
             <div className="space-y-4">
               <h3 className="font-headline text-5xl font-black tracking-tighter uppercase leading-[0.9]">AI Vision Scan</h3>
-              <p className="text-muted-foreground font-medium text-lg">Snap a photo to determine waste type and fair pricing.</p>
+              <p className="text-muted-foreground font-medium text-lg">Snap a photo of the waste to confirm type and fair pricing.</p>
             </div>
             
             <div 
@@ -319,7 +319,7 @@ export default function PickupRequestForm() {
                <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileChange} />
 
                {selectedImageUrl && (
-                 <Image src={selectedImageUrl} alt="Waste Preview" fill className="object-cover opacity-60 grayscale group-hover:grayscale-0 transition-all duration-700" />
+                 <Image src={selectedImageUrl} alt="Waste Profile" fill className="object-cover opacity-60 grayscale group-hover:grayscale-0 transition-all duration-700" />
                )}
 
                {loading ? (
@@ -331,12 +331,12 @@ export default function PickupRequestForm() {
                        </div>
                     </div>
                     <div className="text-center space-y-3">
-                      <p className="font-black text-black tracking-[0.3em] uppercase text-xs">Processing Visual Profile</p>
+                      <p className="font-black text-black tracking-[0.3em] uppercase text-xs">Analyzing Visual Profile</p>
                       <div className="flex items-center gap-2 justify-center">
                          <div className="h-1.5 w-12 bg-black/10 rounded-full overflow-hidden">
                             <div className="h-full bg-primary animate-progress-indefinite" />
                          </div>
-                         <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest">Detecting Waste Content...</p>
+                         <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest">Detecting Material Type...</p>
                       </div>
                     </div>
                  </div>
@@ -381,36 +381,36 @@ export default function PickupRequestForm() {
                       <div className="h-10 w-10 rounded-xl bg-primary/20 flex items-center justify-center text-primary">
                         <Sparkles className="h-5 w-5" />
                       </div>
-                      <span className="font-black uppercase tracking-[0.3em] text-[10px] text-white/60">Dynamic Pricing Engine</span>
+                      <span className="font-black uppercase tracking-[0.3em] text-[10px] text-white/60">WasteGo Pricing Engine</span>
                    </div>
                    <Badge className="bg-secondary text-white border-none font-black uppercase tracking-widest text-[9px] px-4 py-1 rounded-full shadow-lg shadow-secondary/20">Market Verified</Badge>
                 </div>
                 <div className="flex items-end justify-between relative z-10">
                    <div>
-                      <p className="text-[10px] uppercase font-black tracking-[0.4em] text-white/40 mb-3">Calculated Mission Fee</p>
+                      <p className="text-[10px] uppercase font-black tracking-[0.4em] text-white/40 mb-3">Calculated Fee</p>
                       <p className="text-8xl font-black leading-[0.8] tracking-tighter">GHS {priceData?.pickupPrice.toFixed(2)}</p>
                       <div className="flex flex-wrap gap-2 mt-8">
                          <Badge variant="outline" className="border-white/20 text-white font-black uppercase tracking-widest text-[9px] px-3">
                            {wasteData.wasteCategories[0].replace(/_/g, ' ')}
                          </Badge>
                          <Badge variant="outline" className="border-white/20 text-white font-black uppercase tracking-widest text-[9px] px-3">
-                           ~{wasteData.estimatedWeightKg}kg Capacity
+                           ~{wasteData.estimatedWeightKg}kg Payload
                          </Badge>
                       </div>
                    </div>
                    <div className="text-right">
-                      <p className="text-[10px] uppercase font-black text-white/40 tracking-[0.4em] mb-2">Truck ETA</p>
+                      <p className="text-[10px] uppercase font-black text-white/40 tracking-[0.4em] mb-2">Arrival ETA</p>
                       <p className="font-black text-4xl text-primary">4 mins</p>
                    </div>
                 </div>
              </div>
 
              <div className="space-y-6">
-                <p className="text-[10px] font-black uppercase text-black/40 tracking-[0.3em] text-center">Secure Settlement Options</p>
+                <p className="text-[10px] font-black uppercase text-black/40 tracking-[0.3em] text-center">Settlement Options</p>
                 <div className="grid grid-cols-2 gap-6">
                    {[
-                     { id: 'momo', label: 'Mobile Money', icon: Smartphone, color: 'text-yellow-500', desc: 'Instant verification' },
-                     { id: 'card', label: 'Debit Card', icon: CreditCard, color: 'text-blue-500', desc: 'Auto-settle' }
+                     { id: 'momo', label: 'Mobile Money', icon: Smartphone, color: 'text-yellow-500', desc: 'Secure Instant Pay' },
+                     { id: 'card', label: 'Bank Card', icon: CreditCard, color: 'text-blue-500', desc: 'Auto-Verification' }
                    ].map((p) => (
                      <button 
                         key={p.id} 
@@ -442,8 +442,8 @@ export default function PickupRequestForm() {
         {step === 4 && (
           <div className="space-y-10 animate-in slide-in-from-right-8 duration-500">
             <div className="space-y-4 text-center">
-              <h3 className="font-headline text-5xl font-black tracking-tighter uppercase leading-[0.9]">Settlement</h3>
-              <p className="text-muted-foreground font-medium text-lg">Instant settlement via Ghana's payment rails.</p>
+              <h3 className="font-headline text-5xl font-black tracking-tighter uppercase leading-[0.9]">Secure Settlement</h3>
+              <p className="text-muted-foreground font-medium text-lg">Verified payments through WasteGo's secure infrastructure.</p>
             </div>
 
             <div className="p-10 rounded-[3rem] bg-muted/20 border-4 border-black/5 space-y-10">
@@ -459,14 +459,14 @@ export default function PickupRequestForm() {
                   </div>
                   <div>
                     <p className="font-black text-xl uppercase tracking-tighter">{paymentMethod === 'momo' ? 'MoMo Verification' : 'Card Authorization'}</p>
-                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Mission ID: MIS-{Math.floor(Math.random() * 9000) + 1000}</p>
+                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Transaction Ref: WG-{Math.floor(Math.random() * 90000) + 10000}</p>
                   </div>
                </div>
 
                <div className="space-y-8">
                   <div className="space-y-4">
                     <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-black/40">
-                      {paymentMethod === 'momo' ? 'Enter Wallet Number' : 'Card Identification'}
+                      {paymentMethod === 'momo' ? 'Wallet Number' : 'Card Number'}
                     </Label>
                     <Input 
                       placeholder={paymentMethod === 'momo' ? '024 000 0000' : '4242 4242 4242 4242'} 
@@ -480,7 +480,7 @@ export default function PickupRequestForm() {
                <div className="flex items-center gap-4 p-6 bg-secondary/10 rounded-3xl text-secondary border-2 border-secondary/20 shadow-sm">
                   <ShieldCheck className="h-8 w-8 shrink-0" />
                   <p className="text-[11px] font-black uppercase tracking-widest leading-relaxed">
-                    Verified Sandbox: No actual funds will be deducted during this demonstration.
+                    Sandbox Mode: No funds will be deducted during this demonstration pickup.
                   </p>
                </div>
             </div>
@@ -505,8 +505,8 @@ export default function PickupRequestForm() {
                </div>
             </div>
             <div className="space-y-4">
-              <h2 className="font-headline text-6xl font-black tracking-tighter uppercase leading-[0.8]">Network Lock</h2>
-              <p className="text-muted-foreground font-medium text-xl max-w-sm mx-auto">Collector {matchedCollector.name} is now moving to your landmark.</p>
+              <h2 className="font-headline text-6xl font-black tracking-tighter uppercase leading-[0.8]">Network Match</h2>
+              <p className="text-muted-foreground font-medium text-xl max-w-sm mx-auto">{matchedCollector.name} is now navigating to your landmark.</p>
             </div>
             
             <Card className="uber-shadow border-none bg-muted/20 p-10 rounded-[3.5rem] border-2 border-black/5">
@@ -519,7 +519,7 @@ export default function PickupRequestForm() {
                      <div className="flex items-center gap-4 mt-3">
                         <div className="flex items-center gap-2 text-[11px] font-black text-primary uppercase tracking-widest">
                           <Star className="h-5 w-5 fill-primary text-primary" />
-                          <span>{matchedCollector.rating} Rating</span>
+                          <span>{matchedCollector.rating} Driver Rating</span>
                         </div>
                         <Badge variant="outline" className="border-black/10 text-black/40 font-black uppercase tracking-widest text-[9px]">Verified Fleet</Badge>
                      </div>
@@ -534,7 +534,7 @@ export default function PickupRequestForm() {
               className="w-full h-20 rounded-3xl font-black text-xl bg-black text-white shadow-2xl hover:bg-black/90 transition-all uppercase tracking-tighter" 
               onClick={() => window.location.reload()}
             >
-              Enter Live Tracking Map
+              Enter Fleet Tracking Hub
             </Button>
           </div>
         )}
@@ -545,8 +545,8 @@ export default function PickupRequestForm() {
 
 function Badge({ className, children, variant = 'default' }: any) {
   const variants = {
-    default: 'bg-primary text-white border-none',
-    secondary: 'bg-secondary text-white border-none',
+    default: 'bg-primary text-primary-foreground border-none',
+    secondary: 'bg-secondary text-secondary-foreground border-none',
     outline: 'bg-transparent border-2',
     ghost: 'bg-transparent border-none'
   };

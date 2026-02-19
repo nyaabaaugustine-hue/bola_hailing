@@ -63,16 +63,16 @@ export default function Navigation() {
         
         <div className="hidden lg:flex items-center gap-10">
           <Link href="/dashboard" className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/70 hover:text-primary transition-colors flex items-center gap-2 group">
-            <MapPin className="h-4 w-4 group-hover:scale-110 transition-transform" /> Order
+            <MapPin className="h-4 w-4 group-hover:scale-110 transition-transform" /> Pickup
           </Link>
           <Link href="/collector" className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/70 hover:text-primary transition-colors flex items-center gap-2 group">
-            <Truck className="h-4 w-4 group-hover:scale-110 transition-transform" /> Drive
+            <Truck className="h-4 w-4 group-hover:scale-110 transition-transform" /> Driver Hub
           </Link>
           <Link href="/admin" className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/70 hover:text-primary transition-colors flex items-center gap-2 group">
-            <ShieldCheck className="h-4 w-4 group-hover:scale-110 transition-transform" /> Command
+            <ShieldCheck className="h-4 w-4 group-hover:scale-110 transition-transform" /> Fleet Command
           </Link>
           <Link href="#" className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground/70 hover:text-primary transition-colors flex items-center gap-2 group">
-            <Globe className="h-4 w-4 group-hover:scale-110 transition-transform" /> Impact
+            <Globe className="h-4 w-4 group-hover:scale-110 transition-transform" /> Eco-Impact
           </Link>
         </div>
 
@@ -120,8 +120,8 @@ export default function Navigation() {
                 <SheetTitle className="text-left font-black uppercase tracking-tighter text-3xl mb-12">Navigation</SheetTitle>
                 <div className="flex flex-col gap-8">
                   <Link href="/dashboard" className="text-4xl font-black uppercase tracking-tighter hover:text-primary transition-colors">Book Pickup</Link>
-                  <Link href="/collector" className="text-4xl font-black uppercase tracking-tighter hover:text-primary transition-colors">Drive</Link>
-                  <Link href="/admin" className="text-4xl font-black uppercase tracking-tighter hover:text-primary transition-colors">Command</Link>
+                  <Link href="/collector" className="text-4xl font-black uppercase tracking-tighter hover:text-primary transition-colors">Drive Hub</Link>
+                  <Link href="/admin" className="text-4xl font-black uppercase tracking-tighter hover:text-primary transition-colors">Fleet Command</Link>
                   <div className="h-1 bg-black/10 w-full rounded-full" />
                   {user ? (
                     <Button variant="outline" className="h-16 rounded-2xl font-black border-4 text-sm" onClick={handleLogout}>LOGOUT</Button>
