@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Camera, MapPin, Loader2, Sparkles, CreditCard, Truck, Smartphone, Star, Trash2, ArrowRight, Info, Phone, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { Camera, MapPin, Loader2, Sparkles, CreditCard, Truck, Smartphone, Star, Trash2, ArrowRight, Info, Phone, ShieldCheck, CheckCircle2, Mic, Activity } from 'lucide-react';
 import { resolveGhanaAddress } from '@/ai/flows/ghana-address-voice-resolution';
 import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
@@ -25,6 +25,7 @@ export default function PickupRequestForm() {
   const [loading, setLoading] = useState(false);
   const [address, setAddress] = useState('');
   const [locationType, setLocationType] = useState('LANDMARK');
+  const [isRecording, setIsRecording] = useState(false);
   const [resolvedLoc, setResolvedLoc] = useState<any>(null);
   const [wasteData, setWasteData] = useState<any>(null);
   const [priceData, setPriceData] = useState<any>(null);
@@ -32,6 +33,15 @@ export default function PickupRequestForm() {
   const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<'momo' | 'card' | null>(null);
   const [paymentDetail, setPaymentDetail] = useState('');
+
+  const simulateVoiceInput = () => {
+    setIsRecording(true);
+    setTimeout(() => {
+      setAddress("Opposite Yellow Kiosk, Zongo Junction, Madina");
+      setIsRecording(false);
+      toast({ title: "Voice Resolved", description: "Landmark description captured successfully." });
+    }, 2500);
+  };
 
   const handleAddressResolve = async () => {
     if (!address) {
@@ -67,11 +77,13 @@ export default function PickupRequestForm() {
       reader.onloadend = () => {
         setSelectedImageUrl(reader.result as string);
         setLoading(true);
+        // Simulate AI Vision Analysis
         setTimeout(() => {
           setWasteData(DEMO_AI_OUTPUT);
           setPriceData(DEMO_PRICING);
           setStep(3);
           setLoading(false);
+          toast({ title: "AI Scan Complete", description: "Classified as Mixed Domestic Waste (~45kg)." });
         }, 3000);
       };
       reader.readAsDataURL(file);
@@ -94,7 +106,6 @@ export default function PickupRequestForm() {
 
     setLoading(true);
     try {
-      // Use fallback ID if not logged in for testing
       const customerId = user?.uid || 'demo-user-123';
       const customerName = user?.displayName || 'Ama Owusu (Demo)';
 
@@ -127,7 +138,6 @@ export default function PickupRequestForm() {
       
       setMatchedCollector(DUMMY_COLLECTORS[0]);
       setStep(5);
-      toast({ title: "Order Confirmed", description: "Your request has been broadcast to our fleet." });
     } catch (error) {
       console.error("Order error:", error);
       toast({ variant: 'destructive', title: "Order Failed", description: "Could not save your request. Try again." });
@@ -137,122 +147,135 @@ export default function PickupRequestForm() {
   };
 
   return (
-    <Card className="uber-shadow border-none overflow-hidden bg-white rounded-[2rem]">
-      <div className="flex bg-muted/10 p-5 gap-3 border-b border-black/5">
+    <Card className="uber-shadow border-none overflow-hidden bg-white rounded-[3rem]">
+      <div className="flex bg-muted/10 p-6 gap-3 border-b border-black/5">
         {[1, 2, 3, 4, 5].map((s) => (
-          <div key={s} className={`h-1.5 flex-1 rounded-full transition-all duration-700 ${s <= step ? 'bg-black' : 'bg-black/5'}`} />
+          <div key={s} className={`h-2 flex-1 rounded-full transition-all duration-700 ${s <= step ? 'bg-black' : 'bg-black/10'}`} />
         ))}
       </div>
       
-      <CardContent className="p-10">
+      <CardContent className="p-12">
         {step === 1 && (
-          <div className="space-y-8 animate-in slide-in-from-right-8 duration-500">
+          <div className="space-y-10 animate-in slide-in-from-right-8 duration-500">
             <div className="space-y-4">
-              <h2 className="font-headline text-4xl font-black tracking-tighter uppercase">Pickup Location</h2>
-              <p className="text-muted-foreground font-medium">Where should we find you?</p>
+              <h2 className="font-headline text-5xl font-black tracking-tighter uppercase leading-[0.9]">Set Landmark</h2>
+              <p className="text-muted-foreground font-medium text-lg">Our AI resolves local landmarks instantly.</p>
             </div>
             
-            <div className="space-y-6">
-              <div className="space-y-3">
-                <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-black/40">Method</Label>
-                <Select value={locationType} onValueChange={setLocationType}>
-                  <SelectTrigger className="h-16 text-lg rounded-2xl border-2 border-black/5 bg-muted/30 focus:bg-white focus:border-black transition-all">
-                    <SelectValue placeholder="How should we find you?" />
-                  </SelectTrigger>
-                  <SelectContent className="rounded-2xl border-none shadow-2xl">
-                    <SelectItem value="LANDMARK" className="h-12 font-bold">📍 Ghanaian Landmark</SelectItem>
-                    <SelectItem value="GHANA_POST" className="h-12 font-bold">📮 GhanaPost Digital Address</SelectItem>
-                    <SelectItem value="GPS_COORDINATE" className="h-12 font-bold">⚡ Precise GPS Location</SelectItem>
-                  </SelectContent>
-                </Select>
+            <div className="space-y-8">
+              <div className="space-y-4">
+                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-black/40">Resolution Mode</Label>
+                <div className="grid grid-cols-3 gap-4">
+                   {[
+                     { id: 'LANDMARK', label: 'Landmark', icon: MapPin },
+                     { id: 'GHANA_POST', label: 'Digital Addr', icon: ShieldCheck },
+                     { id: 'GPS_COORDINATE', label: 'GPS Pin', icon: Activity }
+                   ].map((mode) => (
+                     <button 
+                       key={mode.id}
+                       onClick={() => setLocationType(mode.id)}
+                       className={`p-4 rounded-2xl flex flex-col items-center gap-2 border-2 transition-all ${locationType === mode.id ? 'border-black bg-black text-white shadow-xl' : 'border-black/5 bg-muted/30 text-black/60 hover:border-black/20'}`}
+                     >
+                        <mode.icon className="h-5 w-5" />
+                        <span className="text-[9px] font-black uppercase tracking-widest">{mode.label}</span>
+                     </button>
+                   ))}
+                </div>
               </div>
               
-              <div className="space-y-3">
-                <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-black/40">Address / Description</Label>
-                <Input 
-                  className="h-16 text-lg px-6 rounded-2xl border-2 border-black/5 bg-muted/30 focus:bg-white focus:border-black transition-all"
-                  placeholder={locationType === 'LANDMARK' ? 'e.g. Opposite Yellow Kiosk, Zongo Junction' : 'e.g. GA-123-4567'}
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                />
-                <p className="text-[10px] text-black/40 font-bold italic flex items-center gap-2">
-                  <Info className="h-3 w-3" /> Landmark-based resolution is optimized for our drivers.
-                </p>
+              <div className="space-y-4">
+                <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-black/40">Landmark Description</Label>
+                <div className="relative group">
+                   <Input 
+                    className="h-20 text-xl px-8 pr-20 rounded-3xl border-4 border-black/5 bg-muted/30 focus:bg-white focus:border-black transition-all font-bold placeholder:font-medium"
+                    placeholder={locationType === 'LANDMARK' ? 'Describe where you are...' : 'e.g. GA-123-4567'}
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                  />
+                  <button 
+                    onClick={simulateVoiceInput}
+                    className={`absolute right-3 top-3 h-14 w-14 rounded-2xl flex items-center justify-center transition-all ${isRecording ? 'bg-destructive text-white animate-pulse' : 'bg-black text-white hover:bg-primary shadow-lg'}`}
+                  >
+                    {isRecording ? <Activity className="h-6 w-6" /> : <Mic className="h-6 w-6" />}
+                  </button>
+                </div>
+                <div className="flex items-center gap-3 p-4 bg-primary/5 rounded-2xl border-2 border-primary/10">
+                   <Sparkles className="h-5 w-5 text-primary" />
+                   <p className="text-[10px] font-bold text-primary uppercase tracking-widest leading-relaxed">
+                     AI Recommendation: Using the landmark resolution engine for Accra central.
+                   </p>
+                </div>
               </div>
             </div>
 
             <Button 
-              className="w-full h-16 text-lg font-black rounded-2xl bg-black text-white hover:bg-black/90 btn-hover-effect group mt-4 shadow-xl shadow-black/10" 
+              className="w-full h-20 text-xl font-black rounded-3xl bg-black text-white hover:bg-black/90 btn-hover-effect group mt-4 shadow-[0_20px_50px_rgba(0,0,0,0.1)]" 
               onClick={handleAddressResolve} 
               disabled={loading || !address}
             >
-              {loading ? <Loader2 className="mr-3 h-6 w-6 animate-spin" /> : <MapPin className="mr-3 h-6 w-6" />}
-              Set Destination <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              {loading ? <Loader2 className="mr-3 h-8 w-8 animate-spin" /> : <MapPin className="mr-3 h-8 w-8" />}
+              CONFIRM LOCATION <ArrowRight className="ml-2 h-6 w-6 group-hover:translate-x-2 transition-transform" />
             </Button>
           </div>
         )}
 
         {step === 2 && (
-          <div className="space-y-8 animate-in slide-in-from-right-8 duration-500">
-            <div className="space-y-3">
-              <h3 className="font-headline text-4xl font-black tracking-tighter uppercase">Scan Waste</h3>
-              <p className="text-muted-foreground font-medium">Snap a photo to get an instant AI-powered price estimate.</p>
+          <div className="space-y-10 animate-in slide-in-from-right-8 duration-500">
+            <div className="space-y-4">
+              <h3 className="font-headline text-5xl font-black tracking-tighter uppercase leading-[0.9]">AI Vision Scan</h3>
+              <p className="text-muted-foreground font-medium text-lg">Snap a photo to determine waste type and fair pricing.</p>
             </div>
             
             <div 
-              className="group relative h-80 w-full rounded-[2rem] border-4 border-dashed border-black/5 hover:border-primary/50 transition-all bg-muted/30 flex flex-col items-center justify-center cursor-pointer overflow-hidden"
+              className="group relative h-96 w-full rounded-[3.5rem] border-4 border-dashed border-black/10 hover:border-primary/50 transition-all bg-muted/20 flex flex-col items-center justify-center cursor-pointer overflow-hidden shadow-inner"
               onClick={triggerFileInput}
             >
-               <input 
-                 type="file" 
-                 ref={fileInputRef} 
-                 className="hidden" 
-                 accept="image/*" 
-                 onChange={handleFileChange} 
-               />
+               <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileChange} />
 
                {selectedImageUrl && (
-                 <Image 
-                   src={selectedImageUrl} 
-                   alt="Waste Preview" 
-                   fill 
-                   className="object-cover opacity-50 grayscale group-hover:grayscale-0 transition-all"
-                 />
+                 <Image src={selectedImageUrl} alt="Waste Preview" fill className="object-cover opacity-60 grayscale group-hover:grayscale-0 transition-all duration-700" />
                )}
 
                {loading ? (
-                 <div className="flex flex-col items-center gap-6 relative z-10 p-10">
+                 <div className="flex flex-col items-center gap-8 relative z-10 p-10">
                     <div className="relative">
                        <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping" />
-                       <div className="relative h-20 w-20 bg-black rounded-2xl flex items-center justify-center text-primary shadow-2xl">
-                          <Loader2 className="h-10 w-10 animate-spin" />
+                       <div className="relative h-28 w-28 bg-black rounded-[2.5rem] flex items-center justify-center text-primary shadow-2xl">
+                          <Loader2 className="h-14 w-14 animate-spin" />
                        </div>
                     </div>
-                    <div className="text-center space-y-2">
-                      <p className="font-black text-black tracking-[0.2em] uppercase text-xs">AI Analyzing Profile</p>
-                      <p className="text-[10px] text-muted-foreground font-bold italic">Estimating volume & pickup difficulty...</p>
+                    <div className="text-center space-y-3">
+                      <p className="font-black text-black tracking-[0.3em] uppercase text-xs">Processing Visual Profile</p>
+                      <div className="flex items-center gap-2 justify-center">
+                         <div className="h-1.5 w-12 bg-black/10 rounded-full overflow-hidden">
+                            <div className="h-full bg-primary animate-progress-indefinite" />
+                         </div>
+                         <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest">Detecting Sachet Plastic...</p>
+                      </div>
                     </div>
                  </div>
                ) : !selectedImageUrl ? (
-                 <div className="flex flex-col items-center gap-6 p-10 text-center relative z-10">
-                    <div className="h-24 w-24 rounded-3xl bg-black text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-2xl">
-                      <Camera className="h-10 w-10" />
+                 <div className="flex flex-col items-center gap-8 p-12 text-center relative z-10">
+                    <div className="h-32 w-32 rounded-[2.5rem] bg-black text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-2xl">
+                      <Camera className="h-12 w-12" />
                     </div>
-                    <div className="space-y-2">
-                      <p className="font-black text-2xl uppercase tracking-tighter">Capture or Upload</p>
-                      <p className="text-sm text-black/40 font-medium">Auto-classify waste type & volume.</p>
+                    <div className="space-y-3">
+                      <p className="font-black text-3xl uppercase tracking-tighter">Capture & Classify</p>
+                      <p className="text-sm text-black/40 font-bold uppercase tracking-widest">Instant volume & weight estimation</p>
                     </div>
                  </div>
                ) : (
-                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20">
-                    <p className="text-white font-black uppercase tracking-widest text-sm">Tap to change image</p>
+                 <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 backdrop-blur-sm">
+                    <Button variant="outline" className="h-14 rounded-2xl bg-white text-black font-black uppercase tracking-widest text-xs">
+                      Retake Photo
+                    </Button>
                  </div>
                )}
             </div>
             
             <Button 
               variant="ghost" 
-              className="w-full h-12 text-black/40 font-black uppercase tracking-widest text-[10px] hover:bg-transparent" 
+              className="w-full h-12 text-black/40 font-black uppercase tracking-[0.3em] text-[10px] hover:bg-transparent" 
               onClick={() => setStep(1)} 
               disabled={loading}
             >
@@ -262,170 +285,186 @@ export default function PickupRequestForm() {
         )}
 
         {step === 3 && wasteData && (
-          <div className="space-y-8 animate-in slide-in-from-right-8 duration-500">
-             <div className="rounded-[2.5rem] bg-black text-white p-10 shadow-2xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 p-8 opacity-10">
-                   <Trash2 className="h-40 w-40" />
+          <div className="space-y-10 animate-in slide-in-from-right-8 duration-500">
+             <div className="rounded-[3rem] bg-black text-white p-12 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.3)] relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-10 opacity-5">
+                   <Sparkles className="h-64 w-64" />
                 </div>
-                <div className="flex justify-between items-start mb-10 relative z-10">
-                   <div className="flex items-center gap-2">
-                      <Sparkles className="h-5 w-5 text-primary" />
-                      <span className="font-black uppercase tracking-[0.2em] text-[10px] text-white/60">Dynamic Pricing Engine</span>
+                <div className="flex justify-between items-start mb-12 relative z-10">
+                   <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-xl bg-primary/20 flex items-center justify-center text-primary">
+                        <Sparkles className="h-5 w-5" />
+                      </div>
+                      <span className="font-black uppercase tracking-[0.3em] text-[10px] text-white/60">Dynamic Pricing Engine</span>
                    </div>
-                   <Badge className="bg-white/10 text-white border-none font-bold uppercase tracking-widest text-[9px] px-3">Instant Quote</Badge>
+                   <Badge className="bg-secondary text-white border-none font-black uppercase tracking-widest text-[9px] px-4 py-1 rounded-full shadow-lg shadow-secondary/20">Market Verified</Badge>
                 </div>
                 <div className="flex items-end justify-between relative z-10">
                    <div>
-                      <p className="text-[10px] uppercase font-black tracking-widest text-white/40 mb-2">Estimated Total</p>
-                      <p className="text-6xl font-black">GHS {priceData?.pickupFee.toFixed(2)}</p>
-                      <p className="text-xs text-primary mt-4 font-black uppercase tracking-widest flex items-center gap-2">
-                         {wasteData.wasteType.replace(/_/g, ' ')} • ~{wasteData.estimatedWeight_kg}kg
-                      </p>
+                      <p className="text-[10px] uppercase font-black tracking-[0.4em] text-white/40 mb-3">Calculated Mission Fee</p>
+                      <p className="text-8xl font-black leading-[0.8] tracking-tighter">GHS {priceData?.pickupFee.toFixed(2)}</p>
+                      <div className="flex flex-wrap gap-2 mt-8">
+                         <Badge variant="outline" className="border-white/20 text-white font-black uppercase tracking-widest text-[9px] px-3">
+                           {wasteData.wasteType.replace(/_/g, ' ')}
+                         </Badge>
+                         <Badge variant="outline" className="border-white/20 text-white font-black uppercase tracking-widest text-[9px] px-3">
+                           ~{wasteData.estimatedWeight_kg}kg Capacity
+                         </Badge>
+                      </div>
                    </div>
                    <div className="text-right">
-                      <p className="text-[10px] uppercase font-black text-white/40 tracking-widest mb-1">ETA</p>
-                      <p className="font-black text-3xl">{DEMO_ROUTING.etaPickup}</p>
+                      <p className="text-[10px] uppercase font-black text-white/40 tracking-[0.4em] mb-2">Truck ETA</p>
+                      <p className="font-black text-4xl text-primary">{DEMO_ROUTING.etaPickup}</p>
                    </div>
                 </div>
              </div>
 
-             <div className="space-y-4">
-                <p className="text-[10px] font-black uppercase text-black/40 tracking-[0.2em]">Select Payment Method</p>
-                <div className="grid grid-cols-2 gap-4">
+             <div className="space-y-6">
+                <p className="text-[10px] font-black uppercase text-black/40 tracking-[0.3em] text-center">Secure Settlement Options</p>
+                <div className="grid grid-cols-2 gap-6">
                    {[
-                     { id: 'momo', label: 'Mobile Money', icon: Smartphone, color: 'text-yellow-500' },
-                     { id: 'card', label: 'Debit Card', icon: CreditCard, color: 'text-blue-500' }
+                     { id: 'momo', label: 'Mobile Money', icon: Smartphone, color: 'text-yellow-500', desc: 'Instant verification' },
+                     { id: 'card', label: 'Debit Card', icon: CreditCard, color: 'text-blue-500', desc: 'Auto-settle' }
                    ].map((p) => (
                      <button 
                         key={p.id} 
                         onClick={() => setPaymentMethod(p.id as any)}
-                        className={`h-28 rounded-[1.5rem] flex flex-col items-center justify-center gap-3 border-2 transition-all ${paymentMethod === p.id ? 'border-black bg-black/5 ring-4 ring-black/5' : 'border-black/5 hover:border-black/20 bg-white'}`}
+                        className={`h-40 rounded-[2.5rem] flex flex-col items-center justify-center gap-4 border-4 transition-all duration-300 ${paymentMethod === p.id ? 'border-black bg-black text-white shadow-2xl scale-105' : 'border-black/5 hover:border-black/20 bg-white'}`}
                      >
-                        <p.icon className={`h-8 w-8 ${p.color}`} />
-                        <span className="font-black text-[10px] uppercase tracking-widest">{p.label}</span>
+                        <p.icon className={`h-10 w-10 ${paymentMethod === p.id ? 'text-white' : p.color}`} />
+                        <div className="text-center">
+                           <span className="font-black text-[11px] uppercase tracking-widest block">{p.label}</span>
+                           <span className={`text-[8px] font-bold uppercase tracking-widest opacity-40 block mt-1 ${paymentMethod === p.id ? 'text-white' : ''}`}>{p.desc}</span>
+                        </div>
                      </button>
                    ))}
                 </div>
              </div>
 
-             <div className="pt-6 space-y-6">
+             <div className="pt-8">
                 <Button 
-                  className="w-full h-20 text-xl font-black rounded-2xl bg-black text-white shadow-2xl btn-hover-effect" 
+                  className="w-full h-24 text-2xl font-black rounded-3xl bg-black text-white shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] btn-hover-effect flex items-center justify-center gap-4" 
                   onClick={handleProceedToPayment} 
                   disabled={!paymentMethod}
                 >
-                   Continue to Checkout <ArrowRight className="ml-2 h-5 w-5" />
+                   PROCEED TO CHECKOUT <ArrowRight className="h-8 w-8" />
                 </Button>
              </div>
           </div>
         )}
 
         {step === 4 && (
-          <div className="space-y-8 animate-in slide-in-from-right-8 duration-500">
-            <div className="space-y-3">
-              <h3 className="font-headline text-4xl font-black tracking-tighter uppercase">Payment Details</h3>
-              <p className="text-muted-foreground font-medium">Verify your demo transaction.</p>
+          <div className="space-y-10 animate-in slide-in-from-right-8 duration-500">
+            <div className="space-y-4 text-center">
+              <h3 className="font-headline text-5xl font-black tracking-tighter uppercase leading-[0.9]">Settlement</h3>
+              <p className="text-muted-foreground font-medium text-lg">Instant settlement via Ghana's payment rails.</p>
             </div>
 
-            <div className="p-6 rounded-[1.5rem] bg-muted/20 border-2 border-black/5 space-y-6">
-               <div className="flex items-center gap-4 mb-4">
-                  <div className={`h-12 w-12 rounded-xl flex items-center justify-center text-white ${paymentMethod === 'momo' ? 'bg-yellow-500' : 'bg-blue-600'}`}>
-                    {paymentMethod === 'momo' ? <Smartphone /> : <CreditCard />}
+            <div className="p-10 rounded-[3rem] bg-muted/20 border-4 border-black/5 space-y-10">
+               <div className="flex items-center gap-6 pb-8 border-b border-black/5">
+                  <div className={`h-16 w-16 rounded-2xl flex items-center justify-center text-white shadow-xl ${paymentMethod === 'momo' ? 'bg-yellow-500' : 'bg-blue-600'}`}>
+                    {paymentMethod === 'momo' ? <Smartphone className="h-8 w-8" /> : <CreditCard className="h-8 w-8" />}
                   </div>
                   <div>
-                    <p className="font-black text-sm uppercase tracking-widest">{paymentMethod === 'momo' ? 'MoMo Payment' : 'Card Payment'}</p>
-                    <p className="text-xs text-muted-foreground">Demo Transaction: GHS {priceData?.pickupFee}</p>
+                    <p className="font-black text-xl uppercase tracking-tighter">{paymentMethod === 'momo' ? 'MoMo Verification' : 'Card Authorization'}</p>
+                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Mission ID: MIS-{Math.floor(Math.random() * 9000) + 1000}</p>
                   </div>
                </div>
 
-               <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-widest text-black/40">
-                      {paymentMethod === 'momo' ? 'Enter Phone Number (0244...)' : 'Enter Card Number (4242...)'}
+               <div className="space-y-8">
+                  <div className="space-y-4">
+                    <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-black/40">
+                      {paymentMethod === 'momo' ? 'Enter Wallet Number' : 'Card Identification'}
                     </Label>
                     <Input 
-                      placeholder={paymentMethod === 'momo' ? '0244 000 000' : '4242 4242 4242 4242'} 
-                      className="h-16 rounded-xl border-2 font-bold text-lg"
+                      placeholder={paymentMethod === 'momo' ? '024 000 0000' : '4242 4242 4242 4242'} 
+                      className="h-20 rounded-2xl border-4 border-black/5 font-black text-2xl px-8 shadow-inner"
                       value={paymentDetail}
                       onChange={(e) => setPaymentDetail(e.target.value)}
                     />
                   </div>
                   
                   {paymentMethod === 'card' && (
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                         <Label className="text-[10px] font-black uppercase tracking-widest text-black/40">Expiry</Label>
-                         <Input placeholder="MM/YY" className="h-14 rounded-xl border-2 font-bold" />
+                    <div className="grid grid-cols-2 gap-6">
+                      <div className="space-y-4">
+                         <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-black/40">Expiry Date</Label>
+                         <Input placeholder="MM / YY" className="h-16 rounded-2xl border-4 border-black/5 font-black text-lg px-6" />
                       </div>
-                      <div className="space-y-2">
-                         <Label className="text-[10px] font-black uppercase tracking-widest text-black/40">CVV</Label>
-                         <Input placeholder="123" className="h-14 rounded-xl border-2 font-bold" />
+                      <div className="space-y-4">
+                         <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-black/40">Security Code</Label>
+                         <Input placeholder="123" className="h-16 rounded-2xl border-4 border-black/5 font-black text-lg px-6" />
                       </div>
                     </div>
                   )}
                </div>
 
-               <div className="flex items-center gap-3 p-4 bg-secondary/10 rounded-xl text-secondary border border-secondary/20">
-                  <ShieldCheck className="h-5 w-5 shrink-0" />
-                  <p className="text-[10px] font-bold uppercase leading-tight">Secure Sandbox: This is a demo transaction. No real funds will be deducted.</p>
+               <div className="flex items-center gap-4 p-6 bg-secondary/10 rounded-3xl text-secondary border-2 border-secondary/20 shadow-sm">
+                  <ShieldCheck className="h-8 w-8 shrink-0" />
+                  <p className="text-[11px] font-black uppercase tracking-widest leading-relaxed">
+                    Verified Sandbox: No actual funds will be deducted during this demonstration.
+                  </p>
                </div>
             </div>
 
             <Button 
-              className="w-full h-20 text-xl font-black rounded-2xl bg-secondary text-white shadow-2xl btn-hover-effect" 
+              className="w-full h-24 text-3xl font-black rounded-3xl bg-secondary text-white shadow-[0_25px_50px_rgba(34,197,94,0.3)] btn-hover-effect flex items-center justify-center gap-4" 
               onClick={handleConfirmOrder} 
               disabled={loading || !paymentDetail}
             >
-              {loading ? <Loader2 className="mr-3 h-6 w-6 animate-spin" /> : <><CheckCircle2 className="mr-2" /> Pay GHS {priceData?.pickupFee}</>}
+              {loading ? <Loader2 className="h-10 w-10 animate-spin" /> : <><CheckCircle2 className="h-8 w-8" /> AUTHORIZE GHS {priceData?.pickupFee}</>}
             </Button>
 
-            <Button variant="ghost" className="w-full text-black/40 font-black uppercase text-[10px]" onClick={() => setStep(3)}>
-              Change Payment Method
+            <Button variant="ghost" className="w-full text-black/40 font-black uppercase tracking-[0.3em] text-[10px]" onClick={() => setStep(3)}>
+              Modify Settlement Method
             </Button>
           </div>
         )}
 
         {step === 5 && matchedCollector && (
-          <div className="text-center py-10 animate-in zoom-in-95 duration-500 space-y-12">
-            <div className="relative mx-auto h-48 w-48">
-               <div className="absolute inset-0 bg-secondary/10 rounded-full animate-ping" />
-               <div className="relative h-48 w-48 rounded-full bg-black flex items-center justify-center text-white shadow-[0_40px_80px_-20px_rgba(0,0,0,0.3)]">
-                 <Truck className="h-24 w-24 text-primary" />
+          <div className="text-center py-12 animate-in zoom-in-95 duration-700 space-y-16">
+            <div className="relative mx-auto h-64 w-64">
+               <div className="absolute inset-0 bg-secondary/10 rounded-full animate-ping duration-[3s]" />
+               <div className="absolute inset-0 bg-primary/10 rounded-full animate-pulse duration-[2s]" />
+               <div className="relative h-64 w-64 rounded-full bg-black flex items-center justify-center text-white shadow-[0_50px_100px_-20px_rgba(0,0,0,0.4)] border-8 border-white">
+                 <Truck className="h-32 w-32 text-primary" />
                </div>
             </div>
             <div className="space-y-4">
-              <h2 className="font-headline text-5xl font-black tracking-tighter uppercase">Truck Dispatched</h2>
-              <p className="text-muted-foreground font-medium text-lg max-w-xs mx-auto">{matchedCollector.name} is on the way to your pickup location.</p>
+              <h2 className="font-headline text-6xl font-black tracking-tighter uppercase leading-[0.8]">Network Lock</h2>
+              <p className="text-muted-foreground font-medium text-xl max-w-sm mx-auto">Collector {matchedCollector.name} is now moving to your landmark.</p>
             </div>
             
-            <Card className="uber-shadow border-none bg-muted/30 p-8 rounded-[2rem]">
-               <div className="flex items-center gap-6">
-                  <div className="h-20 w-20 rounded-2xl overflow-hidden border-2 border-black shadow-xl">
+            <Card className="uber-shadow border-none bg-muted/20 p-10 rounded-[3.5rem] border-2 border-black/5">
+               <div className="flex items-center gap-8">
+                  <div className="h-24 w-24 rounded-3xl overflow-hidden border-4 border-white shadow-2xl relative">
                     <Image src={matchedCollector.image} width={200} height={200} alt="Driver" className="object-cover" />
                   </div>
                   <div className="flex-1 text-left">
-                     <p className="font-black text-2xl uppercase tracking-tighter">{matchedCollector.name}</p>
-                     <div className="flex items-center gap-3 mt-1">
-                        <div className="flex items-center gap-1 text-[10px] font-black text-primary">
-                          <Star className="h-4 w-4 fill-primary text-primary" />
-                          <span>{matchedCollector.rating}</span>
+                     <p className="font-black text-3xl uppercase tracking-tighter leading-none">{matchedCollector.name}</p>
+                     <div className="flex items-center gap-4 mt-3">
+                        <div className="flex items-center gap-2 text-[11px] font-black text-primary uppercase tracking-widest">
+                          <Star className="h-5 w-5 fill-primary text-primary" />
+                          <span>{matchedCollector.rating} Rating</span>
                         </div>
-                        <span className="text-black/40 text-[10px] font-black uppercase tracking-widest">• Verified Driver</span>
+                        <Badge variant="outline" className="border-black/10 text-black/40 font-black uppercase tracking-widest text-[9px]">Verified Fleet</Badge>
                      </div>
                   </div>
-                  <div className="text-right flex flex-col gap-2">
-                    <div className="bg-black text-white font-black px-4 py-2 rounded-xl text-sm">{DEMO_ROUTING.etaPickup}</div>
+                  <div className="text-right flex flex-col gap-3">
+                    <div className="bg-black text-white font-black px-6 py-3 rounded-2xl text-xl shadow-lg">{DEMO_ROUTING.etaPickup}</div>
                     <a href={`tel:${matchedCollector.phone}`}>
-                      <Button size="sm" variant="outline" className="rounded-xl border-primary text-primary hover:bg-primary/10 gap-2 h-10 w-full">
-                        <Phone className="h-3 w-3" /> Call
+                      <Button size="sm" variant="outline" className="rounded-2xl border-2 border-primary text-primary hover:bg-primary/10 gap-3 h-14 w-full font-black text-xs uppercase tracking-widest">
+                        <Phone className="h-4 w-4" /> CONTACT
                       </Button>
                     </a>
                   </div>
                </div>
             </Card>
 
-            <Button className="w-full h-16 rounded-2xl font-black text-lg bg-black text-white shadow-xl" variant="default" onClick={() => window.location.reload()}>
-              Track Arrival Live
+            <Button 
+              className="w-full h-20 rounded-3xl font-black text-xl bg-black text-white shadow-2xl hover:bg-black/90 transition-all uppercase tracking-tighter" 
+              onClick={() => window.location.reload()}
+            >
+              Enter Live Tracking Map
             </Button>
           </div>
         )}
@@ -434,6 +473,12 @@ export default function PickupRequestForm() {
   );
 }
 
-function Badge({ className, children }: any) {
-  return <div className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${className}`}>{children}</div>
+function Badge({ className, children, variant = 'default' }: any) {
+  const variants = {
+    default: 'bg-primary text-white border-none',
+    secondary: 'bg-secondary text-white border-none',
+    outline: 'bg-transparent border-2',
+    ghost: 'bg-transparent border-none'
+  };
+  return <div className={`inline-flex items-center rounded-lg px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${variants[variant as keyof typeof variants]} ${className}`}>{children}</div>
 }
