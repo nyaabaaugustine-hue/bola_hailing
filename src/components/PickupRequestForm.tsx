@@ -31,6 +31,7 @@ import Image from 'next/image';
 import { DUMMY_COLLECTORS } from '@/lib/dummy-data';
 import { useFirestore, useUser } from '@/firebase';
 import { collection, addDoc, serverTimestamp, getDocs, query, where } from 'firebase/firestore';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function PickupRequestForm() {
   const { toast } = useToast();
@@ -50,6 +51,8 @@ export default function PickupRequestForm() {
   const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<'momo' | 'card' | null>(null);
   const [paymentDetail, setPaymentDetail] = useState('');
+
+  const paymentPartners = PlaceHolderImages.find(img => img.id === 'payment-partners');
 
   const simulateVoiceInput = () => {
     setIsRecording(true);
@@ -126,7 +129,6 @@ export default function PickupRequestForm() {
           toast({ title: "AI Scan Complete", description: `Classified as ${classification.wasteCategories[0].replace(/_/g, ' ')}.` });
         } catch (error) {
           console.warn("AI Analysis failed, applying high-fidelity fallback:", error);
-          // Fallback data for robust demo
           setWasteData({
             wasteCategories: ['MIXED_DOMESTIC'],
             estimatedWeightKg: 42,
@@ -445,6 +447,12 @@ export default function PickupRequestForm() {
             </div>
 
             <div className="p-10 rounded-[3rem] bg-muted/20 border-4 border-black/5 space-y-10">
+               {paymentPartners && (
+                 <div className="relative h-14 w-full opacity-80 group">
+                    <Image src={paymentPartners.imageUrl} alt="Payment Partners" fill className="object-contain" />
+                 </div>
+               )}
+
                <div className="flex items-center gap-6 pb-8 border-b border-black/5">
                   <div className={`h-16 w-16 rounded-2xl flex items-center justify-center text-white shadow-xl ${paymentMethod === 'momo' ? 'bg-yellow-500' : 'bg-blue-600'}`}>
                     {paymentMethod === 'momo' ? <Smartphone className="h-8 w-8" /> : <CreditCard className="h-8 w-8" />}
