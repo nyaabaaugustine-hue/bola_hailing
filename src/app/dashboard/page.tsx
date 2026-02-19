@@ -1,5 +1,7 @@
+
 "use client";
 
+import dynamic from 'next/dynamic';
 import Navigation from '@/components/Navigation';
 import PickupRequestForm from '@/components/PickupRequestForm';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -8,13 +10,21 @@ import { Button } from '@/components/ui/button';
 import { Clock, MapPin, Truck, CheckCircle2, Navigation2, MoreHorizontal, Phone, Star } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { RECENT_PICKUPS, DUMMY_COLLECTORS } from '@/lib/dummy-data';
+import { RECENT_PICKUPS, DUMMY_COLLECTORS, DEMO_USER, DEMO_COLLECTOR } from '@/lib/dummy-data';
+
+// Dynamically import the map to avoid SSR issues
+const LiveTrackingMap = dynamic(() => import('@/components/LiveTrackingMap'), { 
+  ssr: false,
+  loading: () => <div className="w-full h-full bg-muted animate-pulse rounded-2xl flex items-center justify-center font-black uppercase tracking-widest text-xs opacity-40">Initializing Fleet Map...</div>
+});
 
 export default function Dashboard() {
   const [activeJob, setActiveJob] = useState(true);
-  const mapImage = PlaceHolderImages.find(img => img.id === 'dashboard-map');
   const activeCollector = DUMMY_COLLECTORS[0];
+  
+  // Coordinates from dummy data
+  const pickupCoords: [number, number] = [DEMO_USER.location.lat, DEMO_USER.location.lng];
+  const collectorCoords: [number, number] = [DEMO_COLLECTOR.currentLocation.lat, DEMO_COLLECTOR.currentLocation.lng];
 
   return (
     <div className="min-h-screen bg-background font-body">
@@ -31,26 +41,15 @@ export default function Dashboard() {
                   <Badge className="bg-primary px-3 py-1 text-white border-none">{activeCollector.name.split(' ')[0]} is arriving</Badge>
                 </div>
                 
-                {/* Simulated Uber Map */}
-                <div className="relative aspect-video w-full rounded-2xl overflow-hidden border uber-shadow bg-muted">
-                  {mapImage && (
-                    <Image 
-                      src={mapImage.imageUrl}
-                      alt={mapImage.description}
-                      fill
-                      className="object-cover opacity-60 grayscale"
-                      data-ai-hint={mapImage.imageHint}
-                    />
-                  )}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="relative">
-                       <div className="absolute -inset-8 bg-primary/20 rounded-full animate-ping" />
-                       <div className="relative bg-primary p-3 rounded-full shadow-xl">
-                          <Truck className="h-8 w-8 text-white" />
-                       </div>
-                    </div>
-                  </div>
-                  <div className="absolute bottom-6 left-6 right-6">
+                {/* Real Interactive Map */}
+                <div className="relative aspect-video w-full rounded-2xl overflow-hidden border uber-shadow bg-muted shadow-2xl">
+                  <LiveTrackingMap 
+                    center={collectorCoords}
+                    pickupPos={pickupCoords}
+                    collectorPos={collectorCoords}
+                  />
+                  
+                  <div className="absolute bottom-6 left-6 right-6 z-[1000]">
                     <Card className="bg-white/95 backdrop-blur border-none shadow-2xl">
                       <CardContent className="p-4 flex items-center justify-between">
                         <div className="flex items-center gap-4">

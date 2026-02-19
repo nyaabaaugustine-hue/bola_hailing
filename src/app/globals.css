@@ -1,6 +1,9 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import 'leaflet/dist/leaflet.css';
 
 @layer base {
   :root {
@@ -67,4 +70,23 @@
 
 .btn-hover-effect {
   @apply transition-all duration-300 hover:scale-[1.02] active:scale-[0.98];
+}
+
+/* Custom Leaflet Styling to match Uber aesthetics */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  filter: grayscale(0.5) contrast(1.1);
+}
+
+.leaflet-control-zoom {
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+}
+
+.leaflet-bar a {
+  background-color: white !important;
+  color: black !important;
+  border-bottom: 1px solid #f0f0f0 !important;
 }
